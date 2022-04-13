@@ -1,9 +1,9 @@
 # Online-Library
 ***
 
-##Functional roles
+## Functional roles
 
-###Guest:
+### Guest:
 1. Log in
 2. Create new account
 3. View book catalog list
@@ -11,7 +11,7 @@
 5. View book info
 6. Switch language
 
-###Client:
+### Client:
 1. Log out
 2. Update account data
 3. Change account password
@@ -22,13 +22,13 @@
 8. View own order list
 9. Cancel order
 
-###Admin:
+### Admin:
 1. Add the book to the library
 2. Update book
 3. Approve or reject user's orders
 4. Lock or unlock users
 5. View users list
-6. + all client function.
+6. +all client function.
 
 ***
 ## Database Schema
