@@ -13,6 +13,8 @@ import by.vlad.JavaWebProject.validator.impl.UserValidatorImpl;
 import java.util.Map;
 import java.util.Optional;
 
+import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.*;
+
 public class UserServiceImpl implements UserService {
     private static UserServiceImpl instance;
 
@@ -49,7 +51,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean createNewAccount(Map<String, String> userData) throws ServiceException {
-        return false;
+        boolean isCreated = false;
+
+        UserValidator userValidator = UserValidatorImpl.getInstance();
+
+        if (!userValidator.validateCreatedAccountData(userData)){
+            return isCreated;
+        }
+
+        String name = userData.get(NEW_NAME);
+        String surname = userData.get(NEW_SURNAME);
+        String email = userData.get(NEW_EMAIL);
+        String password = userData.get(NEW_PASSWORD);
+
+        UserDAO userDAO = UserDAOImpl.getInstance();
+
+        try {
+            if (userDAO.isEmailExists(email)){
+                userData.put("error_msg", "this email is already exists");
+                return isCreated;
+            }
+
+            String encryptedPass = PasswordEncoder.getInstance().getSHA1Hash(password);
+
+            User newUser = User.getBuilder()
+                    .withName(name)
+                    .withSurname(surname)
+                    .withEmail(email)
+                    .withPassword(encryptedPass)
+                    .buildUser();
+
+            isCreated = userDAO.createNewAccount(newUser);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+        return isCreated;
     }
 
     @Override

@@ -15,6 +15,14 @@ public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
             "SELECT users.id, users.name, surname, email, password, roles.name FROM users, roles " +
             "WHERE roles_id = roles.id AND email = ? AND password = ?";
 
+    public static final String SELECT_USER_COUNT_BY_EMAIL =
+            "SELECT COUNT(*) as users_count FROM users " +
+            "WHERE email = ?";
+
+    public static final String INSERT_NEW_USER =
+            "INSERT INTO users(`name`, `surname`, `email`, `password`) " +
+            "VALUES (?, ?, ?, ?)";
+
     private static UserDAOImpl instance;
 
     private UserDAOImpl(){
@@ -57,7 +65,6 @@ public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
-            String passFromDB;
 
             if (resultSet.next()){
                 User curr = User.getBuilder()
@@ -76,5 +83,51 @@ public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
         }
 
         return user;
+    }
+
+    @Override
+    public boolean createNewAccount(User userData) throws DaoException {
+        int row_count;
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER)){
+
+            statement.setString(1, userData.getName());
+            statement.setString(2, userData.getSurname());
+            statement.setString(3, userData.getEmail());
+            statement.setString(4, userData.getPassword());
+
+            row_count = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return row_count == 1;
+    }
+
+    @Override
+    public boolean isEmailExists(String email) throws DaoException {
+        boolean isExists = true;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_COUNT_BY_EMAIL)){
+
+            preparedStatement.setString(1, email);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()){
+                int count = resultSet.getInt(1);
+
+                if (count == 0){
+                    isExists = false;
+                }
+            }
+        }catch (SQLException e) {
+            throw new DaoException(e);
+        }
+
+        return isExists;
     }
 }

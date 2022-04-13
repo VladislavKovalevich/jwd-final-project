@@ -14,13 +14,14 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.Optional;
 
+import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.JavaWebProject.controller.command.PagePath.*;
 
 public class LoginCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String login = request.getParameter("email");//TODO константы в отдельный класс
-        String password = request.getParameter("pass");
+        String login = request.getParameter(EMAIL);//TODO константы в отдельный класс
+        String password = request.getParameter(PASSWORD);
         UserService userService = UserServiceImpl.getInstance();
 
         HttpSession session = request.getSession();
@@ -31,13 +32,15 @@ public class LoginCommand implements Command {
             if (optionalUser.isPresent()){
                 User user = optionalUser.get();
 
-                session.setAttribute("user_name", user.getName() + " " + user.getSurname());
+                session.setAttribute("user_name", user.getName());
+                session.setAttribute("user_surname", user.getSurname());
+                session.setAttribute("user_email", user.getEmail());
                 session.setAttribute("user_role", user.getRole().name().toUpperCase(Locale.ROOT));
-                session.setAttribute("current_page", HOME_PAGE);
+                session.setAttribute(CURRENT_PAGE, HOME_PAGE);
                 router = new Router(HOME_PAGE, Router.Type.FORWARD);
             }else{
                 request.setAttribute("login_msg", "incorrect login or password");
-                session.setAttribute("current_page", LOGIN_PAGE);
+                session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
                 router = new Router(LOGIN_PAGE, Router.Type.FORWARD);
             }
 

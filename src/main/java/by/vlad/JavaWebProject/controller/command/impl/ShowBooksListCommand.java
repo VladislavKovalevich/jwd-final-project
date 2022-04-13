@@ -1,7 +1,6 @@
 package by.vlad.JavaWebProject.controller.command.impl;
 
 import by.vlad.JavaWebProject.controller.command.Command;
-import by.vlad.JavaWebProject.controller.command.PagePath;
 import by.vlad.JavaWebProject.controller.command.Router;
 import by.vlad.JavaWebProject.entity.Book;
 import by.vlad.JavaWebProject.exception.CommandException;
@@ -13,7 +12,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
-import static by.vlad.JavaWebProject.controller.command.PagePath.SHOW_BOOKS_LIST;
+import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.BOOKS_LIST;
+import static by.vlad.JavaWebProject.controller.command.PagePath.SHOW_BOOKS_LIST_PAGE;
 
 public class ShowBooksListCommand implements Command {
     @Override
@@ -27,11 +27,10 @@ public class ShowBooksListCommand implements Command {
             bookList = bookService.getBooks();
             if (bookList.isEmpty()){
                 request.setAttribute("not_found_msg", "Books list is empty");
-                router = new Router(SHOW_BOOKS_LIST, Router.Type.FORWARD);
             }else{
-                request.setAttribute("books_list", bookList);
-                router = new Router(SHOW_BOOKS_LIST, Router.Type.FORWARD);
+                request.setAttribute(BOOKS_LIST, bookList);
             }
+            router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.FORWARD);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

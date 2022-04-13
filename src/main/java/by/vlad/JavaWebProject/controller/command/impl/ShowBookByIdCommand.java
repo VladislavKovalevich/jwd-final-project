@@ -15,12 +15,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-import static by.vlad.JavaWebProject.controller.command.PagePath.SHOW_BOOK_INFO;
+import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.JavaWebProject.controller.command.PagePath.SHOW_BOOK_INFO_PAGE;
 
 public class ShowBookByIdCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        long id = Long.parseLong(request.getParameter("book_id"));
+        long id = Long.parseLong(request.getParameter(BOOK_ID));
         Router router;
         BookService bookService = BookServiceImpl.getInstance();
         AuthorService authorService = AuthorServiceImpl.getInstance();
@@ -30,13 +31,13 @@ public class ShowBookByIdCommand implements Command {
             if (optionalBook.isPresent()){
                 Book book = optionalBook.get();
                 List<Author> authorList = authorService.getAuthorsByBookId(id);
-                request.setAttribute("authors", authorList);
-                request.setAttribute("book", book);
+                request.setAttribute(AUTHORS, authorList);
+                request.setAttribute(BOOK, book);
             }else {
                 request.setAttribute("book_info_not_found_msg", "Not found :)");
             }
 
-            router = new Router(SHOW_BOOK_INFO, Router.Type.FORWARD);
+            router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
 
         } catch (ServiceException e) {
             throw new CommandException(e);

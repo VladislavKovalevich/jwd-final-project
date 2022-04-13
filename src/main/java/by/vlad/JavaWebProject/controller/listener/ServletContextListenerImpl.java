@@ -11,17 +11,17 @@ import org.apache.logging.log4j.Logger;
 
 @WebListener
 public class ServletContextListenerImpl implements ServletContextListener {
-    //private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        //logger.debug("------init connection pool--------");
+        logger.debug("------init connection pool--------");
         ConnectionPool.getInstance();
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        //logger.debug("------destroy connection pool--------");
+        logger.debug("------destroy connection pool--------");
         ConnectionPool.getInstance().destroyPool();
     }
 }

@@ -2,7 +2,7 @@ package by.vlad.JavaWebProject.entity;
 
 public enum Role {
     GUEST,
-    USER,
+    CLIENT,
     LIBRARIAN,
     ADMIN;
 
