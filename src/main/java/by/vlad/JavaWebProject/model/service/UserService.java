@@ -11,8 +11,6 @@ public interface UserService {
 
     boolean createNewAccount(Map<String, String> userData) throws ServiceException;
 
-    Optional<User> findUserId(String userId) throws ServiceException;
-
     boolean updatePersonalData(Map<String, String> userData) throws ServiceException;
 
     boolean changePassword(Map<String, String> password) throws ServiceException;

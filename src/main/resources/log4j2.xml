@@ -27,7 +27,7 @@
             <AppenderRef ref="textFile"/>
         </Logger>
         <Root level="debug">
-            <AppenderRef ref="textFile"/>
+            <!--<AppenderRef ref="textFile"/>-->
             <AppenderRef ref="Console" level="trace"/>
         </Root>
     </Loggers>

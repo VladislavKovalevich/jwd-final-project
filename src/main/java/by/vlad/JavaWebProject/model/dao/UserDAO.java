@@ -11,4 +11,8 @@ public interface UserDAO {
     boolean createNewAccount(User userData) throws DaoException;
 
     boolean isEmailExists(String email) throws DaoException;
+
+    boolean updateUserAccountData(User user, String oldEmail) throws DaoException;
+
+    boolean changeAccountPassword(String email, String password, String newPassword) throws DaoException;
 }

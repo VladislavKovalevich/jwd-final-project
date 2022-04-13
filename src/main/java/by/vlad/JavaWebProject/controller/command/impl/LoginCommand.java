@@ -32,10 +32,11 @@ public class LoginCommand implements Command {
             if (optionalUser.isPresent()){
                 User user = optionalUser.get();
 
-                session.setAttribute("user_name", user.getName());
-                session.setAttribute("user_surname", user.getSurname());
-                session.setAttribute("user_email", user.getEmail());
-                session.setAttribute("user_role", user.getRole().name().toUpperCase(Locale.ROOT));
+                session.setAttribute(USER_NAME, user.getName());
+                session.setAttribute(USER_SURNAME, user.getSurname());
+                session.setAttribute(USER_EMAIL, user.getEmail());
+                session.setAttribute(USER_ROLE, user.getRole().name().toUpperCase(Locale.ROOT));
+                session.setAttribute(USER_BALANCE, user.getBalance());
                 session.setAttribute(CURRENT_PAGE, HOME_PAGE);
                 router = new Router(HOME_PAGE, Router.Type.FORWARD);
             }else{

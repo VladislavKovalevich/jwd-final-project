@@ -13,14 +13,24 @@
 <body>
     <form action="controller">
         <input type="hidden" name="command" value="create_new_account"/>
+        <br/>
+        <br/>
         Name:
         <input type="text" name="new_name" value="">
+        <br/>
+        <br/>
         Surname:
         <input type="text" name="new_surname" value="">
+        <br/>
+        <br/>
         Email:
         <input type="text" name="new_email" value="">
+        <br/>
+        <br/>
         Password:
         <input type="password" name="new_password" value="">
+        <br/>
+        <br/>
         Repeat Password
         <input type="password" name="repeated_pass" value="">
 

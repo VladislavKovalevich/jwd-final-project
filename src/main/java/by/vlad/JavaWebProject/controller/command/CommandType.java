@@ -1,20 +1,26 @@
 package by.vlad.JavaWebProject.controller.command;
 
 import by.vlad.JavaWebProject.controller.command.impl.*;
-import by.vlad.JavaWebProject.controller.command.impl.page_command.GoToCreateNewAccountPageCommand;
-import by.vlad.JavaWebProject.controller.command.impl.page_command.GoToLoginPageCommand;
-import by.vlad.JavaWebProject.controller.command.impl.page_command.GoToMainPageCommand;
+import by.vlad.JavaWebProject.controller.command.impl.client.ReplenishBalanceCommand;
+import by.vlad.JavaWebProject.controller.command.impl.client.page_command.GoToReplenishBalancePageCommand;
+import by.vlad.JavaWebProject.controller.command.impl.page_command.*;
 
 public enum CommandType {
     CREATE_NEW_ACCOUNT(new CreateNewAccountCommand()),
-    LOGIN(new LoginCommand()),
-    LOGOUT(new LogoutCommand()),
+    CHANGE_ACCOUNT_PASSWORD(new ChangeAccountPasswordCommand()),
+    DEFAULT(new DefaultCommand()),
     GO_TO_MAIN_PAGE(new GoToMainPageCommand()),
     GO_TO_LOGIN_PAGE(new GoToLoginPageCommand()),
     GO_TO_CREATE_NEW_ACCOUNT_PAGE(new GoToCreateNewAccountPageCommand()),
+    GO_TO_REPLENISH_BALANCE_PAGE(new GoToReplenishBalancePageCommand()),
+    GO_TO_UPDATE_ACCOUNT_DATA_PAGE(new GoToUpdateAccountDataPageCommand()),
+    GO_TO_CHANGE_PASSWORD_PAGE(new GoToChangeAccountPasswordPageCommand()),
+    LOGIN(new LoginCommand()),
+    LOGOUT(new LogoutCommand()),
+    REPLENISH_BALANCE(new ReplenishBalanceCommand()),
     SHOW_BOOKS_LIST(new ShowBooksListCommand()),
     SHOW_BOOK_INFO(new ShowBookByIdCommand()),
-    DEFAULT(new DefaultCommand());
+    UPDATE_USER_ACCOUNT_DATA(new UpdateUserAccountDataCommand());
 
     Command command;
 

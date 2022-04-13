@@ -90,18 +90,69 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findUserId(String userId) throws ServiceException {
-        return Optional.empty();
-    }
-
-    @Override
     public boolean updatePersonalData(Map<String, String> userData) throws ServiceException {
-        return false;
+        boolean isUpdated = false;
+
+        UserValidator userValidator = UserValidatorImpl.getInstance();
+
+        if (!userValidator.validateUpdatedAccountData(userData)){
+            return isUpdated;
+        }
+
+        String update_name = userData.get(UPDATE_NAME);
+        String update_surname = userData.get(UPDATE_SURNAME);
+        String update_email = userData.get(UPDATE_EMAIL);
+
+        UserDAO userDAO = UserDAOImpl.getInstance();
+
+        try {
+
+            if (!update_email.equals(userData.get("old_email"))) {
+                if (userDAO.isEmailExists(update_email)) {
+                    return isUpdated;
+                }
+            }
+
+            User user = User.getBuilder()
+                    .withName(update_name)
+                    .withSurname(update_surname)
+                    .withEmail(update_email)
+                    .buildUser();
+
+            isUpdated = userDAO.updateUserAccountData(user, userData.get("old_email"));
+
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+        return isUpdated;
     }
 
     @Override
-    public boolean changePassword(Map<String, String> password) throws ServiceException {
-        return false;
+    public boolean changePassword(Map<String, String> passwordData) throws ServiceException {
+        boolean isChanged = false;
+
+        UserValidator userValidator = UserValidatorImpl.getInstance();
+
+        if (!userValidator.validateNewPasswordData(passwordData)){
+            return isChanged;
+        }
+
+        String oldPassword = passwordData.get(PASSWORD);
+        String email = passwordData.get(USER_EMAIL);
+        String newPassword = passwordData.get(NEW_PASS);
+
+        UserDAO userDAO = UserDAOImpl.getInstance();
+
+        String encodedOldPass = PasswordEncoder.getInstance().getSHA1Hash(oldPassword);
+        String encodedNewPass = PasswordEncoder.getInstance().getSHA1Hash(newPassword);
+
+        try {
+            isChanged = userDAO.changeAccountPassword(email, encodedOldPass, encodedNewPass);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return isChanged;
     }
 
     @Override

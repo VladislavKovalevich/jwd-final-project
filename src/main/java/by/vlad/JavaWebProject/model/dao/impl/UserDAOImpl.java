@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
     public static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
-            "SELECT users.id, users.name, surname, email, password, roles.name FROM users, roles " +
+            "SELECT users.id, users.name, surname, email, password, balance, roles.name FROM users, roles " +
             "WHERE roles_id = roles.id AND email = ? AND password = ?";
 
     public static final String SELECT_USER_COUNT_BY_EMAIL =
@@ -22,6 +22,18 @@ public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
     public static final String INSERT_NEW_USER =
             "INSERT INTO users(`name`, `surname`, `email`, `password`) " +
             "VALUES (?, ?, ?, ?)";
+
+    public static final String UPDATE_USER_DATA =
+            "UPDATE users " +
+            "SET name = ?," +
+            "    surname = ?, " +
+            "    email = ? " +
+            "WHERE email = ?;  ";
+
+    public static final String UPDATE_USER_PASSWORD_DATA =
+            "UPDATE users " +
+            "SET password = ? " +
+            "WHERE email = ? AND password = ?";
 
     private static UserDAOImpl instance;
 
@@ -73,7 +85,8 @@ public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
                         .withSurname(resultSet.getString(3))
                         .withEmail(resultSet.getString(4))
                         .withPassword(resultSet.getString(5))
-                        .withRole(resultSet.getString(6))
+                        .withBalance(resultSet.getString(6))
+                        .withRole(resultSet.getString(7))
                         .buildUser();
 
                 user = Optional.of(curr);
@@ -129,5 +142,46 @@ public class UserDAOImpl extends BasicDAO<User> implements UserDAO {
         }
 
         return isExists;
+    }
+
+    @Override
+    public boolean updateUserAccountData(User user, String oldEmail) throws DaoException {
+        int row_count = 0;
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_DATA)){
+
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getSurname());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, oldEmail);
+
+            row_count = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return row_count == 1;
+    }
+
+    @Override
+    public boolean changeAccountPassword(String email, String password, String newPassword) throws DaoException {
+        int row_count;
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_PASSWORD_DATA)){
+
+            statement.setString(1, newPassword);
+            statement.setString(2, email);
+            statement.setString(3, password);
+
+            row_count = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return row_count == 1;
     }
 }

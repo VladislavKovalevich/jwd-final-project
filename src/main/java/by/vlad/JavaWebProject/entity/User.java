@@ -5,6 +5,7 @@ public class User extends AbstractEntity{
     private String surname;
     private String email;
     private String password;
+    private Double balance;
     private Role role;
 
     public User(long id) {
@@ -58,6 +59,14 @@ public class User extends AbstractEntity{
         this.role = role;
     }
 
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
     public class UserBuilder{
         public UserBuilder withId(long id){
             User.this.setId(id);
@@ -88,6 +97,12 @@ public class User extends AbstractEntity{
             User.this.setRole(Role.valueOf(role.toUpperCase()));
             return this;
         }
+
+        public UserBuilder withBalance(String balance){
+            User.this.setBalance(Double.valueOf(balance));
+            return this;
+        }
+
 
         public User buildUser(){
             return User.this;
