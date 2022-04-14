@@ -17,6 +17,9 @@
 <body>
     <hr>
     <div>
+        <br/>
+        Login: ${user_login}
+        <br/>
         Hello: ${user_name} ${user_surname}
         <br/>
         Email: ${user_email}

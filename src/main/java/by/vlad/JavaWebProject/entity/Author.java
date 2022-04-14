@@ -11,6 +11,12 @@ public class Author extends AbstractEntity{
         super(id);
     }
 
+    public Author(long id, String name, String surname) {
+        super(id);
+        this.name = name;
+        this.surname = surname;
+    }
+
     public static AuthorBuilder getAuthorBuilder(){
         return new Author().new AuthorBuilder();
     }

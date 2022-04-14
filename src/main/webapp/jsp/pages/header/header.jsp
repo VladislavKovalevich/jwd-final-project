@@ -39,7 +39,6 @@
                                 <li><a class="dropdown-item" href="${path}/controller?command=logout">Sign out</a></li>
                                 <li><a class="dropdown-item" href="${path}/controller?command=go_to_change_password_page">Change password</a></li>
                                 <li><a class="dropdown-item" href="${path}/controller?command=go_to_update_account_data_page">Update account data</a></li>
-                                <li><a class="dropdown-item" href="#">Balance: ${user_balance}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -67,7 +66,6 @@
                                     <li><a class="dropdown-item" href="${path}/controller?command=logout">Sign out</a></li>
                                     <li><a class="dropdown-item" href="${path}/controller?command=go_to_change_password_page">Change password</a></li>
                                     <li><a class="dropdown-item" href="${path}/controller?command=go_to_update_account_data_page">Update account data</a></li>
-                                    <li><a class="dropdown-item" href="#">Balance: ${user_balance}</a></li>
                                 </ul>
                             </li>
                         </ul>

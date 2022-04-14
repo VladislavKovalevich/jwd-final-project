@@ -46,6 +46,10 @@ public class CreateNewAccountCommand implements Command {
         newUserData.put(NEW_SURNAME, request.getParameter(NEW_SURNAME));
         newUserData.put(NEW_EMAIL, request.getParameter(NEW_EMAIL));
         newUserData.put(NEW_PASSWORD, request.getParameter(NEW_PASSWORD));
+        newUserData.put(NEW_LOGIN, request.getParameter(NEW_LOGIN));
+        newUserData.put(NEW_SERIAL_NUMBER, request.getParameter(NEW_SERIAL_NUMBER));
+        newUserData.put(NEW_PHONE_NUMBER, request.getParameter(NEW_PHONE_NUMBER));
+
         newUserData.put(REPEATED_PASSWORD, request.getParameter(REPEATED_PASSWORD));
 
         return newUserData;

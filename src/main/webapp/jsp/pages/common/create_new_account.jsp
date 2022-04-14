@@ -15,6 +15,10 @@
         <input type="hidden" name="command" value="create_new_account"/>
         <br/>
         <br/>
+        Login:
+        <input type="text" name="new_login" value="">
+        <br/>
+        <br/>
         Name:
         <input type="text" name="new_name" value="">
         <br/>
@@ -26,6 +30,13 @@
         Email:
         <input type="text" name="new_email" value="">
         <br/>
+        <br/>
+        Passport serial number:
+        <input type="text" name="new_serial_number" value="">
+        <br/>
+        <br/>
+        Mobile phone:
+        <input type="text" name="new_phone_number" value=""><br/>
         <br/>
         Password:
         <input type="password" name="new_password" value="">

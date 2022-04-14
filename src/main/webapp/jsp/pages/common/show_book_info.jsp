@@ -31,19 +31,22 @@
         <div class="col-7">
             <div class="px-lg-1 py-lg-1">
                 <br/>
-                <h3>${book.name}</h3>
-                Авторы:
+                <h3>${book.title}</h3>
+                Автор:
                 <h6>
-                    <c:forEach var="author" items="${authors}">
-                        ${author.name} ${author.surname};
-                    </c:forEach>
+                    ${book.author.name} ${book.author.surname}
                 </h6>
                 <div class="">
+                    <br/>
                     <p class="">Колличество копий: ${book.copiesNumber}</p>
                     <p class="">Колличество страниц: ${book.numberOfPages}</p>
-                    <p class="">Цена: ${book.price}</p>
+                    <br/>
                     <p class="">Жанр: ${book.genre}</p>
+                    <br/>
+                    <p class="">Издательский дом: ${book.publisher.name}</p>
                     <p class="">Год выпуска: ${book.releaseYear}</p>
+                    <br/>
+                    <p class="">Описание: ${book.description}</p>
                 </div>
             </div>
         </div>

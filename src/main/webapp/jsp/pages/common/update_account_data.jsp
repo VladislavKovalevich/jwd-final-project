@@ -19,12 +19,24 @@
         <input type="text" name="update_name" value="${user_name}">
         <br/>
         <br/>
+        Логин:
+        <input type="text" name="update_login" value="${user_login}">
+        <br/>
+        <br/>
         Фамилия:
         <input type="text" name="update_surname" value="${user_surname}">
         <br/>
         <br/>
         Email:
         <input type="text" name="update_email" value="${user_email}">
+        <br/>
+        <br/>
+        Номер паспорта:
+        <input type="text" name="update_serial_number" value="${user_serial_number}">
+        <br/>
+        <br/>
+        Номер телефона (моб.):
+        <input type="text" name="update_phone_number" value="${user_phone_number}">
         <br/>
         <br/>
         <input type="submit" name="update" value="update">

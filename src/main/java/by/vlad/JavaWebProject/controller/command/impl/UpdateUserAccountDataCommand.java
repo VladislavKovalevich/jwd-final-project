@@ -32,6 +32,10 @@ public class UpdateUserAccountDataCommand implements Command {
                 session.setAttribute(USER_NAME, userData.get(UPDATE_NAME));
                 session.setAttribute(USER_SURNAME, userData.get(UPDATE_SURNAME));
                 session.setAttribute(USER_EMAIL, userData.get(UPDATE_EMAIL));
+                session.setAttribute(USER_LOGIN, userData.get(USER_LOGIN));
+                session.setAttribute(USER_PHONE_NUMBER, userData.get(USER_PHONE_NUMBER));
+                session.setAttribute(USER_SERIAL_NUMBER, userData.get(USER_SERIAL_NUMBER));
+
                 router = new Router(HOME_PAGE, Router.Type.FORWARD);
             }else{
                 //не обновилось
@@ -51,6 +55,10 @@ public class UpdateUserAccountDataCommand implements Command {
         userData.put(UPDATE_NAME, request.getParameter(UPDATE_NAME));
         userData.put(UPDATE_SURNAME, request.getParameter(UPDATE_SURNAME));
         userData.put(UPDATE_EMAIL, request.getParameter(UPDATE_EMAIL));
+        userData.put(UPDATE_LOGIN, request.getParameter(UPDATE_LOGIN));
+        userData.put(UPDATE_PHONE_NUMBER, request.getParameter(UPDATE_PHONE_NUMBER));
+        userData.put(UPDATE_SERIAL_NUMBER, request.getParameter(UPDATE_SERIAL_NUMBER));
+
         userData.put("old_email", String.valueOf(request.getSession().getAttribute(USER_EMAIL)));
 
         return userData;

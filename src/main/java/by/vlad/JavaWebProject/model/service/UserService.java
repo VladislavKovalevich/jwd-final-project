@@ -14,6 +14,4 @@ public interface UserService {
     boolean updatePersonalData(Map<String, String> userData) throws ServiceException;
 
     boolean changePassword(Map<String, String> password) throws ServiceException;
-
-    boolean replenishBalance(Map<String, String> balanceData) throws ServiceException;
 }

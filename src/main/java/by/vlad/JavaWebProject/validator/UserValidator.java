@@ -9,7 +9,11 @@ public interface UserValidator {
 
     boolean validateName(String name);
 
-    boolean validateAmount(String amount);
+    boolean validatePassportSerialNumber(String amount);
+
+    boolean validateLogin(String login);
+
+    boolean validatePhoneNumber(String phoneNumber);
 
     boolean validateCreatedAccountData(Map<String, String> newUserData);
 

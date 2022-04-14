@@ -35,9 +35,13 @@ public class LoginCommand implements Command {
                 session.setAttribute(USER_NAME, user.getName());
                 session.setAttribute(USER_SURNAME, user.getSurname());
                 session.setAttribute(USER_EMAIL, user.getEmail());
+                session.setAttribute(USER_PHONE_NUMBER, user.getMobilePhone());
+                session.setAttribute(USER_SERIAL_NUMBER, user.getPassportSerialNumber());
                 session.setAttribute(USER_ROLE, user.getRole().name().toUpperCase(Locale.ROOT));
-                session.setAttribute(USER_BALANCE, user.getBalance());
+                session.setAttribute(USER_LOGIN, user.getLogin());
+
                 session.setAttribute(CURRENT_PAGE, HOME_PAGE);
+
                 router = new Router(HOME_PAGE, Router.Type.FORWARD);
             }else{
                 request.setAttribute("login_msg", "incorrect login or password");

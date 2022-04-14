@@ -2,17 +2,13 @@ package by.vlad.JavaWebProject.controller.command.impl;
 
 import by.vlad.JavaWebProject.controller.command.Command;
 import by.vlad.JavaWebProject.controller.command.Router;
-import by.vlad.JavaWebProject.entity.Author;
 import by.vlad.JavaWebProject.entity.Book;
 import by.vlad.JavaWebProject.exception.CommandException;
 import by.vlad.JavaWebProject.exception.ServiceException;
-import by.vlad.JavaWebProject.model.service.AuthorService;
 import by.vlad.JavaWebProject.model.service.BookService;
-import by.vlad.JavaWebProject.model.service.impl.AuthorServiceImpl;
 import by.vlad.JavaWebProject.model.service.impl.BookServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.util.List;
 import java.util.Optional;
 
 import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.*;
@@ -24,14 +20,11 @@ public class ShowBookByIdCommand implements Command {
         long id = Long.parseLong(request.getParameter(BOOK_ID));
         Router router;
         BookService bookService = BookServiceImpl.getInstance();
-        AuthorService authorService = AuthorServiceImpl.getInstance();
 
         try {
             Optional<Book> optionalBook = bookService.getBookById(id);
             if (optionalBook.isPresent()){
                 Book book = optionalBook.get();
-                List<Author> authorList = authorService.getAuthorsByBookId(id);
-                request.setAttribute(AUTHORS, authorList);
                 request.setAttribute(BOOK, book);
             }else {
                 request.setAttribute("book_info_not_found_msg", "Not found :)");

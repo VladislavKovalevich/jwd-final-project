@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.JavaWebProject.controller.command.AttributeAndParamsNames.UPDATE_LOGIN;
 
 public class UserServiceImpl implements UserService {
     private static UserServiceImpl instance;
@@ -62,6 +63,9 @@ public class UserServiceImpl implements UserService {
         String name = userData.get(NEW_NAME);
         String surname = userData.get(NEW_SURNAME);
         String email = userData.get(NEW_EMAIL);
+        String serialNumber = userData.get(NEW_SERIAL_NUMBER);
+        String login = userData.get(NEW_LOGIN);
+        String phoneNumber = userData.get(NEW_PHONE_NUMBER);
         String password = userData.get(NEW_PASSWORD);
 
         UserDAO userDAO = UserDAOImpl.getInstance();
@@ -78,6 +82,9 @@ public class UserServiceImpl implements UserService {
                     .withName(name)
                     .withSurname(surname)
                     .withEmail(email)
+                    .withLogin(login)
+                    .withMobilePhone(phoneNumber)
+                    .withPassportSerialNumber(serialNumber)
                     .withPassword(encryptedPass)
                     .buildUser();
 
@@ -99,24 +106,30 @@ public class UserServiceImpl implements UserService {
             return isUpdated;
         }
 
-        String update_name = userData.get(UPDATE_NAME);
-        String update_surname = userData.get(UPDATE_SURNAME);
-        String update_email = userData.get(UPDATE_EMAIL);
+        String updateName = userData.get(UPDATE_NAME);
+        String updateSurname = userData.get(UPDATE_SURNAME);
+        String updateEmail = userData.get(UPDATE_EMAIL);
+        String updateSerialNumber = userData.get(UPDATE_SERIAL_NUMBER);
+        String updateLogin = userData.get(UPDATE_LOGIN);
+        String updatePhoneNumber = userData.get(UPDATE_PHONE_NUMBER);
 
         UserDAO userDAO = UserDAOImpl.getInstance();
 
         try {
 
-            if (!update_email.equals(userData.get("old_email"))) {
-                if (userDAO.isEmailExists(update_email)) {
+            if (!updateEmail.equals(userData.get("old_email"))) {
+                if (userDAO.isEmailExists(updateEmail)) {
                     return isUpdated;
                 }
             }
 
             User user = User.getBuilder()
-                    .withName(update_name)
-                    .withSurname(update_surname)
-                    .withEmail(update_email)
+                    .withName(updateName)
+                    .withSurname(updateSurname)
+                    .withEmail(updateEmail)
+                    .withPassportSerialNumber(updateSerialNumber)
+                    .withMobilePhone(updatePhoneNumber)
+                    .withLogin(updateLogin)
                     .buildUser();
 
             isUpdated = userDAO.updateUserAccountData(user, userData.get("old_email"));
@@ -153,10 +166,5 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(e);
         }
         return isChanged;
-    }
-
-    @Override
-    public boolean replenishBalance(Map<String, String> balanceData) throws ServiceException {
-        return false;
     }
 }

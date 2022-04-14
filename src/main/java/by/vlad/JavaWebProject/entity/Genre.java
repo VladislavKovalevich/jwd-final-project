@@ -6,12 +6,11 @@ public enum Genre {
     DETECTIVES,
     LOVE_NOVELS,
     THRILLERS,
-    HORROR,
     ADVENTURES,
     PROSE,
     POETRY;
 
-    public static Genre getRole(String genreStr){
+    public static Genre getGenre(String genreStr){
         return Genre.valueOf(genreStr.toUpperCase());
     }
 }

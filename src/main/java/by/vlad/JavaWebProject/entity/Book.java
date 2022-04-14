@@ -3,12 +3,14 @@ package by.vlad.JavaWebProject.entity;
 import java.time.Year;
 
 public class Book extends AbstractEntity{
-    private String name;
+    private String title;
     private int copiesNumber;
     private Year releaseYear;
     private int numberOfPages;
-    private double price;
+    private String description;
     private Genre genre;
+    private Author author;
+    private Publisher publisher;
 
     public Book(long id) {
         super(id);
@@ -22,12 +24,12 @@ public class Book extends AbstractEntity{
         return new Book().new BookBuilder();
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getCopiesNumber() {
@@ -54,12 +56,12 @@ public class Book extends AbstractEntity{
         this.numberOfPages = numberOfPages;
     }
 
-    public double getPrice() {
-        return price;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Genre getGenre() {
@@ -70,6 +72,22 @@ public class Book extends AbstractEntity{
         this.genre = genre;
     }
 
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
+
     public class BookBuilder {
         public BookBuilder withId(long id){
             Book.this.setId(id);
@@ -77,7 +95,7 @@ public class Book extends AbstractEntity{
         }
 
         public BookBuilder withName(String name){
-            Book.this.setName(name);
+            Book.this.setTitle(name);
             return this;
         }
 
@@ -97,12 +115,22 @@ public class Book extends AbstractEntity{
         }
 
         public BookBuilder withGenre(String genre){
-            Book.this.setGenre(Genre.getRole(genre));
+            Book.this.setGenre(Genre.getGenre(genre));
             return this;
         }
 
-        public BookBuilder withPrice(double price){
-            Book.this.setPrice(price);
+        public BookBuilder withDescription(String description){
+            Book.this.setDescription(description);
+            return this;
+        }
+
+        public BookBuilder withAuthor(Author author){
+            Book.this.setAuthor(author);
+            return this;
+        }
+
+        public BookBuilder withPublisher(Publisher publisher){
+            Book.this.setPublisher(publisher);
             return this;
         }
 

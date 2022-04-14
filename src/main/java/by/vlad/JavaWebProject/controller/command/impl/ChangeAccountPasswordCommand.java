@@ -18,8 +18,8 @@ import static by.vlad.JavaWebProject.controller.command.PagePath.HOME_PAGE;
 public class ChangeAccountPasswordCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Map<String, String> passwordData = new HashMap<>();
-        Router router = null;
+        Map<String, String> passwordData;
+        Router router;
 
         passwordData = initPasswordData(request);
 

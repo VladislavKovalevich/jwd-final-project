@@ -49,11 +49,11 @@
                                 <div class="card-body">
                                     <a class=" card-title link-secondary text-decoration-none"
                                        href="${path}/controller?command=show_book_info&book_id=${book.id}">
-                                            ${book.id}. ${book.name}
+                                            ${book.id}. ${book.title}
                                     </a>
-                                    <p class="card-text">Колличество копий: ${book.copiesNumber}</p>
-                                    <p class="card-text">Колличество страниц: ${book.numberOfPages}</p>
-                                    <p class="card-text">Цена: ${book.price}</p>
+                                    <p class="card-text">Автор: ${book.author.name} ${book.author.surname}</p>
+                                    <p class="card-text">Жанр: ${book.genre}</p>
+                                    <p class="card-text">Издательский центр: ${book.publisher.name}</p>
                                 </div>
                             </div>
                         </div>
