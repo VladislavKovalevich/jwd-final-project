@@ -23,10 +23,6 @@ public class Controller extends HttpServlet {
 
         String commandStr = request.getParameter("command");//TODO параметр в константу
 
-        if (commandStr.equals("logout")){
-            System.out.println("logout");
-        }
-
         Command command = CommandType.define(commandStr);
         Router router;
 

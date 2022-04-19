@@ -5,6 +5,7 @@ public class AttributeAndParamsNames {
     }
 
     //session attributes names
+    public static final String LOCALE = "locale";
     public static final String USER_LOGIN = "user_login";
     public static final String USER_NAME = "user_name";
     public static final String USER_SURNAME = "user_surname";
@@ -15,6 +16,8 @@ public class AttributeAndParamsNames {
     public static final String CURRENT_PAGE = "current_page";
 
     //request params names
+    public static final String LANGUAGE = "language";
+
     public static final String BOOK_ID = "book_id";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "pass";

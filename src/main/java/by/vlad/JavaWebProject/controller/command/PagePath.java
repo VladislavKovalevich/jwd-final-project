@@ -1,6 +1,7 @@
 package by.vlad.JavaWebProject.controller.command;
 
 public class PagePath {
+    public static final String INDEX_PAGE = "index.jsp";
     public static final String MAIN_PAGE = "jsp/pages/main.jsp";
     public static final String LOGIN_PAGE = "jsp/pages/login.jsp";
     public static final String HOME_PAGE = "jsp/pages/home.jsp";

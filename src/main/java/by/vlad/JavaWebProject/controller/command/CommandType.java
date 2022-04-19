@@ -6,8 +6,9 @@ import by.vlad.JavaWebProject.controller.command.impl.client.page_command.GoToRe
 import by.vlad.JavaWebProject.controller.command.impl.page_command.*;
 
 public enum CommandType {
-    CREATE_NEW_ACCOUNT(new CreateNewAccountCommand()),
     CHANGE_ACCOUNT_PASSWORD(new ChangeAccountPasswordCommand()),
+    CHANGE_LOCAL(new ChangeLocalCommand()),
+    CREATE_NEW_ACCOUNT(new CreateNewAccountCommand()),
     DEFAULT(new DefaultCommand()),
     GO_TO_MAIN_PAGE(new GoToMainPageCommand()),
     GO_TO_LOGIN_PAGE(new GoToLoginPageCommand()),
