@@ -32,4 +32,4 @@
 
 ***
 ## Database Schema
-![image](https://user-images.githubusercontent.com/48410663/163284775-a4504641-af21-453e-bb46-52d3658c3280.png)
+![image](https://user-images.githubusercontent.com/48410663/163931456-40c9df58-cf83-4245-8007-c64b231bf4b2.png)
