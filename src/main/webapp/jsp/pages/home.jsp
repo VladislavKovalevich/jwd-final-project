@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <fmt:setLocale value="${locale}" scope="session"/>
-<fmt:setBundle basename="properties.pagecontent"/>
+<fmt:setBundle basename="config.pagecontent"/>
 
 <fmt:message key="message.welcome" var="welcome"/>
 <fmt:message key="title.home" var="home"/>

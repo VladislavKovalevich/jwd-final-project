@@ -6,8 +6,9 @@
 <c:set var="role" value="${user_role}" scope="page"/>
 
 <fmt:setLocale value="${locale}" scope="session"/>
-<fmt:setBundle basename="properties.pagecontent" var="rb"/>
+<fmt:setBundle basename="config.pagecontent"/>
 
+<fmt:message key="label.library" var="library"/>
 <fmt:message key="dropdown_menu_title.guest" var="guest_title"/>
 <fmt:message key="reference.sign_in" var="sign_in"/>
 <fmt:message key="reference.sign_out" var="sign_out"/>
@@ -27,7 +28,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <span class="navbar-brand"><fmt:message key="label.library" bundle="${rb}"/></span>
+            <span class="navbar-brand">${library}</span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -103,9 +104,7 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <c:if test="${guest_title eq 'Guest'}">
-                                        Guest
-                                    </c:if>
+                                    ${guest_title}
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="${path}/controller?command=go_to_create_new_account_page">${create_new_account}</a></li>
