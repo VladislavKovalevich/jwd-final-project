@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface BookDao {
     List<Book> getBooks() throws DaoException;
+
     Optional<Book> getBookById(long id) throws DaoException;
 }

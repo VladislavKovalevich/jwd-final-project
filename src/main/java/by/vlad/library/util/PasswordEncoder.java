@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class PasswordEncoder {
     private static PasswordEncoder instance;
+    private static final String ALGORITHM_NAME = "sha-1";
 
     private PasswordEncoder(){
     }
@@ -26,7 +27,7 @@ public class PasswordEncoder {
 
         try {
 
-            messageDigest = MessageDigest.getInstance("sha-1");
+            messageDigest = MessageDigest.getInstance(ALGORITHM_NAME);
             bytes = messageDigest.digest(password.getBytes());
 
             for (byte b: bytes) {
@@ -34,7 +35,7 @@ public class PasswordEncoder {
             }
 
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            //logg
         }
 
         return stringHashCode.toString();

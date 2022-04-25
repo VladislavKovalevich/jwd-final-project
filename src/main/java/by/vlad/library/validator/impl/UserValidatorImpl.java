@@ -162,21 +162,21 @@ public class UserValidatorImpl implements UserValidator {
         boolean isValid = true;
 
         String oldPassword = passwordData.get(PASSWORD_FORM);
-        String newPassword = passwordData.get(PASSWORD_FORM);
-        String repeatNewPass = passwordData.get(PASSWORD_FORM);
+        String newPassword = passwordData.get(NEW_PASSWORD_FORM);
+        String repeatNewPass = passwordData.get(NEW_REPEAT_PASSWORD_FORM);
 
         if (!validatePassword(oldPassword)){
-            passwordData.put("error_msg", "invalid old password format");
+            passwordData.put(WRONG_PASSWORD_FORM, "invalid old password format");
             isValid = false;
         }
 
         if (!validatePassword(newPassword)){
-            passwordData.put("error_msg", "invalid new password format");
+            passwordData.put(WRONG_NEW_PASSWORD_FORM, "invalid new password format");
             isValid = false;
         }
 
         if (!newPassword.equals(repeatNewPass)){
-            passwordData.put("error_msg", "new password and repeated isn't equals");
+            passwordData.put(WRONG_NEW_REPEAT_PASSWORD_FORM, "new password and repeated isn't equals");
             isValid = false;
         }
 

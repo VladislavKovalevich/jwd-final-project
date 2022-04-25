@@ -161,8 +161,8 @@ public class UserServiceImpl implements UserService {
         }
 
         String oldPassword = passwordData.get(PASSWORD_FORM);
-        String email = passwordData.get(EMAIL_FORM);
-        String newPassword = passwordData.get(PASSWORD_FORM);
+        String email = passwordData.get(USER_EMAIL);
+        String newPassword = passwordData.get(NEW_PASSWORD_FORM);
 
         UserDao userDao = UserDaoImpl.getInstance();
 
@@ -171,6 +171,9 @@ public class UserServiceImpl implements UserService {
 
         try {
             isChanged = userDao.changeAccountPassword(email, encodedOldPass, encodedNewPass);
+            if (!isChanged){
+                passwordData.put(WRONG_PASSWORD_FORM, "invalid password value");
+            }
         } catch (DaoException e) {
             throw new ServiceException(e);
         }

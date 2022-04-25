@@ -32,8 +32,6 @@ public class UpdateUserAccountDataCommand implements Command {
             if(service.updatePersonalData(userFormData)){
                 session.removeAttribute(USER_FORM_DATA);
 
-                session.setAttribute(USER_NAME, userFormData.get(NAME_FORM));
-                session.setAttribute(USER_SURNAME, userFormData.get(SURNAME_FORM));
                 session.setAttribute(USER_EMAIL, userFormData.get(EMAIL_FORM));
                 session.setAttribute(USER_LOGIN, userFormData.get(LOGIN_FORM));
 

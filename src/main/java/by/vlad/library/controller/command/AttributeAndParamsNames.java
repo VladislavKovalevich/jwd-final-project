@@ -16,6 +16,8 @@ public class AttributeAndParamsNames {
     public static final String WRONG_EMAIL_FORM = "wrong_email_form";
     public static final String WRONG_PASSWORD_FORM = "wrong_pass_form";
     public static final String WRONG_REPEAT_PASSWORD_FORM = "wrong_repeat_pass_form";
+    public static final String WRONG_NEW_PASSWORD_FORM = "wrong_new_pass_form";
+    public static final String WRONG_NEW_REPEAT_PASSWORD_FORM = "wrong_new_repeat_pass_form";
 
     public static final String USER_FORM_DATA = "user_form_data";
 
@@ -27,6 +29,9 @@ public class AttributeAndParamsNames {
     public static final String EMAIL_FORM = "email_form";
     public static final String PASSWORD_FORM = "pass_form";
     public static final String REPEAT_PASSWORD_FORM = "repeat_pass_form";
+    public static final String NEW_PASSWORD_FORM = "new_pass_form";
+    public static final String NEW_REPEAT_PASSWORD_FORM = "new_repeat_pass_form";
+
 
     public static final String LOCALE = "locale";
 
@@ -51,6 +56,8 @@ public class AttributeAndParamsNames {
     public static final String PHONE_NUMBER = "phone_number";
     public static final String SERIAL_NUMBER = "serial_number";
     public static final String REPEATED_PASSWORD = "repeated_pass";
+    public static final String NEW_PASSWORD = "new_pass";
+    public static final String NEW_REPEAT_PASSWORD = "new_repeat_pass";
 
     //request attributes names
     public static final String USER_NAME = "user_name";

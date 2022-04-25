@@ -98,7 +98,7 @@
 
             <div class="col-md-4">
                 <label for="validationCustom06" class="form-label">Password</label>
-                <input type="text" class="form-control" name="pass"
+                <input type="password" class="form-control" name="pass"
                        value="${user_form_data['pass_form']}" id="validationCustom06" required>
                 <div class="red-color">
                     <c:if test="${not empty user_form_data['wrong_pass_form']}">
@@ -109,7 +109,7 @@
 
             <div class="col-md-4">
                 <label for="validationCustom07" class="form-label">Repeated password</label>
-                <input type="text" class="form-control" name="repeated_pass"
+                <input type="password" class="form-control" name="repeated_pass"
                        value="${user_form_data['repeat_pass_form']}" id="validationCustom07" required>
                 <div class="red-color">
                     <c:if test="${not empty user_form_data['wrong_repeat_pass_form']}">
