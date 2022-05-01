@@ -3,7 +3,7 @@ package by.vlad.library.entity;
 public enum Genre {
     FANTASY,
     FICTION,
-    DETECTIVES,
+    DETECTIVE,
     LOVE_NOVELS,
     THRILLERS,
     ADVENTURES,

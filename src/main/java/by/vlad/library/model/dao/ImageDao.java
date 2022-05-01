@@ -1,4 +1,6 @@
 package by.vlad.library.model.dao;
 
-public interface ImageDao {
+import by.vlad.library.entity.Image;
+
+public interface ImageDao extends BasicDao<Image> {
 }

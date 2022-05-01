@@ -51,8 +51,18 @@
             </div>
         </div>
     </div>
+    <c:if test="${user_role eq 'ADMIN'}">
+        <a href="${path}/controller?command=go_to_update_book_data_page">Update book</a>
+    </c:if>
+
+    <c:if test="${user_role eq 'CLIENT'}">
+        <a href="#">Add book to order</a>
+    </c:if>
 </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 <footer>
     <jsp:include page="../footer/footer.jsp"/>
 </footer>

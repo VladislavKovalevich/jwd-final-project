@@ -66,14 +66,22 @@
 
                     <c:when test="${role eq 'ADMIN'}">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Book menu
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
+                                        <a class="nav-link" href="${path}/controller?command=go_to_add_new_book_page">Add new book</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Orders list</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Users list</a>
+                                <a class="nav-link" href="${path}/controller?command=show_users_list">Users list</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -1,6 +1,5 @@
 package by.vlad.library.model.dao.impl;
 
-import by.vlad.library.model.dao.BasicDao;
 import by.vlad.library.model.dao.UserDao;
 import by.vlad.library.entity.User;
 import by.vlad.library.exception.DaoException;
@@ -10,7 +9,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoImpl extends BasicDao<User> implements UserDao {
+public class UserDaoImpl implements UserDao {
     private static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
             "SELECT users.id, users.name, surname, email, password, login, passport_serial_number, mobile_phone, roles.name FROM users, roles " +
             "WHERE roles_id = roles.id AND email = ? AND password = ?";

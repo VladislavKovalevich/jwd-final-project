@@ -5,7 +5,7 @@ import by.vlad.library.exception.DaoException;
 
 import java.util.Optional;
 
-public interface UserDao {
+public interface UserDao extends BasicDao<User> {
     Optional<User> authenticate(String login, String password) throws DaoException;
 
     boolean createNewAccount(User userData) throws DaoException;

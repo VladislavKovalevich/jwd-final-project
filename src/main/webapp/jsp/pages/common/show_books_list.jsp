@@ -33,7 +33,6 @@
         </div>
     </div>
     <div class="col-10">
-
         <c:choose>
             <c:when test="${empty books_list}">
                 ${not_found_msg}
@@ -61,6 +60,22 @@
                 </div>
             </c:otherwise>
         </c:choose>
+
+        <div class="row">
+            <div class="col-md-3">
+                <c:if test="${pagination_data['current_page_num'] > 1}">
+                    <a href="${path}/controller?command=show_books_list&page_direction=prev">prev</a>
+                </c:if>
+            </div>
+            <div class="col-md-2">
+                ${pagination_data['current_page_num']}
+            </div>
+            <div class="col-md-3">
+                <c:if test="${pagination_data['current_page_num'] < pagination_data['pages_number']}">
+                    <a href="${path}/controller?command=show_books_list&page_direction=next">next</a>
+                </c:if>
+            </div>
+        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"

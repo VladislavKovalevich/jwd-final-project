@@ -10,6 +10,7 @@ import by.vlad.library.util.PasswordEncoder;
 import by.vlad.library.validator.UserValidator;
 import by.vlad.library.validator.impl.UserValidatorImpl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -193,5 +194,10 @@ public class UserServiceImpl implements UserService {
         }
 
         return optionalUser;
+    }
+
+    @Override
+    public List<User> getAllUsers() throws ServiceException {
+        return null;
     }
 }

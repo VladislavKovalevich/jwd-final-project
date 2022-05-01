@@ -1,4 +1,6 @@
 package by.vlad.library.model.dao;
 
-public interface OrderDao {
+import by.vlad.library.entity.Order;
+
+public interface OrderDao extends BasicDao<Order> {
 }

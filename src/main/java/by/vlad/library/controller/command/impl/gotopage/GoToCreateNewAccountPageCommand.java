@@ -19,8 +19,10 @@ public class GoToCreateNewAccountPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Map<String,String> userFormData = new HashMap<>();
+
         session.setAttribute(USER_FORM_DATA, userFormData);
         session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));
+
         return new Router(CREATE_NEW_ACCOUNT_PAGE, Router.Type.FORWARD);
     }
 }

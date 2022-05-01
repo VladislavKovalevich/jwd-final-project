@@ -1,11 +1,11 @@
-package by.vlad.library.controller.command.impl.admin;
+package by.vlad.library.controller.command.impl.admin.gotopage;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class ChangeUserRoleCommand implements Command {
+public class GoToUpdateBookDataPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         return null;

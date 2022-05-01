@@ -1,12 +1,12 @@
-package by.vlad.library.controller.command.impl;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
-import by.vlad.library.entity.Book;
+import by.vlad.library.entity.User;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
-import by.vlad.library.model.service.BookService;
-import by.vlad.library.model.service.impl.BookServiceImpl;
+import by.vlad.library.model.service.UserService;
+import by.vlad.library.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -15,35 +15,37 @@ import java.util.List;
 import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
-import static by.vlad.library.controller.command.PagePath.SHOW_BOOKS_LIST_PAGE;
+import static by.vlad.library.controller.command.PagePath.USERS_LIST_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
-public class ShowBooksListCommand implements Command {
+public class ShowUsersListCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        BookService bookService = BookServiceImpl.getInstance();
+        UserService userService = UserServiceImpl.getInstance();
         HttpSession session = request.getSession();
-        List<Book> bookList;
-        Router router;
 
-        Map<String, Long> paginationData = (Map<String, Long>) session.getAttribute(PAGINATION_DATA);
-        String direction = request.getParameter(PAGE_DIRECTION);
+        Map<String, String> paginationData = (Map<String, String>) session.getAttribute(PAGINATION_DATA);
 
         if (paginationData == null){
             paginationData = new HashMap<>();
         }
 
+        List<User> users;
+        Router router;
+
         try {
-            bookList = bookService.getAllBooks(direction, paginationData);
+            users = userService.getAllUsers();
 
+            session.setAttribute(CURRENT_PAGE, USERS_LIST_PAGE);
             session.setAttribute(PAGINATION_DATA, paginationData);
-            session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
+            request.setAttribute(USERS_LIST, users);
 
-            request.setAttribute(BOOKS_LIST, bookList);
-
-            router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.FORWARD);
+            router = new Router(USERS_LIST_PAGE, FORWARD);
         } catch (ServiceException e) {
+            //logg
             throw new CommandException(e);
         }
+
 
         return router;
     }
