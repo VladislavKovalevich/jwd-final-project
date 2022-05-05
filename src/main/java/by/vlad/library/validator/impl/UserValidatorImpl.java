@@ -7,9 +7,9 @@ import java.util.Map;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class UserValidatorImpl implements UserValidator {
-    private static final String EMAIL_EXPRESSION = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
-    private static final String PASSWORD_EXPRESSION = "^([a-z0-9A-Z]){9,16}$";
-    private static final String NAME_AND_SURNAME_EXPRESSION = "^([а-яa-zA-ZА-Я]){3,30}$";
+    private static final String EMAIL_EXPRESSION = "^(\\w+\\.)*\\w+@\\w+(\\.\\w+)*\\.[\\p{Lower}]{2,6}$";
+    private static final String PASSWORD_EXPRESSION = "^([\\w]){9,16}$";
+    private static final String NAME_AND_SURNAME_EXPRESSION = "^([\\w]){3,30}$";
     private static final String LOGIN_REGEX = "^[\\w-]{3,25}$";
     private static final String SERIAL_NUMBER_REGEX = "^[\\p{Upper}]{2}[\\d]{7}$";
     private static final String MOBILE_PHONE_REGEX = "^[+]?[\\d]{7,15}$";

@@ -109,7 +109,7 @@ public class ConnectionPool {
                 Thread.currentThread().interrupt();
             }
         }else{
-            throw new RuntimeException("unknown connection");
+            // logger
         }
     }
 

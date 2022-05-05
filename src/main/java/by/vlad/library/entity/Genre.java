@@ -11,6 +11,13 @@ public enum Genre {
     POETRY;
 
     public static Genre getGenre(String genreStr){
-        return Genre.valueOf(genreStr.toUpperCase());
+        Genre genre;
+        try{
+            genre = Genre.valueOf(genreStr.toUpperCase());
+        }catch (IllegalArgumentException | NullPointerException e){
+            //logger
+            genre = FICTION;
+        }
+        return genre;
     }
 }

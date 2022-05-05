@@ -6,6 +6,13 @@ public enum Role {
     ADMIN;
 
     public static Role getRole(String roleStr){
-        return Role.valueOf(roleStr.toUpperCase());
+        Role role;
+        try {
+            role = valueOf(roleStr.toUpperCase());
+        }catch (IllegalArgumentException | NullPointerException e){
+            role = GUEST;
+            //logger
+        }
+        return role;
     }
 }

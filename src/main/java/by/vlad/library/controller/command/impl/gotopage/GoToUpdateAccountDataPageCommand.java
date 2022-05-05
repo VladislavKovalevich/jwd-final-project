@@ -7,7 +7,7 @@ import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.UserService;
 import by.vlad.library.model.service.impl.UserServiceImpl;
-import by.vlad.library.util.CurrentPageExtractor;
+import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

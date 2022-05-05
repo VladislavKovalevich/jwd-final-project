@@ -10,7 +10,7 @@ import by.vlad.library.model.service.AuthorService;
 import by.vlad.library.model.service.PublisherService;
 import by.vlad.library.model.service.impl.AuthorServiceImpl;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
-import by.vlad.library.util.CurrentPageExtractor;
+import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

@@ -1,11 +1,10 @@
 package by.vlad.library.util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class PasswordEncoder {
     private static PasswordEncoder instance;
-    private static final String ALGORITHM_NAME = "sha-1";
+    private final String SALT = "5e!6&T#";
 
     private PasswordEncoder(){
     }
@@ -18,26 +17,7 @@ public class PasswordEncoder {
         return instance;
     }
 
-    public String getSHA1Hash(String password){
-        StringBuilder stringHashCode;
-        byte[] bytes;
-        MessageDigest messageDigest;
-
-        stringHashCode = new StringBuilder();
-
-        try {
-
-            messageDigest = MessageDigest.getInstance(ALGORITHM_NAME);
-            bytes = messageDigest.digest(password.getBytes());
-
-            for (byte b: bytes) {
-                stringHashCode.append(String.format("%02x", b));
-            }
-
-        } catch (NoSuchAlgorithmException e) {
-            //logg
-        }
-
-        return stringHashCode.toString();
+    public String encode(String password){
+        return DigestUtils.md5Hex(password + SALT);
     }
 }

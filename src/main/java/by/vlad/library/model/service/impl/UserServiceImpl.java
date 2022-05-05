@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserDao userDao = UserDaoImpl.getInstance();
-        password = PasswordEncoder.getInstance().getSHA1Hash(password);
+        password = PasswordEncoder.getInstance().encode(password);
 
         try {
             optionalUser = userDao.authenticate(login, password);
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
                 return isCreated;
             }
 
-            String encryptedPass = PasswordEncoder.getInstance().getSHA1Hash(password);
+            String encryptedPass = PasswordEncoder.getInstance().encode(password);
 
             User newUser = User.getBuilder()
                     .withName(name)
@@ -167,8 +167,8 @@ public class UserServiceImpl implements UserService {
 
         UserDao userDao = UserDaoImpl.getInstance();
 
-        String encodedOldPass = PasswordEncoder.getInstance().getSHA1Hash(oldPassword);
-        String encodedNewPass = PasswordEncoder.getInstance().getSHA1Hash(newPassword);
+        String encodedOldPass = PasswordEncoder.getInstance().encode(oldPassword);
+        String encodedNewPass = PasswordEncoder.getInstance().encode(newPassword);
 
         try {
             isChanged = userDao.changeAccountPassword(email, encodedOldPass, encodedNewPass);

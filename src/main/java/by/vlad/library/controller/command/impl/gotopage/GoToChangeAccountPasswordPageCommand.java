@@ -3,7 +3,7 @@ package by.vlad.library.controller.command.impl.gotopage;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
-import by.vlad.library.util.CurrentPageExtractor;
+import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

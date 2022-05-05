@@ -26,9 +26,9 @@ public class ShowBookByIdCommand implements Command {
             if (optionalBook.isPresent()){
                 Book book = optionalBook.get();
                 request.setAttribute(BOOK, book);
-            }else {
-                request.setAttribute("book_info_not_found_msg", "Not found :)");//заменить на константы
-            }
+            }/*else {
+                request.setAttribute("book_info_not_found_msg", "Not found");//заменить на константы
+            }*/
 
             router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
 
