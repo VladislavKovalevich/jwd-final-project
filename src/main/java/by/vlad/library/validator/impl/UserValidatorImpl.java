@@ -7,9 +7,9 @@ import java.util.Map;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class UserValidatorImpl implements UserValidator {
-    private static final String EMAIL_EXPRESSION = "^(\\w+\\.)*\\w+@\\w+(\\.\\w+)*\\.[\\p{Lower}]{2,6}$";
-    private static final String PASSWORD_EXPRESSION = "^([\\w]){9,16}$";
-    private static final String NAME_AND_SURNAME_EXPRESSION = "^([\\w]){3,30}$";
+    private static final String EMAIL_REGEX = "^(\\w+\\.)*\\w+@\\w+(\\.\\w+)*\\.[\\p{Lower}]{2,6}$";
+    private static final String PASSWORD_REGEX = "^([\\w]){9,16}$";
+    private static final String NAME_AND_SURNAME_REGEX = "^([а-яА-ЯЁё]){3,30}$";
     private static final String LOGIN_REGEX = "^[\\w-]{3,25}$";
     private static final String SERIAL_NUMBER_REGEX = "^[\\p{Upper}]{2}[\\d]{7}$";
     private static final String MOBILE_PHONE_REGEX = "^[+]?[\\d]{7,15}$";
@@ -29,17 +29,17 @@ public class UserValidatorImpl implements UserValidator {
 
     @Override
     public boolean validatePassword(String password) {
-        return password.matches(PASSWORD_EXPRESSION);
+        return password.matches(PASSWORD_REGEX);
     }
 
     @Override
     public boolean validateEmail(String email) {
-        return email.matches(EMAIL_EXPRESSION);
+        return email.matches(EMAIL_REGEX);
     }
 
     @Override
     public boolean validateName(String name) {
-        return name.matches(NAME_AND_SURNAME_EXPRESSION);
+        return name.matches(NAME_AND_SURNAME_REGEX);
     }
 
     @Override

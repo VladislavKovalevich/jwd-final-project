@@ -12,7 +12,9 @@ public class PagePath {
     public static final String CHANGE_ACCOUNT_DATA_PAGE ="jsp/pages/common/update_account_data.jsp";
     public static final String USERS_LIST_PAGE = "jsp/pages/admin/users_list.jsp";
     public static final String ADD_NEW_BOOK_PAGE = "jsp/pages/admin/add_book.jsp";
-    public static final String UPDATE_BOOK_DATA_PAGE = "jsp/pages/admin/update_book_data.jsp";
+    public static final String UPDATE_BOOK_DATA_PAGE = "jsp/pages/admin/update_book.jsp";
+    public static final String ADD_BOOK_COMPONENTS_PAGE = "jsp/pages/admin/add_book_components.jsp";
+    public static final String UPDATE_BOOK_COMPONENTS_PAGE = "jsp/pages/admin/update_book_components.jsp";
 
     private PagePath(){}
 }

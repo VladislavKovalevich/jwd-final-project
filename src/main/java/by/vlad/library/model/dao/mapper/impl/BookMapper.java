@@ -2,6 +2,7 @@ package by.vlad.library.model.dao.mapper.impl;
 
 import by.vlad.library.entity.Author;
 import by.vlad.library.entity.Book;
+import by.vlad.library.entity.Genre;
 import by.vlad.library.entity.Publisher;
 import by.vlad.library.model.dao.mapper.Mapper;
 
@@ -39,12 +40,16 @@ public class BookMapper implements Mapper<Book> {
                     resultSet.getString(7)
             );
 
+            Genre genre = new Genre(
+                    resultSet.getString(8)
+            );
+
             Book book = Book.getBuilder()
                     .withId(resultSet.getLong(1))
-                    .withName(resultSet.getString(2))
+                    .withTitle(resultSet.getString(2))
                     .withAuthor(author)
                     .withPublisher(publisher)
-                    .withGenre(resultSet.getString(8))
+                    .withGenre(genre)
                     .buildBook();
 
             books.add(book);

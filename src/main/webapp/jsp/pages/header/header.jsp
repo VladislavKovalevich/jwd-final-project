@@ -74,6 +74,8 @@
                                     <li class="nav-item">
                                         <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
                                         <a class="nav-link" href="${path}/controller?command=go_to_add_new_book_page">Add new book</a>
+                                        <a class="nav-link" href="${path}/controller?command=go_to_add_book_components_page">Add book components</a>
+                                        <a class="nav-link" href="${path}/controller?command=go_to_update_book_components_page">Update book components</a>
                                     </li>
                                 </ul>
                             </li>

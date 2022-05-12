@@ -79,9 +79,9 @@ public class Author extends AbstractEntity{
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("Author{" + "name='").append(name).append('\'')
-                .append(", surname='").append(surname).append('\'')
-                .append('}')
+                .append(super.getId()).append('|')
+                .append(name).append('|')
+                .append(surname)
                 .toString();
     }
 }

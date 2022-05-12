@@ -32,16 +32,13 @@
             <div class="px-lg-1 py-lg-1">
                 <br/>
                 <h3>${book.title}</h3>
-                Автор:
-                <h6>
-                    ${book.author.name} ${book.author.surname}
-                </h6>
+                <h6>Автор: ${book.author.name} ${book.author.surname} </h6>
                 <div class="">
                     <br/>
                     <p class="">Колличество копий: ${book.copiesNumber}</p>
                     <p class="">Колличество страниц: ${book.numberOfPages}</p>
                     <br/>
-                    <p class="">Жанр: ${book.genre}</p>
+                    <p class="">Жанр: ${book.genre.name}</p>
                     <br/>
                     <p class="">Издательский дом: ${book.publisher.name}</p>
                     <p class="">Год выпуска: ${book.releaseYear}</p>
@@ -52,7 +49,7 @@
         </div>
     </div>
     <c:if test="${user_role eq 'ADMIN'}">
-        <a href="${path}/controller?command=go_to_update_book_data_page">Update book</a>
+        <a href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">Update book</a>
     </c:if>
 
     <c:if test="${user_role eq 'CLIENT'}">

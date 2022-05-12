@@ -13,5 +13,5 @@ public interface BookValidator {
 
     boolean validateDescription(String description);
 
-    boolean validateCreatedBook(Map<String, String> bookData);
+    boolean validateBookData(Map<String, String> bookData);
 }

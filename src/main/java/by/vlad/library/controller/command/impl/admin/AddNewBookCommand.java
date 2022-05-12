@@ -49,28 +49,19 @@ public class AddNewBookCommand implements Command {
     private void fillUserDataMap(HttpServletRequest request, Map<String, String> booksMap) {
         booksMap.put(TITLE_FORM, request.getParameter(TITLE));
         booksMap.put(AUTHOR_FORM, request.getParameter(AUTHOR));
+        booksMap.put(PUBLISHER_FORM, request.getParameter(PUBLISHER));
+        booksMap.put(GENRE_FORM, request.getParameter(GENRE));
         booksMap.put(COPIES_NUMBER_FORM, request.getParameter(COPIES_NUMBER));
         booksMap.put(RELEASE_YEAR_FORM, request.getParameter(RELEASE_YEAR));
         booksMap.put(PAGES_COUNT_FORM, request.getParameter(PAGES_COUNT));
-        booksMap.put(PUBLISHER_FORM, request.getParameter(PUBLISHER));
         booksMap.put(DESCRIPTION_FORM, request.getParameter(DESCRIPTION));
-        booksMap.put(NEW_PUBLISHER_CHECK_FORM, request.getParameter(NEW_PUBLISHER_CHECK));
-        booksMap.put(NEW_AUTHOR_CHECK_FORM, request.getParameter(NEW_AUTHOR_CHECK));
-        booksMap.put(NEW_AUTHOR_NAME_FORM, request.getParameter(NEW_AUTHOR_NAME));
-        booksMap.put(NEW_AUTHOR_SURNAME_FORM, request.getParameter(NEW_AUTHOR_SURNAME));
-        booksMap.put(NEW_PUBLISHER_NAME_FORM, request.getParameter(NEW_PUBLISHER_NAME));
     }
 
     private void cleanWrongMessages(Map<String, String> booksMap) {
         booksMap.remove(WRONG_TITLE_FORM);
-        booksMap.remove(WRONG_AUTHOR_FORM);
-        booksMap.remove(WRONG_PUBLISHER_FORM);
         booksMap.remove(WRONG_COPIES_NUMBER_FORM);
         booksMap.remove(WRONG_RELEASE_YEAR_FORM);
         booksMap.remove(WRONG_PAGES_COUNT_FORM);
         booksMap.remove(WRONG_DESCRIPTION_FORM);
-        booksMap.remove(WRONG_NEW_AUTHOR_NAME_FORM);
-        booksMap.remove(WRONG_NEW_AUTHOR_SURNAME_FORM);
-        booksMap.remove(WRONG_NEW_PUBLISHER_NAME_FORM);
     }
 }

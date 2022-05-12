@@ -11,8 +11,6 @@ import by.vlad.library.validator.impl.PublisherValidatorImpl;
 import java.util.List;
 import java.util.Map;
 
-import static by.vlad.library.controller.command.AttributeAndParamsNames.NEW_PUBLISHER_NAME_FORM;
-
 public class PublisherServiceImpl implements PublisherService {
     private static PublisherServiceImpl instance;
 
@@ -42,7 +40,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public boolean addNewPublisher(Map<String, String> mapData) throws ServiceException {
         boolean isCreated = false;
-        String newPublisherName = mapData.get(NEW_PUBLISHER_NAME_FORM);
+        String newPublisherName = mapData.get("NEW_PUBLISHER_NAME_FORM");
         PublisherValidator publisherValidator = PublisherValidatorImpl.getInstance();
 
         if (!publisherValidator.validatePublisherName(newPublisherName)){

@@ -46,7 +46,6 @@ public class ShowUsersListCommand implements Command {
             throw new CommandException(e);
         }
 
-
         return router;
     }
 }

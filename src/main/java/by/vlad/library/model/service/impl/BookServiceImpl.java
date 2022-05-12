@@ -1,16 +1,18 @@
 package by.vlad.library.model.service.impl;
 
+import by.vlad.library.entity.Author;
 import by.vlad.library.entity.Book;
+import by.vlad.library.entity.Genre;
+import by.vlad.library.entity.Publisher;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.dao.BookDao;
 import by.vlad.library.model.dao.impl.BookDaoImpl;
-import by.vlad.library.model.service.AuthorService;
 import by.vlad.library.model.service.BookService;
-import by.vlad.library.model.service.PublisherService;
 import by.vlad.library.validator.BookValidator;
 import by.vlad.library.validator.impl.BookValidatorImpl;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +20,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class BookServiceImpl implements BookService {
-    private static final String CREATE_NEW_ENTITY_MARKER = "on";
+    private static final String BOOK_COMPONENTS_DELIMITER = "\\|";
     private static final String PREV_PAGE = "prev";
     private static final String NEXT_PAGE = "next";
 
@@ -100,40 +102,86 @@ public class BookServiceImpl implements BookService {
     public boolean addBook(Map<String, String> bookData) throws ServiceException {
         boolean isAdded = false;
 
-        String isNewAuthorCheck = bookData.get(NEW_AUTHOR_CHECK_FORM);
-        String isNewPublisherCheck = bookData.get(NEW_PUBLISHER_CHECK_FORM);
-
-        if (isNewAuthorCheck.equals(CREATE_NEW_ENTITY_MARKER)){
-            AuthorService authorService = AuthorServiceImpl.getInstance();
-
-            if (!authorService.createNewAuthor(bookData)){
-                return isAdded;
-            }
-        }
-
-        if (isNewPublisherCheck.equals(CREATE_NEW_ENTITY_MARKER)){
-            PublisherService publisherService = PublisherServiceImpl.getInstance();
-
-            if (!publisherService.addNewPublisher(bookData)){
-                return isAdded;
-            }
-        }
-
         BookValidator bookValidator = BookValidatorImpl.getInstance();
 
-        if (!bookValidator.validateCreatedBook(bookData)){
+        if (!bookValidator.validateBookData(bookData)){
             return isAdded;
         }
 
-        Book book = new Book();
+        String title = bookData.get(TITLE_FORM);
+        long author_id = Long.parseLong(bookData.get(AUTHOR_FORM));
+        long publisher_id = Long.parseLong(bookData.get(PUBLISHER_FORM));
+        long genre_id = Long.parseLong(bookData.get(GENRE_FORM));
+        String description = bookData.get(DESCRIPTION_FORM);
+        int pages_count = Integer.parseInt(bookData.get(PAGES_COUNT_FORM));
+        int copies_number = Integer.parseInt(bookData.get(COPIES_NUMBER_FORM));
+        int year = Integer.parseInt(bookData.get(RELEASE_YEAR_FORM));
+
         BookDao bookDao = BookDaoImpl.getInstance();
 
         try {
+
+            Book book = Book.getBuilder()
+                    .withTitle(title)
+                    .withGenre(new Genre(genre_id))
+                    .withAuthor(new Author(author_id))
+                    .withPublisher(new Publisher(publisher_id))
+                    .withCopiesNumber(copies_number)
+                    .withDescription(description)
+                    .withNumberOfPages(pages_count)
+                    .withReleaseYear(Year.of(year))
+                    .buildBook();
+
             isAdded = bookDao.addNewBook(book);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
 
         return isAdded;
+    }
+
+    @Override
+    public Optional<Book> updateBook(Map<String, String> bookData) throws ServiceException {
+        Optional<Book> optionalBook = Optional.empty();
+
+        BookValidator bookValidator = BookValidatorImpl.getInstance();
+
+        if (!bookValidator.validateBookData(bookData)){
+            return optionalBook;
+        }
+
+        String[] authorParams = bookData.get(AUTHOR_FORM).split(BOOK_COMPONENTS_DELIMITER);
+        String[] genreParams = bookData.get(GENRE_FORM).split(BOOK_COMPONENTS_DELIMITER);
+        String[] publisherParams = bookData.get(PUBLISHER_FORM).split(BOOK_COMPONENTS_DELIMITER);
+
+        long bookId = Long.parseLong(bookData.get(BOOK_ID));
+        String title = bookData.get(TITLE_FORM);
+        String description = bookData.get(DESCRIPTION_FORM);
+        int pages_count = Integer.parseInt(bookData.get(PAGES_COUNT_FORM));
+        int copies_number = Integer.parseInt(bookData.get(COPIES_NUMBER_FORM));
+        int year = Integer.parseInt(bookData.get(RELEASE_YEAR_FORM));
+
+        BookDao bookDao = BookDaoImpl.getInstance();
+
+        try {
+
+            Book book = Book.getBuilder()
+                    .withId(bookId)
+                    .withTitle(title)
+                    .withGenre(new Genre(Long.parseLong(genreParams[0]), genreParams[1]))
+                    .withAuthor(new Author(Long.parseLong(authorParams[0]), authorParams[1], authorParams[2]))
+                    .withPublisher(new Publisher(Long.parseLong(publisherParams[0]), publisherParams[1]))
+                    .withCopiesNumber(copies_number)
+                    .withDescription(description)
+                    .withNumberOfPages(pages_count)
+                    .withReleaseYear(Year.of(year))
+                    .buildBook();
+
+            optionalBook = bookDao.updateBook(book);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+        return optionalBook;
     }
 }

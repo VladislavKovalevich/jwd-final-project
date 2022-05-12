@@ -15,6 +15,14 @@ import java.util.List;
 public class PublisherDaoImpl implements PublisherDao {
     private static final String SELECT_ALL_PUBLISHER = "SELECT * FROM book_publishers";
 
+    private static final String INSERT_AUTHOR =
+            "INSERT INTO book_publishers (`name`) VALUES (?)";
+
+    private static final String UPDATE_AUTHOR =
+            "UPDATE book_publishers " +
+                    "SET name = ? " +
+                    "WHERE id = ?";
+
     private static PublisherDaoImpl instance;
 
     public static PublisherDaoImpl getInstance(){
@@ -28,7 +36,19 @@ public class PublisherDaoImpl implements PublisherDao {
 
     @Override
     public boolean insert(Publisher publisher) throws DaoException {
-        return false;
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)){
+
+            statement.setString(1, publisher.getName());
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
     }
 
     @Override
@@ -68,6 +88,11 @@ public class PublisherDaoImpl implements PublisherDao {
 
     @Override
     public boolean isPublisherExists(String publisherName) {
+        return false;
+    }
+
+    @Override
+    public boolean updatePublisher(String publisherName) throws DaoException {
         return false;
     }
 }

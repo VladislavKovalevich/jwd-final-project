@@ -3,7 +3,6 @@ package by.vlad.library.model.dao.impl;
 import by.vlad.library.entity.Author;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.AuthorDao;
-import by.vlad.library.model.dao.BasicDao;
 import by.vlad.library.model.pool.ConnectionPool;
 
 import java.sql.Connection;
@@ -16,6 +15,15 @@ import java.util.List;
 public class AuthorDaoImpl implements AuthorDao {
     private static final String SELECT_ALL_AUTHORS =
             "SELECT * FROM authors";
+
+    private static final String INSERT_AUTHOR =
+            "INSERT INTO authors (`name`, `surname`) VALUES (?, ?)";
+
+    private static final String UPDATE_AUTHOR =
+            "UPDATE authors " +
+                    "SET name = ?," +
+                    "    surname = ? " +
+                    "WHERE id = ?";
 
     private static AuthorDaoImpl instance;
 
@@ -65,11 +73,17 @@ public class AuthorDaoImpl implements AuthorDao {
         }catch (SQLException e){
             throw new DaoException(e);
         }
+
         return authors;
     }
 
     @Override
     public boolean isAuthorExists(String name, String surname) {
+        return false;
+    }
+
+    @Override
+    public boolean updateAuthor(String name, String surname) throws DaoException {
         return false;
     }
 }

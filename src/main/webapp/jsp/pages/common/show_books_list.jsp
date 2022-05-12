@@ -51,7 +51,7 @@
                                             ${book.id}. ${book.title}
                                     </a>
                                     <p class="card-text">Автор: ${book.author.name} ${book.author.surname}</p>
-                                    <p class="card-text">Жанр: ${book.genre}</p>
+                                    <p class="card-text">Жанр: ${book.genre.name}</p>
                                     <p class="card-text">Издательский центр: ${book.publisher.name}</p>
                                 </div>
                             </div>

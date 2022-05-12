@@ -4,7 +4,6 @@ import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.CommandType;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
-import by.vlad.library.model.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +18,6 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.COMMAND
 public class Controller extends HttpServlet {
 
     public void init() {
-        ConnectionPool.getInstance();
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -59,6 +57,5 @@ public class Controller extends HttpServlet {
     }
 
     public void destroy() {
-        ConnectionPool.getInstance().destroyPool();
     }
 }

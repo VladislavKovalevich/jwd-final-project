@@ -2,6 +2,7 @@ package by.vlad.library.model.dao.impl;
 
 import by.vlad.library.entity.Author;
 import by.vlad.library.entity.Book;
+import by.vlad.library.entity.Genre;
 import by.vlad.library.entity.Publisher;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.BookDao;
@@ -58,7 +59,23 @@ public class BookDaoImpl implements BookDao {
                     "JOIN library.genres ON books.genres_id = genres.id " +
                     "WHERE books.id>? ORDER BY books.id LIMIT ?";
 
-    private static final long DEFAULT_ITEM_PER_PAGE = 4;
+    private static final String INSERT_NEW_BOOK =
+            "INSERT INTO books (`title`, `copies_number`, `publish_year`, `number_of_pages`, `description`, `authors_id`, `book_publishers_id`, `genres_id`) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+    private static final String UPDATE_BOOK =
+            "UPDATE books " +
+                    "SET title = ?," +
+                    "    copies_number = ?, " +
+                    "    publish_year = ?, " +
+                    "    number_of_pages = ?, " +
+                    "    description = ?, " +
+                    "    authors_id = ? ," +
+                    "    book_publishers_id = ? ," +
+                    "    genres_id = ? " +
+                    "WHERE id = ?;  ";
+
+    private static final long DEFAULT_ITEM_COUNT_PER_PAGE = 4;
 
     private static BookDaoImpl instance;
 
@@ -134,14 +151,18 @@ public class BookDaoImpl implements BookDao {
                         resultSet.getString(12)
                 );
 
+                Genre genre = new Genre(
+                        resultSet.getString(10)
+                );
+
                 Book book = Book.getBuilder()
                         .withId(resultSet.getLong(1))
-                        .withName(resultSet.getString(2))
+                        .withTitle(resultSet.getString(2))
                         .withCopiesNumber(resultSet.getInt(3))
                         .withReleaseYear(Year.of(resultSet.getInt(4)))
                         .withNumberOfPages(resultSet.getInt(5))
                         .withDescription(resultSet.getString(6))
-                        .withGenre(resultSet.getString(10))
+                        .withGenre(genre)
                         .withPublisher(publisher)
                         .withAuthor(author)
                         .buildBook();
@@ -174,9 +195,9 @@ public class BookDaoImpl implements BookDao {
             throw new DaoException(e);
         }
 
-        result = (int) (booksNumber / DEFAULT_ITEM_PER_PAGE);
+        result = (int) (booksNumber / DEFAULT_ITEM_COUNT_PER_PAGE);
 
-        if (booksNumber % DEFAULT_ITEM_PER_PAGE != 0){
+        if (booksNumber % DEFAULT_ITEM_COUNT_PER_PAGE != 0){
             result++;
         }
 
@@ -191,8 +212,7 @@ public class BookDaoImpl implements BookDao {
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NEXT_BOOKS)){
 
-            preparedStatement.setLong(1, lastId);
-            preparedStatement.setLong(2, DEFAULT_ITEM_PER_PAGE);
+            preparePaginationDbRequest(preparedStatement, lastId);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 books = mapper.map(resultSet);
@@ -213,8 +233,7 @@ public class BookDaoImpl implements BookDao {
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PREVIOUS_BOOKS)){
 
-            preparedStatement.setLong(1, firstId);
-            preparedStatement.setLong(2, DEFAULT_ITEM_PER_PAGE);
+            preparePaginationDbRequest(preparedStatement, firstId);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 books = mapper.map(resultSet);
@@ -229,6 +248,71 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean addNewBook(Book book) throws DaoException {
-        return false;
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_NEW_BOOK)){
+
+            prepareInsertUpdateDbRequest(statement, book, false);
+
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
+    }
+
+    @Override
+    public Optional<Book> updateBook(Book book) throws DaoException {
+        Optional<Book> bookOptional;
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_BOOK)) {
+
+            prepareInsertUpdateDbRequest(statement, book, true);
+
+            rows = statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+
+        if (rows == 1){
+            bookOptional = Optional.ofNullable(book);
+        }else{
+            bookOptional = Optional.empty();
+        }
+
+        return bookOptional;
+    }
+
+    private void prepareInsertUpdateDbRequest(PreparedStatement statement, Book book, boolean isUpdate){
+        try {
+            if (isUpdate){
+                statement.setLong(9, book.getId());
+            }
+
+            statement.setString(1, book.getTitle());
+            statement.setInt(2, book.getCopiesNumber());
+            statement.setInt(3, book.getReleaseYear().getValue());
+            statement.setInt(4, book.getNumberOfPages());
+            statement.setString(5, book.getDescription());
+            statement.setLong(6, book.getAuthor().getId());
+            statement.setLong(7, book.getPublisher().getId());
+            statement.setLong(8, book.getGenre().getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void preparePaginationDbRequest(PreparedStatement statement, long id){
+        try {
+            statement.setLong(1, id);
+            statement.setLong(2, BookDaoImpl.DEFAULT_ITEM_COUNT_PER_PAGE);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

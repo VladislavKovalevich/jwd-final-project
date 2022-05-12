@@ -1,6 +1,5 @@
 package by.vlad.library.controller.command.impl;
 
-import by.vlad.library.controller.command.AttributeAndParamsNames;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;

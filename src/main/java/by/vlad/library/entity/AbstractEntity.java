@@ -36,9 +36,8 @@ public abstract class AbstractEntity {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("AbstractEntity{" + "id=")
                 .append(id)
-                .append('}')
+                .append('|')
                 .toString();
     }
 }

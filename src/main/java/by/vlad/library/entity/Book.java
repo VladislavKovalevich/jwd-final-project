@@ -94,7 +94,7 @@ public class Book extends AbstractEntity{
             return this;
         }
 
-        public BookBuilder withName(String name){
+        public BookBuilder withTitle(String name){
             Book.this.setTitle(name);
             return this;
         }
@@ -114,8 +114,8 @@ public class Book extends AbstractEntity{
             return this;
         }
 
-        public BookBuilder withGenre(String genre){
-            Book.this.setGenre(Genre.getGenre(genre));
+        public BookBuilder withGenre(Genre genre){
+            Book.this.setGenre(genre);
             return this;
         }
 

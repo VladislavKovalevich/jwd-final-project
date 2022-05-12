@@ -18,4 +18,6 @@ public interface BookDao extends BasicDao<Book> {
     List<Book> findPrevBooks(long firstId) throws DaoException;
 
     boolean addNewBook(Book book) throws DaoException;
+
+    Optional<Book> updateBook(Book book) throws DaoException;
 }

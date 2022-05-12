@@ -41,8 +41,8 @@ public class Publisher extends AbstractEntity{
     @Override
     public String toString() {
         return new StringBuilder()
-                .append("BookPublisher{" + "name='").append(name).append('\'')
-                .append('}')
+                .append(super.getId()).append('|')
+                .append(name)
                 .toString();
     }
 }

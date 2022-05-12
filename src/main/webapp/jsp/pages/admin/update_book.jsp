@@ -14,7 +14,7 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Add book</title>
+    <title>Update book</title>
     <style>
         .red-color {
             color: red;
@@ -30,7 +30,7 @@
     <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
         <h3 class="py-md-3">Add new book</h3>
         <form class="row g-3 needs-validation" novalidate>
-            <input type="hidden" name="command" value="add_new_book">
+            <input type="hidden" name="command" value="update_book_data">
 
             <div class="col-md-4">
                 <label for="validationCustom01" class="form-label">Title</label>
@@ -50,11 +50,11 @@
                 <select name="author">
                     <c:forEach var="a" items="${authors}">
                         <c:choose>
-                            <c:when test="${a.id eq book_form_data['author_form']}">
-                                <option value="${a.id}" selected>${a.name} ${a.surname}</option>
+                            <c:when test="${a eq book_form_data['author_form']}">
+                                <option value="${a.id}|${a.name}|${a.surname}" selected>${a.name} ${a.surname}</option>
                             </c:when>
                             <c:otherwise>
-                                <option value="${a.id}">${a.name} ${a.surname}</option>
+                                <option value="${a.id}|${a.name}|${a.surname}">${a.name} ${a.surname}</option>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
@@ -66,11 +66,11 @@
                 <select name="publisher">
                     <c:forEach var="p" items="${publishers}">
                         <c:choose>
-                            <c:when test="${p.id eq book_form_data['publisher_form']}">
-                                <option value="${p.id}" selected>${p.name}</option>
+                            <c:when test="${p eq book_form_data['publisher_form']}">
+                                <option value="${p.id}|${p.name}" selected>${p.name}</option>
                             </c:when>
                             <c:otherwise>
-                                <option value="${p.id}">${p.name}</option>
+                                <option value="${p.id}|${p.name}">${p.name}</option>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
@@ -82,11 +82,11 @@
                 <select name="genre">
                     <c:forEach var="g" items="${genres}">
                         <c:choose>
-                            <c:when test="${g.id eq book_form_data['genre_form']}">
-                                <option value="${g.id}" selected>${g.name}</option>
+                            <c:when test="${g eq book_form_data['genre_form']}">
+                                <option value="${g.id}|${g.name}" selected>${g.name}</option>
                             </c:when>
                             <c:otherwise>
-                                <option value="${g.id}">${g.name}</option>
+                                <option value="${g.id}|${g.name}">${g.name}</option>
                             </c:otherwise>
                         </c:choose>
                     </c:forEach>
@@ -143,7 +143,7 @@
             </div>
 
             <div class="col-12">
-                <button class="btn btn-primary" type="submit">Submit form</button>
+                <button class="btn btn-primary" type="submit">Update book</button>
             </div>
         </form>
     </div>

@@ -11,9 +11,6 @@ import by.vlad.library.validator.impl.AuthorValidatorImpl;
 import java.util.List;
 import java.util.Map;
 
-import static by.vlad.library.controller.command.AttributeAndParamsNames.NEW_AUTHOR_NAME_FORM;
-import static by.vlad.library.controller.command.AttributeAndParamsNames.NEW_AUTHOR_SURNAME_FORM;
-
 public class AuthorServiceImpl implements AuthorService {
     private static AuthorServiceImpl instance;
 
@@ -44,8 +41,8 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean createNewAuthor(Map<String, String> mapData) throws ServiceException {
         boolean isCreated = false;
         AuthorValidator authorValidator = AuthorValidatorImpl.getInstance();
-        String authorName = mapData.get(NEW_AUTHOR_NAME_FORM);
-        String authorSurname = mapData.get(NEW_AUTHOR_SURNAME_FORM);
+        String authorName = mapData.get("NEW_AUTHOR_NAME_FORM");
+        String authorSurname = mapData.get("NEW_AUTHOR_SURNAME_FORM");
 
         if (!authorValidator.validateName(authorName) || !authorValidator.validateName(authorSurname)){
             return isCreated;
