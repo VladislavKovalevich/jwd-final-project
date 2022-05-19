@@ -11,9 +11,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static by.vlad.library.model.dao.ColumnName.*;
 
 public class GenreDaoImpl implements GenreDao {
-    private static final String SELECT_ALL_GENRES = "SELECT * FROM genres";
+    private static final String SELECT_ALL_GENRES = "SELECT genres.id, genres.name FROM genres";
+
+    private static final String IS_GENRE_EXISTS =
+            "SELECT COUNT(*) as count_col FROM genres " +
+                    "WHERE name = ?";
+
+    private static final String INSERT_GENRE =
+            "INSERT INTO genres (`name`) VALUES (?)";
+
+    private static final String UPDATE_GENRE =
+            "UPDATE genres " +
+                    "SET name = ? " +
+                    "WHERE id = ?";
 
     private static GenreDaoImpl instance;
 
@@ -29,7 +44,18 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public boolean insert(Genre genre) throws DaoException {
-        return false;
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_GENRE)){
+
+            statement.setString(1, genre.getName());
+
+            rows = statement.executeUpdate();
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+        return rows == 1;
     }
 
     @Override
@@ -52,8 +78,8 @@ public class GenreDaoImpl implements GenreDao {
             try(ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
                     Genre genre = new Genre();
-                    genre.setId(resultSet.getLong(1));
-                    genre.setName(resultSet.getString(2));
+                    genre.setId(resultSet.getLong(GENRES_ID_COL));
+                    genre.setName(resultSet.getString(GENRES_NAME_COL));
 
                     genres.add(genre);
                 }
@@ -68,11 +94,49 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public boolean isGenreExists(String name) throws DaoException {
-        return false;
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(IS_GENRE_EXISTS)) {
+
+            statement.setString(1, name);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    rows = resultSet.getInt(COUNT_COL);
+                }else{
+                    rows = 1;
+                }
+            }
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
     }
 
     @Override
-    public boolean updateGenre(String name) throws DaoException {
-        return false;
+    public Optional<Genre> updateGenre(Genre genre) throws DaoException {
+        Optional<Genre> optionalGenre;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_GENRE)){
+
+            statement.setString(1, genre.getName());
+            statement.setLong(2, genre.getId());
+
+            int rows = statement.executeUpdate();
+
+            if (rows == 1){
+                optionalGenre = Optional.of(genre);
+            }else{
+                optionalGenre = Optional.empty();
+            }
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return optionalGenre;
     }
 }

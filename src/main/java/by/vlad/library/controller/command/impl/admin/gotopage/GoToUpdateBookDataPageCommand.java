@@ -63,9 +63,9 @@ public class GoToUpdateBookDataPageCommand implements Command {
                 booksData.put(COPIES_NUMBER_FORM, String.valueOf(book.getCopiesNumber()));
                 booksData.put(PAGES_COUNT_FORM, String.valueOf(book.getNumberOfPages()));
                 booksData.put(RELEASE_YEAR_FORM, String.valueOf(book.getReleaseYear()));
-                booksData.put(AUTHOR_FORM, String.valueOf(book.getAuthor().getId()));
-                booksData.put(PUBLISHER_FORM, String.valueOf(book.getPublisher().getId()));
-                booksData.put(GENRE_FORM, String.valueOf(book.getGenre().getId()));
+                booksData.put(AUTHOR_FORM, String.valueOf(book.getAuthor()));
+                booksData.put(PUBLISHER_FORM, String.valueOf(book.getPublisher()));
+                booksData.put(GENRE_FORM, String.valueOf(book.getGenre()));
             }
         } catch (ServiceException e) {
             throw new CommandException(e);

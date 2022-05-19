@@ -1,12 +1,10 @@
 package by.vlad.library.controller.command;
 
 import by.vlad.library.controller.command.impl.*;
-import by.vlad.library.controller.command.impl.admin.AddNewBookCommand;
+import by.vlad.library.controller.command.impl.admin.book.AddNewBookCommand;
 import by.vlad.library.controller.command.impl.admin.ShowUsersListCommand;
-import by.vlad.library.controller.command.impl.admin.UpdateBookDataCommand;
-import by.vlad.library.controller.command.impl.admin.book_components.AddNewAuthorCommand;
-import by.vlad.library.controller.command.impl.admin.book_components.AddNewGenreCommand;
-import by.vlad.library.controller.command.impl.admin.book_components.AddNewPublisherCommand;
+import by.vlad.library.controller.command.impl.admin.book.UpdateBookDataCommand;
+import by.vlad.library.controller.command.impl.admin.book.book_components.*;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddBookComponentsPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddNewBookPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookComponentsPageCommand;
@@ -36,6 +34,9 @@ public enum CommandType {
     SHOW_BOOKS_LIST(new ShowBooksListCommand()),
     SHOW_BOOK_INFO(new ShowBookByIdCommand()),
     SHOW_USERS_LIST(new ShowUsersListCommand()),
+    UPDATE_AUTHOR(new UpdateAuthorCommand()),
+    UPDATE_PUBLISHER(new UpdatePublisherCommand()),
+    UPDATE_GENRE(new UpdateGenreCommand()),
     UPDATE_BOOK_DATA(new UpdateBookDataCommand()),
     UPDATE_USER_ACCOUNT_DATA(new UpdateUserAccountDataCommand());
 

@@ -71,42 +71,42 @@ public class UserValidatorImpl implements UserValidator {
         String repeated_pass = newUserData.get(REPEAT_PASSWORD_FORM);
 
         if (!validateLogin(login)){
-            newUserData.put(WRONG_LOGIN_FORM, "invalid login format");
+            newUserData.put(WRONG_LOGIN_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validatePhoneNumber(phoneNumber) && phoneNumber.length() > 0){
-            newUserData.put(WRONG_PHONE_NUMBER_FORM, "invalid phone number format");
+            newUserData.put(WRONG_PHONE_NUMBER_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validatePassportSerialNumber(serialNumber)){
-            newUserData.put(WRONG_SERIAL_NUMBER_FORM, "invalid passport serial number format");
+            newUserData.put(WRONG_SERIAL_NUMBER_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validateEmail(email)){
-            newUserData.put(WRONG_EMAIL_FORM, "invalid email format");
+            newUserData.put(WRONG_EMAIL_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validatePassword(password)){
-            newUserData.put(WRONG_PASSWORD_FORM, "invalid password format");
+            newUserData.put(WRONG_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validateName(name)){
-            newUserData.put(WRONG_NAME_FORM, "invalid name format");
+            newUserData.put(WRONG_NAME_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validateName(surname)){
-            newUserData.put(WRONG_SURNAME_FORM, "invalid surname format");
+            newUserData.put(WRONG_SURNAME_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!password.equals(repeated_pass)){
-            newUserData.put(WRONG_REPEAT_PASSWORD_FORM, "password and repeated password isn't equals");
+            newUserData.put(WRONG_REPEAT_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
@@ -125,32 +125,32 @@ public class UserValidatorImpl implements UserValidator {
         String phoneNumber = updatedUserData.get(PHONE_NUMBER_FORM);
 
         if (!validateLogin(updateLogin)){
-            updatedUserData.put(WRONG_LOGIN_FORM, "invalid login format");
+            updatedUserData.put(WRONG_LOGIN_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validatePhoneNumber(phoneNumber) && phoneNumber.length() > 0){
-            updatedUserData.put(WRONG_PHONE_NUMBER_FORM, "invalid phone number format");
+            updatedUserData.put(WRONG_PHONE_NUMBER_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validatePassportSerialNumber(updateSerialNumber)){
-            updatedUserData.put(WRONG_SERIAL_NUMBER_FORM, "invalid passport serial number format");
+            updatedUserData.put(WRONG_SERIAL_NUMBER_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validateName(updateName)){
-            updatedUserData.put(WRONG_NAME_FORM, "invalid name format");
+            updatedUserData.put(WRONG_NAME_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validateName(updateSurname)){
-            updatedUserData.put(WRONG_SURNAME_FORM, "invalid surname format");
+            updatedUserData.put(WRONG_SURNAME_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validateEmail(updateEmail)){
-            updatedUserData.put(WRONG_EMAIL_FORM, "invalid email format");
+            updatedUserData.put(WRONG_EMAIL_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
@@ -166,17 +166,17 @@ public class UserValidatorImpl implements UserValidator {
         String repeatNewPass = passwordData.get(NEW_REPEAT_PASSWORD_FORM);
 
         if (!validatePassword(oldPassword)){
-            passwordData.put(WRONG_PASSWORD_FORM, "invalid old password format");
+            passwordData.put(WRONG_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!validatePassword(newPassword)){
-            passwordData.put(WRONG_NEW_PASSWORD_FORM, "invalid new password format");
+            passwordData.put(WRONG_NEW_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 
         if (!newPassword.equals(repeatNewPass)){
-            passwordData.put(WRONG_NEW_REPEAT_PASSWORD_FORM, "new password and repeated isn't equals");
+            passwordData.put(WRONG_NEW_REPEAT_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
             isValid = false;
         }
 

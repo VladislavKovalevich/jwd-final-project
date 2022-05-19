@@ -63,5 +63,6 @@ public class CreateNewAccountCommand implements Command {
         userData.remove(WRONG_PHONE_NUMBER_FORM);
         userData.remove(WRONG_SERIAL_NUMBER_FORM);
         userData.remove(WRONG_REPEAT_PASSWORD_FORM);
+        userData.remove(WRONG_EMAIL_EXISTS_FORM);
     }
 }

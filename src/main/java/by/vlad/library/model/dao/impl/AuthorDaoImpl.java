@@ -11,10 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static by.vlad.library.model.dao.ColumnName.*;
 
 public class AuthorDaoImpl implements AuthorDao {
     private static final String SELECT_ALL_AUTHORS =
-            "SELECT * FROM authors";
+            "SELECT authors.id, authors.name, authors.surname FROM authors";
 
     private static final String INSERT_AUTHOR =
             "INSERT INTO authors (`name`, `surname`) VALUES (?, ?)";
@@ -24,6 +27,10 @@ public class AuthorDaoImpl implements AuthorDao {
                     "SET name = ?," +
                     "    surname = ? " +
                     "WHERE id = ?";
+
+    private static final String IS_AUTHOR_EXISTS =
+            "SELECT COUNT(*) as count_col FROM authors " +
+                    "WHERE name = ? AND surname = ?";
 
     private static AuthorDaoImpl instance;
 
@@ -39,7 +46,21 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public boolean insert(Author author) throws DaoException {
-        return false;
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)){
+
+            statement.setString(1, author.getName());
+            statement.setString(2, author.getSurname());
+
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
     }
 
     @Override
@@ -63,9 +84,9 @@ public class AuthorDaoImpl implements AuthorDao {
                 while (resultSet.next()){
                     Author author = new Author();
 
-                    author.setId(resultSet.getLong(1));
-                    author.setName(resultSet.getString(2));
-                    author.setSurname(resultSet.getString(3));
+                    author.setId(resultSet.getLong(AUTHORS_ID_COL));
+                    author.setName(resultSet.getString(AUTHORS_NAME_COL));
+                    author.setSurname(resultSet.getString(AUTHORS_SURNAME_COL));
 
                     authors.add(author);
                 }
@@ -78,12 +99,51 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public boolean isAuthorExists(String name, String surname) {
-        return false;
+    public boolean isAuthorExists(String name, String surname) throws DaoException {
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(IS_AUTHOR_EXISTS)){
+
+            statement.setString(1, name);
+            statement.setString(2, surname);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    rows = resultSet.getInt(COUNT_COL);
+                }else{
+                    rows = 1;
+                }
+            }
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
     }
 
     @Override
-    public boolean updateAuthor(String name, String surname) throws DaoException {
-        return false;
+    public Optional<Author> updateAuthor(Author author) throws DaoException {
+        Optional<Author> optionalAuthor;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_AUTHOR)){
+
+            statement.setString(1, author.getName());
+            statement.setString(2, author.getSurname());
+            statement.setLong(3, author.getId());
+
+            int rows = statement.executeUpdate();
+
+            if (rows == 1){
+                optionalAuthor = Optional.of(author);
+            }else{
+                optionalAuthor = Optional.empty();
+            }
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return optionalAuthor;
     }
 }

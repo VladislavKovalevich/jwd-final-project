@@ -1,8 +1,7 @@
-package by.vlad.library.controller.command.impl.admin;
+package by.vlad.library.controller.command.impl.admin.book;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
-import by.vlad.library.entity.Book;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
@@ -11,12 +10,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.Map;
-import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
-import static by.vlad.library.controller.command.PagePath.*;
+import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
+import static by.vlad.library.controller.command.PagePath.HOME_PAGE;
 
-public class UpdateBookDataCommand implements Command {
+public class AddNewBookCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -27,24 +26,18 @@ public class UpdateBookDataCommand implements Command {
         fillUserDataMap(request, bookMap);
 
         BookService bookService = BookServiceImpl.getInstance();
-        Book book;
 
         try {
-            Optional<Book> optionalBook = bookService.updateBook(bookMap);
-            if (optionalBook.isPresent()){
-                book = optionalBook.get();
-
+            if (bookService.addBook(bookMap)){
                 session.removeAttribute(AUTHORS);
                 session.removeAttribute(PUBLISHERS);
                 session.removeAttribute(BOOK_FORM_DATA);
-
-                request.setAttribute(BOOK, book);
                 session.setAttribute(CURRENT_PAGE, HOME_PAGE);
-                router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
+                router = new Router(HOME_PAGE, Router.Type.FORWARD);
             }else{
                 session.setAttribute(BOOK_FORM_DATA, bookMap);
-                session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
-                router = new Router(UPDATE_BOOK_DATA_PAGE, Router.Type.FORWARD);
+                session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
+                router = new Router(ADD_NEW_BOOK_PAGE, Router.Type.FORWARD);
             }
         } catch (ServiceException e) {
             throw new CommandException(e);

@@ -11,15 +11,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static by.vlad.library.model.dao.ColumnName.*;
 
 public class PublisherDaoImpl implements PublisherDao {
-    private static final String SELECT_ALL_PUBLISHER = "SELECT * FROM book_publishers";
+    private static final String SELECT_ALL_PUBLISHER = "SELECT publishers.id, publishers.name FROM publishers";
 
     private static final String INSERT_AUTHOR =
-            "INSERT INTO book_publishers (`name`) VALUES (?)";
+            "INSERT INTO publishers (`name`) VALUES (?)";
 
-    private static final String UPDATE_AUTHOR =
-            "UPDATE book_publishers " +
+    private static final String IS_PUBLISHER_EXISTS =
+            "SELECT COUNT(*) as count_col FROM publishers " +
+                    "WHERE name = ?";
+
+    private static final String UPDATE_PUBLISHER =
+            "UPDATE publishers " +
                     "SET name = ? " +
                     "WHERE id = ?";
 
@@ -72,8 +79,8 @@ public class PublisherDaoImpl implements PublisherDao {
                 while (resultSet.next()){
                     Publisher p = new Publisher();
 
-                    p.setId(resultSet.getLong(1));
-                    p.setName(resultSet.getString(2));
+                    p.setId(resultSet.getLong(PUBLISHERS_ID_COL));
+                    p.setName(resultSet.getString(PUBLISHERS_NAME_COL));
 
                     publishers.add(p);
                 }
@@ -87,12 +94,50 @@ public class PublisherDaoImpl implements PublisherDao {
     }
 
     @Override
-    public boolean isPublisherExists(String publisherName) {
-        return false;
+    public boolean isPublisherExists(String publisherName) throws DaoException{
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(IS_PUBLISHER_EXISTS)){
+
+            statement.setString(1, publisherName);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    rows = resultSet.getInt(COUNT_COL);
+                }else {
+                    rows = 1;
+                }
+            }
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
     }
 
     @Override
-    public boolean updatePublisher(String publisherName) throws DaoException {
-        return false;
+    public Optional<Publisher> updatePublisher(Publisher publisher) throws DaoException {
+        Optional<Publisher> optionalPublisher;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_PUBLISHER)){
+
+            statement.setString(1, publisher.getName());
+            statement.setLong(2, publisher.getId());
+
+            int rows = statement.executeUpdate();
+
+            if (rows == 1){
+                optionalPublisher = Optional.of(publisher);
+            }else{
+                optionalPublisher = Optional.empty();
+            }
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return optionalPublisher;
     }
 }

@@ -29,12 +29,15 @@ public class AttributeAndParamsNames {
 
     public static final String WRONG_AUTHOR_NAME_FORM = "wrong_author_name_form";
     public static final String WRONG_AUTHOR_SURNAME_FORM = "wrong_author_surname_form";
+    public static final String WRONG_AUTHOR_EXISTS_FORM = "wrong_author_exists_form";
 
     public static final String PUBLISHER_NAME_FORM = "publisher_name_form";
     public static final String WRONG_PUBLISHER_NAME_FORM = "wrong_publisher_name_form";
+    public static final String WRONG_PUBLISHER_EXISTS_FORM = "wrong_publisher_exists_form";
 
     public static final String GENRE_NAME_FORM = "genre_name_form";
     public static final String WRONG_GENRE_NAME_FORM = "wrong_genre_name_form";
+    public static final String WRONG_GENRE_EXISTS_FORM = "wrong_genre_exists_form";
 
     public static final String WRONG_EMAIL_OR_PASS = "wrong_email_or_pass";
     public static final String NOT_FOUND_USER = "not_found_user";
@@ -46,6 +49,8 @@ public class AttributeAndParamsNames {
     public static final String WRONG_SERIAL_NUMBER_FORM = "wrong_serial_number_form";
     public static final String WRONG_EMAIL_FORM = "wrong_email_form";
     public static final String WRONG_PASSWORD_FORM = "wrong_pass_form";
+    public static final String WRONG_PASSWORD_VALUE = "wrong_pass_value";
+    public static final String WRONG_EMAIL_EXISTS_FORM = "wrong_email_exists_form";
     public static final String WRONG_REPEAT_PASSWORD_FORM = "wrong_repeat_pass_form";
     public static final String WRONG_NEW_PASSWORD_FORM = "wrong_new_pass_form";
     public static final String WRONG_NEW_REPEAT_PASSWORD_FORM = "wrong_new_repeat_pass_form";
@@ -116,6 +121,14 @@ public class AttributeAndParamsNames {
     public static final String GENRE_NAME = "genre_name";
 
     ////request attributes names
+    public static final String PUBLISHER_ADDED_MSG = "is_publisher_added";
+    public static final String AUTHOR_ADDED_MSG = "is_author_added";
+    public static final String GENRE_ADDED_MSG = "is_genre_added";
+
+    public static final String PUBLISHER_UPDATED_MSG = "is_publisher_updated";
+    public static final String AUTHOR_UPDATED_MSG = "is_author_updated";
+    public static final String GENRE_UPDATED_MSG = "is_genre_updated";
+
     public static final String USERS_LIST = "users_list";
     public static final String USER_NAME = "user_name";
     public static final String USER_SURNAME = "user_surname";

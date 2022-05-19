@@ -32,7 +32,7 @@ public class GoToUpdateBookComponentsPageCommand implements Command {
         HttpSession session = request.getSession();
         Map<String, String> componentsData = new HashMap<>();
 
-        session.setAttribute("components_data", componentsData);
+        session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
 
         PublisherService publisherService = PublisherServiceImpl.getInstance();
         AuthorService authorService = AuthorServiceImpl.getInstance();

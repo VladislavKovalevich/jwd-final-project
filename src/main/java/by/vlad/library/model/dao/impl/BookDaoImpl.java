@@ -18,49 +18,51 @@ import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
+import static by.vlad.library.model.dao.ColumnName.*;
+
 public class BookDaoImpl implements BookDao {
     private static final String SELECT_ALL_BOOKS =
-            "SELECT books.id, title, authors.id, authors.name, authors.surname, book_publishers.id, " +
-                    "book_publishers.name, genres.name " +
+            "SELECT books.id, books.title, authors.id, authors.name, authors.surname, publishers.id, " +
+                    "publishers.name, genres.name " +
             "FROM library.books " +
             "JOIN library.authors ON books.authors_id = authors.id " +
-            "JOIN library.book_publishers ON books.book_publishers_id = book_publishers.id " +
+            "JOIN library.publishers ON books.publishers_id = publishers.id " +
             "JOIN library.genres ON books.genres_id = genres.id";
 
     private static final String SELECT_BOOK_BY_ID =
-            "SELECT books.id, books.title, copies_number, publish_year, number_of_pages, description, authors.id, " +
-                    "authors.name, authors.surname, genres.name, book_publishers.id, book_publishers.name " +
+            "SELECT books.id, books.title, books.copies_number, books.publish_year, books.number_of_pages, books.description, authors.id, " +
+                    "authors.name, authors.surname, genres.id, genres.name, publishers.id, publishers.name " +
             "FROM library.books " +
             "JOIN library.authors ON books.authors_id = authors.id " +
-            "JOIN library.book_publishers ON books.book_publishers_id = book_publishers.id " +
+            "JOIN library.publishers ON books.publishers_id = publishers.id " +
             "JOIN library.genres ON books.genres_id = genres.id " +
             "WHERE books.id = ?";
 
     private static final String SELECT_NUMBER_OF_BOOKS =
-            "SELECT COUNT(*) as books_count FROM books";
+            "SELECT COUNT(*) as count_col FROM books";
 
     private static final String SELECT_PREVIOUS_BOOKS =
             "SELECT * FROM (SELECT books.id as books_id, title, authors.id as authors_id, authors.name as author_name, " +
-                    "authors.surname, book_publishers.id as publisher_id, " +
-                    "book_publishers.name as publisher_name, genres.name as genre_name " +
+                    "authors.surname, publishers.id as publisher_id, " +
+                    "publishers.name as publisher_name, genres.name as genre_name " +
                     "FROM library.books " +
                     "LEFT JOIN library.authors ON books.authors_id = authors.id " +
-                    "LEFT JOIN library.book_publishers ON books.book_publishers_id = book_publishers.id " +
+                    "LEFT JOIN library.publishers ON books.publishers_id = publishers.id " +
                     "LEFT JOIN library.genres ON books.genres_id = genres.id " +
                     "WHERE books.id<? ORDER BY books.id DESC LIMIT ?) as reverse_table " +
                     "ORDER BY books_id";
 
     private static final String SELECT_NEXT_BOOKS =
-            "SELECT books.id, title, authors.id, authors.name, authors.surname, book_publishers.id, " +
-                    "book_publishers.name, genres.name " +
+            "SELECT books.id, books.title, authors.id, authors.name, authors.surname, publishers.id, " +
+                    "publishers.name, genres.name " +
                     "FROM library.books " +
                     "JOIN library.authors ON books.authors_id = authors.id " +
-                    "JOIN library.book_publishers ON books.book_publishers_id = book_publishers.id " +
+                    "JOIN library.publishers ON books.publishers_id = publishers.id " +
                     "JOIN library.genres ON books.genres_id = genres.id " +
                     "WHERE books.id>? ORDER BY books.id LIMIT ?";
 
     private static final String INSERT_NEW_BOOK =
-            "INSERT INTO books (`title`, `copies_number`, `publish_year`, `number_of_pages`, `description`, `authors_id`, `book_publishers_id`, `genres_id`) " +
+            "INSERT INTO books (`title`, `copies_number`, `publish_year`, `number_of_pages`, `description`, `authors_id`, `publishers_id`, `genres_id`) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String UPDATE_BOOK =
@@ -71,7 +73,7 @@ public class BookDaoImpl implements BookDao {
                     "    number_of_pages = ?, " +
                     "    description = ?, " +
                     "    authors_id = ? ," +
-                    "    book_publishers_id = ? ," +
+                    "    publishers_id = ? ," +
                     "    genres_id = ? " +
                     "WHERE id = ?;  ";
 
@@ -141,27 +143,28 @@ public class BookDaoImpl implements BookDao {
 
             if (resultSet.next()){
                 Author author = new Author(
-                        resultSet.getLong(7),
-                        resultSet.getString(8),
-                        resultSet.getString(9)
+                        resultSet.getLong(AUTHORS_ID_COL),
+                        resultSet.getString(AUTHORS_NAME_COL),
+                        resultSet.getString(AUTHORS_SURNAME_COL)
                 );
 
                 Publisher publisher = new Publisher(
-                        resultSet.getLong(11),
-                        resultSet.getString(12)
+                        resultSet.getLong(PUBLISHERS_ID_COL),
+                        resultSet.getString(PUBLISHERS_NAME_COL)
                 );
 
                 Genre genre = new Genre(
-                        resultSet.getString(10)
+                        resultSet.getLong(GENRES_ID_COL),
+                        resultSet.getString(GENRES_NAME_COL)
                 );
 
                 Book book = Book.getBuilder()
-                        .withId(resultSet.getLong(1))
-                        .withTitle(resultSet.getString(2))
-                        .withCopiesNumber(resultSet.getInt(3))
-                        .withReleaseYear(Year.of(resultSet.getInt(4)))
-                        .withNumberOfPages(resultSet.getInt(5))
-                        .withDescription(resultSet.getString(6))
+                        .withId(resultSet.getLong(BOOKS_ID_COL))
+                        .withTitle(resultSet.getString(BOOKS_TITLE_COL))
+                        .withCopiesNumber(resultSet.getInt(BOOKS_COPIES_NUMBER_COL))
+                        .withReleaseYear(Year.of(resultSet.getInt(BOOKS_PUBLISH_YEAR_COL)))
+                        .withNumberOfPages(resultSet.getInt(BOOKS_NUMBER_OF_PAGES_COL))
+                        .withDescription(resultSet.getString(BOOKS_DESCRIPTION_COL))
                         .withGenre(genre)
                         .withPublisher(publisher)
                         .withAuthor(author)
@@ -188,7 +191,7 @@ public class BookDaoImpl implements BookDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()){
-                booksNumber = resultSet.getInt(1);
+                booksNumber = resultSet.getInt(COUNT_COL);
             }
 
         }catch (SQLException e){

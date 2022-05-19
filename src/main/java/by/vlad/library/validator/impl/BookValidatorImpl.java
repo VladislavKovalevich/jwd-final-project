@@ -63,27 +63,27 @@ public class BookValidatorImpl implements BookValidator {
 
         if (!validateTitle(title)){
             isValid = false;
-            bookData.put(WRONG_TITLE_FORM, "invalid title format");
+            bookData.put(WRONG_TITLE_FORM, BookValidator.WRONG_FORMAT_MARKER);
         }
 
         if (!validateDescription(description)){
             isValid = false;
-            bookData.put(WRONG_DESCRIPTION_FORM, "invalid description format");
+            bookData.put(WRONG_DESCRIPTION_FORM, BookValidator.WRONG_FORMAT_MARKER);
         }
 
         if (!validateCopiesNumber(copiesNumber)){
             isValid = false;
-            bookData.put(WRONG_COPIES_NUMBER_FORM, "invalid copies number format");
+            bookData.put(WRONG_COPIES_NUMBER_FORM, BookValidator.WRONG_FORMAT_MARKER);
         }
 
         if (!validatePagesCount(pagesCount)){
             isValid = false;
-            bookData.put(WRONG_PAGES_COUNT_FORM, "invalid pages count format");
+            bookData.put(WRONG_PAGES_COUNT_FORM, BookValidator.WRONG_FORMAT_MARKER);
         }
 
         if (!validateReleaseYear(releaseYear)){
             isValid = false;
-            bookData.put(WRONG_RELEASE_YEAR_FORM, "invalid release year format");
+            bookData.put(WRONG_RELEASE_YEAR_FORM, BookValidator.WRONG_FORMAT_MARKER);
         }
 
         return isValid;

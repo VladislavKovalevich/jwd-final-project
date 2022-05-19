@@ -4,11 +4,26 @@
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="config.pagecontent"/>
+
+<fmt:message key="title.show_books_list" var="title"/>
+<fmt:message key="label.book_title" var="book_title"/>
+<fmt:message key="label.book_author" var="book_author"/>
+<fmt:message key="label.book_copies_number" var="book_copies_number"/>
+<fmt:message key="label.book_description" var="book_description"/>
+<fmt:message key="label.book_genre" var="book_genre"/>
+<fmt:message key="label.book_pages_count" var="book_pages_count"/>
+<fmt:message key="label.book_publish_year" var="book_publish_year"/>
+<fmt:message key="label.book_publisher" var="book_publisher"/>
+<fmt:message key="reference.next_page" var="next"/>
+<fmt:message key="reference.prev_page" var="prev"/>
+
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Books list</title>
+    <title>${title}</title>
     <style>
         figure {
             width: 100%; /* Ширина области */
@@ -50,9 +65,9 @@
                                        href="${path}/controller?command=show_book_info&book_id=${book.id}">
                                             ${book.id}. ${book.title}
                                     </a>
-                                    <p class="card-text">Автор: ${book.author.name} ${book.author.surname}</p>
-                                    <p class="card-text">Жанр: ${book.genre.name}</p>
-                                    <p class="card-text">Издательский центр: ${book.publisher.name}</p>
+                                    <p class="card-text">${book_author}: ${book.author.name} ${book.author.surname}</p>
+                                    <p class="card-text">${book_genre}: ${book.genre.name}</p>
+                                    <p class="card-text">${book_publisher}: ${book.publisher.name}</p>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +79,7 @@
         <div class="row">
             <div class="col-md-3">
                 <c:if test="${pagination_data['current_page_num'] > 1}">
-                    <a href="${path}/controller?command=show_books_list&page_direction=prev">prev</a>
+                    <a href="${path}/controller?command=show_books_list&page_direction=prev">${prev}</a>
                 </c:if>
             </div>
             <div class="col-md-2">
@@ -72,7 +87,7 @@
             </div>
             <div class="col-md-3">
                 <c:if test="${pagination_data['current_page_num'] < pagination_data['pages_number']}">
-                    <a href="${path}/controller?command=show_books_list&page_direction=next">next</a>
+                    <a href="${path}/controller?command=show_books_list&page_direction=next">${next}</a>
                 </c:if>
             </div>
         </div>

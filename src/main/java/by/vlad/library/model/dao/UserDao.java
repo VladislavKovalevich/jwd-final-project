@@ -3,6 +3,7 @@ package by.vlad.library.model.dao;
 import by.vlad.library.entity.User;
 import by.vlad.library.exception.DaoException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao extends BasicDao<User> {
@@ -19,4 +20,6 @@ public interface UserDao extends BasicDao<User> {
     boolean changeAccountStatus(long userId, int status) throws DaoException;
 
     Optional<User> findUserById(long id) throws DaoException;
+
+    List<User> findAllUsers() throws DaoException;
 }

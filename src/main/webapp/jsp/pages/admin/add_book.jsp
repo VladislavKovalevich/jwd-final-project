@@ -10,14 +10,35 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
+
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="config.pagecontent"/>
+
+<fmt:message key="title.add_book" var="title"/>
+<fmt:message key="label.book_title" var="book_title"/>
+<fmt:message key="label.book_author" var="book_author"/>
+<fmt:message key="label.book_copies_number" var="book_copies_number"/>
+<fmt:message key="label.book_description" var="book_description"/>
+<fmt:message key="label.book_genre" var="book_genre"/>
+<fmt:message key="label.book_pages_count" var="book_pages_count"/>
+<fmt:message key="label.book_publish_year" var="book_publish_year"/>
+<fmt:message key="label.book_publisher" var="book_publisher"/>
+<fmt:message key="button.add_book" var="add_book_btn"/>
+<fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
+<fmt:message key="message.book_has_been_added" var="book_has_been_added"/>
+<fmt:message key="button.back_to_main" var="back_btn"/>
+
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Add book</title>
+    <title>${title}</title>
     <style>
         .red-color {
             color: red;
+        }
+        .green-color {
+            color: green;
         }
     </style>
 </head>
@@ -28,17 +49,17 @@
 
 
     <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
-        <h3 class="py-md-3">Add new book</h3>
+        <h3 class="py-md-3">${title}</h3>
         <form class="row g-3 needs-validation" novalidate>
             <input type="hidden" name="command" value="add_new_book">
 
             <div class="col-md-4">
-                <label for="validationCustom01" class="form-label">Title</label>
-                <input type="text" class="form-control" name="title" id="validationCustom01"
+                <label for="title" class="form-label">${book_title}</label>
+                <input type="text" class="form-control" name="title" id="title"
                        value="${book_form_data['title_form']}" required>
                 <div class="red-color">
                     <c:if test="${not empty book_form_data['wrong_title_form']}">
-                        ${book_form_data['wrong_title_form']}
+                        ${incorrect_data_format}
                     </c:if>
                 </div>
             </div>
@@ -46,7 +67,7 @@
             <hr/>
 
             <div class="col-md-3">
-                <p class="form-label">Author:</p>
+                <p class="form-label">${book_author}:</p>
                 <select name="author">
                     <c:forEach var="a" items="${authors}">
                         <c:choose>
@@ -62,7 +83,7 @@
             </div>
 
             <div class="col-md-3">
-                <p class="form-label">Publisher:</p>
+                <p class="form-label">${book_publisher}:</p>
                 <select name="publisher">
                     <c:forEach var="p" items="${publishers}">
                         <c:choose>
@@ -78,7 +99,7 @@
             </div>
 
             <div class="col-md-3">
-                <p class="form-label">Genres:</p>
+                <p class="form-label">${book_genre}:</p>
                 <select name="genre">
                     <c:forEach var="g" items="${genres}">
                         <c:choose>
@@ -96,34 +117,34 @@
             <hr/>
 
             <div class="col-md-2">
-                <label for="validationCustom02" class="form-label">Number of copies</label>
-                <input type="number" class="form-control" name="copies_number" id="validationCustom02"
+                <label for="copies_number" class="form-label">${book_copies_number}</label>
+                <input type="number" class="form-control" name="copies_number" id="copies_number"
                        value="${book_form_data['copies_number_form']}" required>
                 <div class="red-color">
                     <c:if test="${not empty book_form_data['wrong_copies_number_form']}">
-                        ${book_form_data['wrong_copies_number_form']}
+                        ${incorrect_data_format}
                     </c:if>
                 </div>
             </div>
 
             <div class="col-md-2">
-                <label for="validationCustomUsername" class="form-label">Release year</label>
-                <input type="number" class="form-control" name="release_year" id="validationCustomUsername"
+                <label for="release_year" class="form-label">${book_publish_year}</label>
+                <input type="number" class="form-control" name="release_year" id="release_year"
                        value="${book_form_data['release_year_form']}" aria-describedby="inputGroupPrepend" required>
                 <div class="red-color">
                     <c:if test="${not empty book_form_data['wrong_release_year_form']}">
-                        ${book_form_data['wrong_release_year_form']}
+                        ${incorrect_data_format}
                     </c:if>
                 </div>
             </div>
 
             <div class="col-md-2">
-                <label for="validationCustom03" class="form-label">Number of pages</label>
+                <label for="pages_count" class="form-label">${book_pages_count}</label>
                 <input type="number" class="form-control" name="pages_count"
-                       value="${book_form_data['pages_count_form']}" id="validationCustom03" required>
+                       value="${book_form_data['pages_count_form']}" id="pages_count" required>
                 <div class="red-color">
                     <c:if test="${not empty book_form_data['wrong_pages_count_form']}">
-                        ${book_form_data['wrong_pages_count_form']}
+                        ${incorrect_data_format}
                     </c:if>
                 </div>
             </div>
@@ -131,19 +152,31 @@
             <hr/>
 
             <div class="col-md-10">
-                <label for="validationCustom04" class="form-label">Description</label>
+                <label for="description" class="form-label">${book_description}</label>
                 <textarea type="text" class="form-control" name="description"
-                          rows="4" id="validationCustom04"
+                          rows="4" id="description"
                           required>${book_form_data['description_form']}</textarea>
                 <div class="red-color">
                     <c:if test="${not empty book_form_data['wrong_description_form']}">
-                        ${book_form_data['wrong_description_form']}
+                        ${incorrect_data_format}
                     </c:if>
                 </div>
             </div>
 
+            <div class="col-12 green-color">
+                <c:if test="${not empty is_book_added}">
+                    ${book_has_been_added}
+                </c:if>
+            </div>
+
             <div class="col-12">
-                <button class="btn btn-primary" type="submit">Submit form</button>
+                <button class="btn btn-primary" type="submit">${add_book_btn}</button>
+                <form action="controller">
+                    <input type="hidden" name="command" value="go_to_main_page">
+                    <div class="col-12">
+                        <button class="btn btn-primary" type="submit">${back_btn}</button>
+                    </div>
+                </form>
             </div>
         </form>
     </div>

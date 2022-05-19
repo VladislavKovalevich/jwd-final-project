@@ -58,5 +58,6 @@ public class ChangeAccountPasswordCommand implements Command {
         passwordData.remove(WRONG_PASSWORD_FORM);
         passwordData.remove(WRONG_NEW_PASSWORD_FORM);
         passwordData.remove(WRONG_NEW_REPEAT_PASSWORD_FORM);
+        passwordData.remove(WRONG_PASSWORD_VALUE);
     }
 }

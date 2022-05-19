@@ -10,6 +10,7 @@ import by.vlad.library.util.PasswordEncoder;
 import by.vlad.library.validator.UserValidator;
 import by.vlad.library.validator.impl.UserValidatorImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
         UserValidator validator = UserValidatorImpl.getInstance();
 
         if (!validator.validateEmail(login) || !validator.validatePassword(password)){
-            userData.put(WRONG_EMAIL_OR_PASS, "invalid email or password");
+            userData.put(WRONG_EMAIL_OR_PASS, UserValidator.WRONG_FORMAT_MARKER);
             //log
             return optionalUser;
         }
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
         try {
             optionalUser = userDao.authenticate(login, password);
             if (optionalUser.isEmpty()){
-                userData.put(NOT_FOUND_USER, "user with these params was not found");
+                userData.put(NOT_FOUND_USER, UserValidator.WRONG_FORMAT_MARKER);
             }
         } catch (DaoException e) {
             //logger msg
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
         try {
             if (userDao.isEmailExists(email)){
-                userData.put(WRONG_EMAIL_FORM, "this email is already exists");
+                userData.put(WRONG_EMAIL_EXISTS_FORM, UserValidator.WRONG_FORMAT_MARKER);
                 return isCreated;
             }
 
@@ -128,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
             if (!updateEmail.equals(userData.get(USER_EMAIL))) {
                 if (userDao.isEmailExists(updateEmail)) {
-                    userData.put(WRONG_EMAIL_FORM, "this email is already exists");
+                    userData.put(WRONG_EMAIL_EXISTS_FORM, UserValidator.WRONG_FORMAT_MARKER);
                     return isUpdated;
                 }
             }
@@ -173,7 +174,7 @@ public class UserServiceImpl implements UserService {
         try {
             isChanged = userDao.changeAccountPassword(email, encodedOldPass, encodedNewPass);
             if (!isChanged){
-                passwordData.put(WRONG_PASSWORD_FORM, "invalid password value");
+                passwordData.put(WRONG_PASSWORD_VALUE, UserValidator.WRONG_FORMAT_MARKER);
             }
         } catch (DaoException e) {
             throw new ServiceException(e);
@@ -198,6 +199,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() throws ServiceException {
-        return null;
+        List<User> users;
+        UserDao userDao = UserDaoImpl.getInstance();
+
+        try {
+            users = userDao.findAllUsers();
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+        return users;
     }
 }

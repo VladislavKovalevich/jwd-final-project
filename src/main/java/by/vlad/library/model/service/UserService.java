@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
+    String USER_EXISTS_MARKER = "user with this params is already exists";
+
     Optional<User> authenticate(Map<String, String> userData) throws ServiceException;
 
     boolean createNewAccount(Map<String, String> userData) throws ServiceException;

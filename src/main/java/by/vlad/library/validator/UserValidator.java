@@ -3,6 +3,8 @@ package by.vlad.library.validator;
 import java.util.Map;
 
 public interface UserValidator {
+    String WRONG_FORMAT_MARKER = "wrong format";
+
     boolean validatePassword(String password);
 
     boolean validateEmail(String email);

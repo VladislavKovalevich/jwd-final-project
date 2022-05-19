@@ -16,6 +16,9 @@
 <fmt:message key="reference.change_account_password" var="change_password"/>
 <fmt:message key="reference.update_account_data" var="update_account_data"/>
 <fmt:message key="reference.get_books_list" var="get_books"/>
+<fmt:message key="reference.add_new_book_to_library" var="add_new_book"/>
+<fmt:message key="reference.add_book_components" var="add_book_components"/>
+<fmt:message key="reference.update_book_components" var="update_book_components"/>
 <fmt:message key="dropdown_menu_title.locale" var="change_local"/>
 <fmt:message key="local.en" var="en"/>
 <fmt:message key="local.ru" var="ru"/>
@@ -73,9 +76,9 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li class="nav-item">
                                         <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
-                                        <a class="nav-link" href="${path}/controller?command=go_to_add_new_book_page">Add new book</a>
-                                        <a class="nav-link" href="${path}/controller?command=go_to_add_book_components_page">Add book components</a>
-                                        <a class="nav-link" href="${path}/controller?command=go_to_update_book_components_page">Update book components</a>
+                                        <a class="nav-link" href="${path}/controller?command=go_to_add_new_book_page">${add_new_book}</a>
+                                        <a class="nav-link" href="${path}/controller?command=go_to_add_book_components_page">${add_book_components}</a>
+                                        <a class="nav-link" href="${path}/controller?command=go_to_update_book_components_page">${update_book_components}</a>
                                     </li>
                                 </ul>
                             </li>

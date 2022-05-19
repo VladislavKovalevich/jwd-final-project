@@ -6,6 +6,7 @@ import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.pool.ConnectionPool;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,9 @@ public class UserDaoImpl implements UserDao {
     private static final String GET_USER_BY_ID =
             "SELECT name, surname, email, login, passport_serial_number, mobile_phone " +
             "FROM users WHERE id = ?";
+
+    private static final String FIND_ALL_USERS =
+            "SELECT * FROM users WHERE roles_id = 1";
 
     private static UserDaoImpl instance;
 
@@ -87,14 +91,13 @@ public class UserDaoImpl implements UserDao {
             if (resultSet.next()){
                 User temp = User.getBuilder()
                         .withId(resultSet.getLong(1))
-                        .withName(resultSet.getString(2))
-                        .withSurname(resultSet.getString(3))
-                        .withEmail(resultSet.getString(4))
-                        .withPassword(resultSet.getString(5))
-                        .withLogin(resultSet.getString(6))
+                        .withName(resultSet.getString(5))
+                        .withSurname(resultSet.getString(6))
+                        .withEmail(resultSet.getString(3))
+                        .withLogin(resultSet.getString(2))
                         .withPassportSerialNumber(resultSet.getString(7))
                         .withMobilePhone(resultSet.getString(8))
-                        .withRole(resultSet.getString(9))
+                        .withIsBanned(resultSet.getBoolean(9))
                         .buildUser();
 
                 optionalUser = Optional.of(temp);
@@ -234,5 +237,37 @@ public class UserDaoImpl implements UserDao {
         }
 
         return optionalUser;
+    }
+
+    @Override
+    public List<User> findAllUsers() throws DaoException {
+        List<User> users = new ArrayList<>();
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            Statement statement = connection.createStatement()){
+
+            try(ResultSet resultSet = statement.executeQuery(FIND_ALL_USERS)) {
+                while (resultSet.next()){
+                    User temp = User.getBuilder()
+                            .withId(resultSet.getLong(1))
+                            .withName(resultSet.getString(2))
+                            .withSurname(resultSet.getString(3))
+                            .withEmail(resultSet.getString(4))
+                            .withPassword(resultSet.getString(5))
+                            .withLogin(resultSet.getString(6))
+                            .withPassportSerialNumber(resultSet.getString(7))
+                            .withMobilePhone(resultSet.getString(8))
+                            .withRole(resultSet.getString(9))
+                            .buildUser();
+                    //перенести в mapper
+                    users.add(temp);
+                }
+            }
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return users;
     }
 }

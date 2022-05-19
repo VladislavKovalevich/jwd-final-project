@@ -65,5 +65,6 @@ public class UpdateUserAccountDataCommand implements Command {
         userData.remove(WRONG_SURNAME_FORM);
         userData.remove(WRONG_PHONE_NUMBER_FORM);
         userData.remove(WRONG_SERIAL_NUMBER_FORM);
+        userData.remove(WRONG_EMAIL_EXISTS_FORM);
     }
 }
