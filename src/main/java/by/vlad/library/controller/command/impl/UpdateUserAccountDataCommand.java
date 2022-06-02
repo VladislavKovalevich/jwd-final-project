@@ -22,8 +22,8 @@ public class UpdateUserAccountDataCommand implements Command {
         HttpSession session = request.getSession();
         Router router;
 
-        cleanWrongMessages(userFormData);
-        fillUserDataMap(request, userFormData);
+        cleanSessionMap(userFormData);
+        fillSessionMap(request, userFormData);
 
         UserService service = UserServiceImpl.getInstance();
 
@@ -36,10 +36,10 @@ public class UpdateUserAccountDataCommand implements Command {
 
                 session.setAttribute(CURRENT_PAGE, HOME_PAGE);
 
-                router = new Router(HOME_PAGE, Router.Type.FORWARD);
+                router = new Router(HOME_PAGE, Router.Type.REDIRECT);
             }else{
                 request.setAttribute(USER_FORM_DATA, userFormData);
-                router = new Router(CHANGE_ACCOUNT_DATA_PAGE, Router.Type.FORWARD);
+                router = new Router(CHANGE_ACCOUNT_DATA_PAGE, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
             throw new CommandException(e);
@@ -48,7 +48,7 @@ public class UpdateUserAccountDataCommand implements Command {
         return router;
     }
 
-    private void fillUserDataMap(HttpServletRequest request, Map<String, String> userData) {
+    private void fillSessionMap(HttpServletRequest request, Map<String, String> userData) {
         userData.put(NAME_FORM, request.getParameter(NAME));
         userData.put(SURNAME_FORM, request.getParameter(SURNAME));
         userData.put(EMAIL_FORM, request.getParameter(EMAIL));
@@ -58,7 +58,7 @@ public class UpdateUserAccountDataCommand implements Command {
         userData.put(USER_EMAIL, String.valueOf(request.getSession().getAttribute(USER_EMAIL)));
     }
 
-    private void cleanWrongMessages(Map<String, String> userData) {
+    private void cleanSessionMap(Map<String, String> userData) {
         userData.remove(WRONG_EMAIL_FORM);
         userData.remove(WRONG_LOGIN_FORM);
         userData.remove(WRONG_NAME_FORM);

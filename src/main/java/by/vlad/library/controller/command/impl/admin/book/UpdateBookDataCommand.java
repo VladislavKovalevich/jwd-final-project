@@ -23,8 +23,8 @@ public class UpdateBookDataCommand implements Command {
         Map<String,String> bookMap = (Map<String, String>) session.getAttribute(BOOK_FORM_DATA);
         Router router;
 
-        cleanWrongMessages(bookMap);
-        fillUserDataMap(request, bookMap);
+        clearSessionMap(bookMap);
+        fillSessionMap(request, bookMap);
 
         BookService bookService = BookServiceImpl.getInstance();
         Book book;
@@ -34,8 +34,9 @@ public class UpdateBookDataCommand implements Command {
             if (optionalBook.isPresent()){
                 book = optionalBook.get();
 
-                session.removeAttribute(AUTHORS);
-                session.removeAttribute(PUBLISHERS);
+                //session.removeAttribute(GENRES);
+                //session.removeAttribute(AUTHORS);
+                //session.removeAttribute(PUBLISHERS);
                 session.removeAttribute(BOOK_FORM_DATA);
 
                 request.setAttribute(BOOK, book);
@@ -53,7 +54,7 @@ public class UpdateBookDataCommand implements Command {
         return router;
     }
 
-    private void fillUserDataMap(HttpServletRequest request, Map<String, String> booksMap) {
+    private void fillSessionMap(HttpServletRequest request, Map<String, String> booksMap) {
         booksMap.put(TITLE_FORM, request.getParameter(TITLE));
         booksMap.put(AUTHOR_FORM, request.getParameter(AUTHOR));
         booksMap.put(PUBLISHER_FORM, request.getParameter(PUBLISHER));
@@ -64,7 +65,7 @@ public class UpdateBookDataCommand implements Command {
         booksMap.put(DESCRIPTION_FORM, request.getParameter(DESCRIPTION));
     }
 
-    private void cleanWrongMessages(Map<String, String> booksMap) {
+    private void clearSessionMap(Map<String, String> booksMap) {
         booksMap.remove(WRONG_TITLE_FORM);
         booksMap.remove(WRONG_COPIES_NUMBER_FORM);
         booksMap.remove(WRONG_RELEASE_YEAR_FORM);

@@ -17,20 +17,20 @@ import static by.vlad.library.model.dao.ColumnName.*;
 
 public class AuthorDaoImpl implements AuthorDao {
     private static final String SELECT_ALL_AUTHORS =
-            "SELECT authors.id, authors.name, authors.surname FROM authors";
+            "SELECT * FROM authors";
 
     private static final String INSERT_AUTHOR =
-            "INSERT INTO authors (`name`, `surname`) VALUES (?, ?)";
+            "INSERT INTO authors (`author_name`, `author_surname`) VALUES (?, ?)";
 
     private static final String UPDATE_AUTHOR =
             "UPDATE authors " +
-                    "SET name = ?," +
-                    "    surname = ? " +
-                    "WHERE id = ?";
+                    "SET author_name = ?," +
+                    "    author_surname = ? " +
+                    "WHERE author_id = ?";
 
     private static final String IS_AUTHOR_EXISTS =
             "SELECT COUNT(*) as count_col FROM authors " +
-                    "WHERE name = ? AND surname = ?";
+                    "WHERE author_name = ? AND author_surname = ?";
 
     private static AuthorDaoImpl instance;
 
@@ -84,9 +84,9 @@ public class AuthorDaoImpl implements AuthorDao {
                 while (resultSet.next()){
                     Author author = new Author();
 
-                    author.setId(resultSet.getLong(AUTHORS_ID_COL));
-                    author.setName(resultSet.getString(AUTHORS_NAME_COL));
-                    author.setSurname(resultSet.getString(AUTHORS_SURNAME_COL));
+                    author.setId(resultSet.getLong(AUTHOR_ID_COL));
+                    author.setName(resultSet.getString(AUTHOR_NAME_COL));
+                    author.setSurname(resultSet.getString(AUTHOR_SURNAME_COL));
 
                     authors.add(author);
                 }

@@ -26,53 +26,63 @@
 
 <html>
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
     <title>${title}</title>
+
+    <link rel="stylesheet" href="${path}/css/styles.css">
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>
 </header>
-<body>
-<div class="container px-4 py-lg-5">
-    <div class="row">
-        <div class="col-4">
-            <div class="">
-                <img src="${path}/img/not_found_image.jpg"/>
-            </div>
-        </div>
-        <div class="col-7">
-            <div class="px-lg-1 py-lg-1">
-                <br/>
-                <h3>${book.title}</h3>
-                <h6>${book_author}: ${book.author.name} ${book.author.surname} </h6>
+<body class="background-theme">
+<section class="container-fluid">
+    <div class="container px-4 py-lg-5">
+        <div class="row">
+            <div class="col-4 white-background">
                 <div class="">
+                    <img src="${path}/img/not_found_image.jpg"/>
+                </div>
+            </div>
+            <div class="col-8 white-background">
+                <div class="px-lg-1 py-lg-1">
                     <br/>
-                    <p class="">${book_copies_number}: ${book.copiesNumber}</p>
-                    <p class="">${book_pages_count}: ${book.numberOfPages}</p>
-                    <br/>
-                    <p class="">${book_genre}: ${book.genre.name}</p>
-                    <br/>
-                    <p class="">${book_publisher}: ${book.publisher.name}</p>
-                    <p class="">${book_publish_year}: ${book.releaseYear}</p>
-                    <br/>
-                    <p class="">${book_description}: ${book.description}</p>
+                    <h3>${book.title}</h3>
+                    <h6>${book_author}: ${book.author.name} ${book.author.surname} </h6>
+                    <div class="">
+                        <br/>
+                        <p class="">${book_copies_number}: ${book.copiesNumber}</p>
+                        <p class="">${book_pages_count}: ${book.numberOfPages}</p>
+                        <br/>
+                        <p class="">${book_genre}: ${book.genre.name}</p>
+                        <br/>
+                        <p class="">${book_publisher}: ${book.publisher.name}</p>
+                        <p class="">${book_publish_year}: ${book.releaseYear}</p>
+                        <br/>
+                        <p class="">${book_description}: ${book.description}</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <c:if test="${user_role eq 'ADMIN'}">
-        <a href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">Update book</a>
-    </c:if>
+        <div class="row white-background">
+            <c:if test="${user_role eq 'ADMIN'}">
+                <a href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">Update book</a>
+            </c:if>
 
-    <c:if test="${user_role eq 'CLIENT'}">
-        <a href="#">Add book to order</a>
-    </c:if>
-</div>
+            <c:if test="${user_role eq 'CLIENT'}">
+                <a href="#">Add book to order</a>
+            </c:if>
+        </div>
+    </div>
+</section>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
 <footer>
     <jsp:include page="../footer/footer.jsp"/>
 </footer>

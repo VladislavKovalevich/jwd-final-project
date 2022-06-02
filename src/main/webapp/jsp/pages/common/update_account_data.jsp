@@ -24,19 +24,25 @@
 <fmt:message key="message.incorrect_email" var="incorrect_email"/>
 <fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
 <fmt:message key="button.change_account_data" var="change_account_data_btn"/>
+<fmt:message key="button.back_to_main" var="back_btn"/>
 
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
     <title>${title}</title>
-    <style>
-        .red-color {
-            color: red;
-        }
-    </style>
+
+    <link rel="stylesheet" href="${path}/css/styles.css">
+
 </head>
-<body style="background-color: cadetblue">
+<body class="background-theme">
+<section class="container-fluid">
 <div class="row mb-5 py-lg-5"></div>
 <div class="row py-lg-5">
     <div class="col mb-3"></div>
@@ -44,7 +50,7 @@
 
     <div class="col-7 mb-3 py-3 px-3" style="background-color: aliceblue">
         <h3 class="py-md-5">${title}</h3>
-        <form class="row g-3 needs-validation" novalidate>
+        <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
             <input type="hidden" name="command" value="update_user_account_data">
 
             <div class="col-md-4">
@@ -120,11 +126,22 @@
                 <button class="btn btn-primary" type="submit">${change_account_data_btn}</button>
             </div>
         </form>
+
+        <hr/>
+
+        <form method="get" action="${path}/controller">
+            <input type="hidden" name="command" value="go_to_main_page">
+            <div class="col-12">
+                <button class="btn btn-primary" type="submit">${back_btn}</button>
+            </div>
+        </form>
+
     </div>
 
 
     <div class="col mb-3"></div>
 </div>
+</section>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>

@@ -4,9 +4,7 @@ import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
-import by.vlad.library.model.service.GenreService;
 import by.vlad.library.model.service.PublisherService;
-import by.vlad.library.model.service.impl.GenreServiceImpl;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,27 +19,34 @@ public class AddNewPublisherCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        request.removeAttribute(PUBLISHER_ADDED_MSG);
 
         Map<String, String> componentsData = (Map<String, String>) session.getAttribute(BOOK_COMPONENTS_FORM_DATA);
 
+        clearSessionMap(componentsData);
         componentsData.put(PUBLISHER_NAME_FORM, request.getParameter(PUBLISHER_NAME));
-        componentsData.remove(WRONG_PUBLISHER_NAME_FORM);
-        componentsData.remove(WRONG_PUBLISHER_EXISTS_FORM);
 
         PublisherService genreService = PublisherServiceImpl.getInstance();
 
         try {
             if (genreService.addNewPublisher(componentsData)){
                 componentsData.remove(PUBLISHER_NAME_FORM);
-                request.setAttribute(PUBLISHER_ADDED_MSG, PUBLISHER_ADDED_MARKER);
+                componentsData.put(PUBLISHER_ADDED_MSG, PUBLISHER_ADDED_MARKER);
             }
 
+            session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
             session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
 
-        return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.FORWARD);
+        return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);
+    }
+
+    private void clearSessionMap(Map<String, String> map){
+        map.remove(PUBLISHER_ADDED_MSG);
+        map.remove(GENRE_ADDED_MSG);
+        map.remove(AUTHOR_ADDED_MSG);
+        map.remove(WRONG_PUBLISHER_NAME_FORM);
+        map.remove(WRONG_PUBLISHER_EXISTS_FORM);
     }
 }

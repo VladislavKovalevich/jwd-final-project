@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface BookService {
-    List<Book> getAllBooks(String direction, Map<String, Long> paginationData) throws ServiceException;
+    List<Book> getAllBooks(String direction, Map<String, Long> paginationData, Map<String, String> filterMap) throws ServiceException;
 
     Optional<Book> getBookById(long id) throws ServiceException;
 

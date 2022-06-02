@@ -16,15 +16,15 @@ import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PA
 
 public class AddNewAuthorCommand implements Command {
     private static final String AUTHOR_ADDED_MARKER = "author has been added";
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        request.removeAttribute(AUTHOR_ADDED_MSG);
 
         Map<String, String> componentsData = (Map<String, String>) session.getAttribute(BOOK_COMPONENTS_FORM_DATA);
 
-        clearWrongMsg(componentsData);
-        fillComponentsData(componentsData, request);
+        clearSessionMap(componentsData);
+        fillSessionMap(componentsData, request);
 
         AuthorService authorService = AuthorServiceImpl.getInstance();
 
@@ -33,24 +33,28 @@ public class AddNewAuthorCommand implements Command {
             if (authorService.createNewAuthor(componentsData)){
                 componentsData.remove(AUTHOR_NAME_FORM);
                 componentsData.remove(AUTHOR_SURNAME_FORM);
-                request.setAttribute(AUTHOR_ADDED_MSG, AUTHOR_ADDED_MARKER);
+                componentsData.put(AUTHOR_ADDED_MSG, AUTHOR_ADDED_MARKER);
             }
 
+            session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
             session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
 
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
 
-        return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.FORWARD);
+        return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);
     }
 
-    private void fillComponentsData(Map<String, String> componentsData, HttpServletRequest request) {
+    private void fillSessionMap(Map<String, String> componentsData, HttpServletRequest request) {
         componentsData.put(AUTHOR_NAME_FORM,request.getParameter(AUTHOR_NAME));
         componentsData.put(AUTHOR_SURNAME_FORM,request.getParameter(AUTHOR_SURNAME));
     }
 
-    private void clearWrongMsg(Map<String, String> componentsData) {
+    private void clearSessionMap(Map<String, String> componentsData) {
+        componentsData.remove(PUBLISHER_ADDED_MSG);
+        componentsData.remove(GENRE_ADDED_MSG);
+        componentsData.remove(AUTHOR_ADDED_MSG);
         componentsData.remove(WRONG_AUTHOR_NAME_FORM);
         componentsData.remove(WRONG_AUTHOR_SURNAME_FORM);
         componentsData.remove(WRONG_AUTHOR_EXISTS_FORM);

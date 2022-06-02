@@ -38,158 +38,157 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
     <title>${title}</title>
-    <style>
-        .red-color {
-            color: red;
-        }
-        .green-color {
-            color: green;
-        }
-    </style>
+
+    <link rel="stylesheet" href="${path}/css/styles.css">
+
 </head>
-<body style="background-color: cadetblue">
-<div class="row mb-4 py-lg-5"></div>
-<div class="row py-lg-5">
-    <div class="col mb-2"></div>
+<body class="background-theme">
+<section class="container-fluid">
+    <div class="row mb-4 py-lg-5"></div>
+    <div class="row py-lg-5">
+        <div class="col mb-2"></div>
 
-    <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
-        <h3 class="py-md-3">${title}</h3>
-        <hr/>
-        <form action="controller" class="row g-3 needs-validation" novalidate>
-            <input type="hidden" name="command" value="add_new_author">
-            <div class="col-md-12">
-                <p class="form-label">${author}:</p>
-            </div>
+        <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
+            <h3 class="py-md-3">${title}</h3>
+            <hr/>
+            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                <input type="hidden" name="command" value="add_new_author">
+                <div class="col-md-12">
+                    <p class="form-label">${author}:</p>
+                </div>
 
-            <div class="col-md-3">
-                <label for="author_name" class="form-label">${author_name}</label>
-                <input type="text" class="form-control" name="author_name" id="author_name"
-                       value="${book_components_form_data['author_name_form']}" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_author_name_form']}">
-                        ${incorrect_data_format}
+                <div class="col-md-3">
+                    <label for="author_name" class="form-label">${author_name}</label>
+                    <input type="text" class="form-control" name="author_name" id="author_name"
+                           value="${book_components_form_data['author_name_form']}" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_components_form_data['wrong_author_name_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <div class="col-md-9"></div>
+
+                <div class="col-md-3">
+                    <label for="author_surname" class="form-label">${author_surname}</label>
+                    <input type="text" class="form-control" name="author_surname" id="author_surname"
+                           value="${book_components_form_data['author_surname_form']}" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_components_form_data['wrong_author_surname_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <div class="col-md-9"></div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">${add_author_btn}</button>
+                </div>
+                <div class="col-12 red-color">
+                    <c:if test="${not empty book_components_form_data['wrong_author_exists_form']}">
+                        ${incorrect_author}
                     </c:if>
                 </div>
-            </div>
-
-            <div class="col-md-9"></div>
-
-            <div class="col-md-3">
-                <label for="author_surname" class="form-label">${author_surname}</label>
-                <input type="text" class="form-control" name="author_surname" id="author_surname"
-                       value="${book_components_form_data['author_surname_form']}" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_author_surname_form']}">
-                        ${incorrect_data_format}
+                <div class="col-12 green-color">
+                    <c:if test="${not empty book_components_form_data['is_author_added']}">
+                        ${author_has_been_added}
                     </c:if>
                 </div>
-            </div>
+            </form>
 
-            <div class="col-md-9"></div>
+            <hr/>
 
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">${add_author_btn}</button>
-            </div>
-            <div class="col-12 red-color">
-                <c:if test="${not empty book_components_form_data['wrong_author_exists_form']}">
-                    ${incorrect_author}
-                </c:if>
-            </div>
-            <div class="col-12 green-color">
-                <c:if test="${not empty is_author_added}">
-                    ${author_has_been_added}
-                </c:if>
-            </div>
-        </form>
+            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                <input type="hidden" name="command" value="add_new_publisher">
 
-        <hr/>
+                <div class="col-md-12">
+                    <p class="form-label">${publisher}:</p>
+                </div>
 
-        <form action="controller" class="row g-3 needs-validation" novalidate>
-            <input type="hidden" name="command" value="add_new_publisher">
+                <div class="col-md-3">
+                    <label for="publisher_name" class="form-label">${publisher_name}</label>
+                    <input type="text" class="form-control" name="publisher_name" id="publisher_name"
+                           value="${book_components_form_data['publisher_name_form']}" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_components_form_data['wrong_publisher_name_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
 
-            <div class="col-md-12">
-                <p class="form-label">${publisher}:</p>
-            </div>
+                <div class="col-md-9"></div>
 
-            <div class="col-md-3">
-                <label for="publisher_name" class="form-label">${publisher_name}</label>
-                <input type="text" class="form-control" name="publisher_name" id="publisher_name"
-                       value="${book_components_form_data['publisher_name_form']}" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_publisher_name_form']}">
-                        ${incorrect_data_format}
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">${add_publisher_btn}</button>
+                </div>
+                <div class="col-12 red-color">
+                    <c:if test="${not empty book_components_form_data['wrong_publisher_exists_form']}">
+                        ${incorrect_publisher}
                     </c:if>
                 </div>
-            </div>
-
-            <div class="col-md-9"></div>
-
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">${add_publisher_btn}</button>
-            </div>
-            <div class="col-12 red-color">
-                <c:if test="${not empty book_components_form_data['wrong_publisher_exists_form']}">
-                    ${incorrect_publisher}
-                </c:if>
-            </div>
-            <div class="col-12 green-color">
-                <c:if test="${not empty is_publisher_added}">
-                    ${publisher_has_been_added}
-                </c:if>
-            </div>
-        </form>
-
-        <hr/>
-
-        <form action="controller" class="row g-3 needs-validation" novalidate>
-            <input type="hidden" name="command" value="add_new_genre">
-            <div class="col-md-12">
-                <p class="form-label">${genre}:</p>
-            </div>
-
-            <div class="col-md-3">
-                <label for="genre_name" class="form-label">${genre_name}</label>
-                <input type="text" class="form-control" name="genre_name" id="genre_name"
-                       value="${book_components_form_data['genre_name_form']}" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_genre_name_form']}">
-                        ${incorrect_data_format}
+                <div class="col-12 green-color">
+                    <c:if test="${not empty book_components_form_data['is_publisher_added']}">
+                        ${publisher_has_been_added}
                     </c:if>
                 </div>
-            </div>
+            </form>
 
-            <div class="col-md-9"></div>
+            <hr/>
 
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">${add_genre_btn}</button>
-            </div>
-            <div class="col-12 red-color">
-                <c:if test="${not empty book_components_form_data['wrong_genre_exists_form']}">
-                    ${incorrect_genre}
-                </c:if>
-            </div>
-            <div class="col-12 green-color">
-                <c:if test="${not empty is_genre_added}">
-                    ${genre_has_been_added}
-                </c:if>
-            </div>
-        </form>
+            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                <input type="hidden" name="command" value="add_new_genre">
+                <div class="col-md-12">
+                    <p class="form-label">${genre}:</p>
+                </div>
 
-        <hr/>
+                <div class="col-md-3">
+                    <label for="genre_name" class="form-label">${genre_name}</label>
+                    <input type="text" class="form-control" name="genre_name" id="genre_name"
+                           value="${book_components_form_data['genre_name_form']}" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_components_form_data['wrong_genre_name_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
 
-        <form action="controller">
-            <input type="hidden" name="command" value="go_to_main_page">
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">${back_btn}</button>
-            </div>
-        </form>
+                <div class="col-md-9"></div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">${add_genre_btn}</button>
+                </div>
+                <div class="col-12 red-color">
+                    <c:if test="${not empty book_components_form_data['wrong_genre_exists_form']}">
+                        ${incorrect_genre}
+                    </c:if>
+                </div>
+                <div class="col-12 green-color">
+                    <c:if test="${not empty book_components_form_data['is_genre_added']}">
+                        ${genre_has_been_added}
+                    </c:if>
+                </div>
+            </form>
+
+            <hr/>
+
+            <form method="get" action="${path}/controller">
+                <input type="hidden" name="command" value="go_to_main_page">
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">${back_btn}</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col mb-3"></div>
     </div>
-
-    <div class="col mb-3"></div>
-</div>
+</section>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
 </html>

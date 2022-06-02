@@ -21,4 +21,6 @@ public interface UserService {
     Optional<User> findUserById(long id) throws ServiceException;
 
     List<User> getAllUsers() throws ServiceException;
+
+    boolean changeAccountStatus(String email, boolean status) throws ServiceException;
 }

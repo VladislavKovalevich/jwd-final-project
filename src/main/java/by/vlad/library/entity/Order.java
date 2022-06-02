@@ -1,13 +1,15 @@
 package by.vlad.library.entity;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 public class Order extends AbstractEntity{
-    private Date startDate;
-    private Date expirationDate;
-    private Double sum;
-    private List<Book> books;
+    private LocalDate createDate;
+    private LocalDate orderedDate;
+    private LocalDate rejectedDate;
+    private LocalDate returnedDate;
+    private OrderType type;
+    private OrderStatus status;
+    private User user;
 
     public Order() {
     }
@@ -16,37 +18,62 @@ public class Order extends AbstractEntity{
         super(id);
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public LocalDate getCreateDate() {
+        return createDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
     }
 
-    public Date getExpirationDate() {
-        return expirationDate;
+    public LocalDate getOrderedDate() {
+        return orderedDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setOrderedDate(LocalDate orderedDate) {
+        this.orderedDate = orderedDate;
     }
 
-    public Double getSum() {
-        return sum;
+    public LocalDate getRejectedDate() {
+        return rejectedDate;
     }
 
-    public void setSum(Double sum) {
-        this.sum = sum;
+    public void setRejectedDate(LocalDate rejectedDate) {
+        this.rejectedDate = rejectedDate;
     }
 
-    public List<Book> getBooks() {
-        return books;
+    public LocalDate getReturnedDate() {
+        return returnedDate;
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setReturnedDate(LocalDate returnedDate) {
+        this.returnedDate = returnedDate;
     }
+
+    public OrderType getType() {
+        return type;
+    }
+
+    public void setType(OrderType type) {
+        this.type = type;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
 
     public static OrderBuilder getOrderBuilder(){
         return new Order().new OrderBuilder();
@@ -58,8 +85,38 @@ public class Order extends AbstractEntity{
             return this;
         }
 
-        public OrderBuilder withStartDate(Date date){
-            Order.this.setStartDate(date);
+        public OrderBuilder withCreateDate(LocalDate date){
+            Order.this.setCreateDate(date);
+            return this;
+        }
+
+        public OrderBuilder withOrderedDate(LocalDate date){
+            Order.this.setOrderedDate(date);
+            return this;
+        }
+
+        public OrderBuilder withRejectedDate(LocalDate date){
+            Order.this.setRejectedDate(date);
+            return this;
+        }
+
+        public OrderBuilder withReturnedDate(LocalDate date){
+            Order.this.setReturnedDate(date);
+            return this;
+        }
+
+        public OrderBuilder withOrderType(OrderType type){
+            Order.this.setType(type);
+            return this;
+        }
+
+        public OrderBuilder withOrderStatus(OrderStatus status){
+            Order.this.setStatus(status);
+            return this;
+        }
+
+        public OrderBuilder withUser(User user){
+            Order.this.setUser(user);
             return this;
         }
 

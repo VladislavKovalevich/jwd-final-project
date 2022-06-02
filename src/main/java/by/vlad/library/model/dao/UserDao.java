@@ -17,7 +17,7 @@ public interface UserDao extends BasicDao<User> {
 
     boolean changeAccountPassword(String email, String password, String newPassword) throws DaoException;
 
-    boolean changeAccountStatus(long userId, int status) throws DaoException;
+    boolean changeAccountStatus(String userEmail, boolean status) throws DaoException;
 
     Optional<User> findUserById(long id) throws DaoException;
 

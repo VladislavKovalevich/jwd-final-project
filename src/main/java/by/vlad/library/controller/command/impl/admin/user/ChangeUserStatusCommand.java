@@ -1,4 +1,4 @@
-package by.vlad.library.controller.command.impl.admin;
+package by.vlad.library.controller.command.impl.admin.user;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
@@ -13,22 +13,24 @@ import java.util.List;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.USERS_LIST_PAGE;
-import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
-public class ShowUsersListCommand implements Command {
+public class ChangeUserStatusCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        String email = request.getParameter(USER_ID_REQ_PARAM);
+        boolean status = Boolean.parseBoolean(request.getParameter(USER_STATUS));
         UserService userService = UserServiceImpl.getInstance();
-        List<User> users;
 
         try {
-            users = userService.getAllUsers();
-            request.setAttribute(USERS_LIST, users);
+            if(userService.changeAccountStatus(email, status)){
+                List<User> users;
+                users = userService.getAllUsers();
+                request.setAttribute(USERS_LIST, users);
+            }
         } catch (ServiceException e) {
-            //logg
-            throw new CommandException(e);
+            e.printStackTrace();
         }
 
-        return new Router(USERS_LIST_PAGE, FORWARD);
+        return new Router(USERS_LIST_PAGE, Router.Type.FORWARD);
     }
 }

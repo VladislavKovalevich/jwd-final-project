@@ -9,7 +9,6 @@ import by.vlad.library.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
@@ -34,11 +33,11 @@ public class ChangeAccountPasswordCommand implements Command {
             if(userService.changePassword(passwordData)){
                 session.removeAttribute(USER_FORM_DATA);
                 session.setAttribute(CURRENT_PAGE, HOME_PAGE);
-                router = new Router(HOME_PAGE, Router.Type.FORWARD);
+                router = new Router(HOME_PAGE, Router.Type.REDIRECT);
             }else{
                 session.setAttribute(USER_FORM_DATA, passwordData);
                 session.setAttribute(CURRENT_PAGE, CHANGE_PASSWORD_PAGE);
-                router = new Router(CHANGE_PASSWORD_PAGE, Router.Type.FORWARD);
+                router = new Router(CHANGE_PASSWORD_PAGE, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
             throw new CommandException(e);

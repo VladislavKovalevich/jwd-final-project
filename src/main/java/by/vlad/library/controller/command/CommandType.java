@@ -2,24 +2,34 @@ package by.vlad.library.controller.command;
 
 import by.vlad.library.controller.command.impl.*;
 import by.vlad.library.controller.command.impl.admin.book.AddNewBookCommand;
-import by.vlad.library.controller.command.impl.admin.ShowUsersListCommand;
+import by.vlad.library.controller.command.impl.admin.user.ChangeUserStatusCommand;
+import by.vlad.library.controller.command.impl.admin.user.ShowUsersListCommand;
 import by.vlad.library.controller.command.impl.admin.book.UpdateBookDataCommand;
 import by.vlad.library.controller.command.impl.admin.book.book_components.*;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddBookComponentsPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddNewBookPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookComponentsPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookDataPageCommand;
+import by.vlad.library.controller.command.impl.client.book.AddBookToOrderCommand;
+import by.vlad.library.controller.command.impl.client.book.RemoveBookFromOrderCommand;
+import by.vlad.library.controller.command.impl.client.order.CreateOrderCommand;
+import by.vlad.library.controller.command.impl.client.order.DeleteOrderCommand;
 import by.vlad.library.controller.command.impl.gotopage.*;
 
 public enum CommandType {
+    ADD_BOOK_TO_ORDER(new AddBookToOrderCommand()),
     ADD_NEW_AUTHOR(new AddNewAuthorCommand()),
     ADD_NEW_BOOK(new AddNewBookCommand()),
     ADD_NEW_GENRE(new AddNewGenreCommand()),
     ADD_NEW_PUBLISHER(new AddNewPublisherCommand()),
+    CHANGE_USER_STATUS(new ChangeUserStatusCommand()),
     CHANGE_ACCOUNT_PASSWORD(new ChangeAccountPasswordCommand()),
     CHANGE_LOCAL(new ChangeLocalCommand()),
     CREATE_NEW_ACCOUNT(new CreateNewAccountCommand()),
+    CREATE_ORDER(new CreateOrderCommand()),
     DEFAULT(new DefaultCommand()),
+    DELETE_ORDER(new DeleteOrderCommand()),
+    GET_ORDERS_BY_USER_ID(new GetOrdersByUserIdCommand()),
     GO_TO_ADD_BOOK_COMPONENTS_PAGE(new GoToAddBookComponentsPageCommand()),
     GO_TO_ADD_NEW_BOOK_PAGE(new GoToAddNewBookPageCommand()),
     GO_TO_CHANGE_PASSWORD_PAGE(new GoToChangeAccountPasswordPageCommand()),
@@ -31,6 +41,7 @@ public enum CommandType {
     GO_TO_UPDATE_BOOK_DATA_PAGE(new GoToUpdateBookDataPageCommand()),
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
+    REMOVE_BOOK_FROM_ORDER(new RemoveBookFromOrderCommand()),
     SHOW_BOOKS_LIST(new ShowBooksListCommand()),
     SHOW_BOOK_INFO(new ShowBookByIdCommand()),
     SHOW_USERS_LIST(new ShowUsersListCommand()),

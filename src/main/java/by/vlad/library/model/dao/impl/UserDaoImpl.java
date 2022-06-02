@@ -3,47 +3,54 @@ package by.vlad.library.model.dao.impl;
 import by.vlad.library.model.dao.UserDao;
 import by.vlad.library.entity.User;
 import by.vlad.library.exception.DaoException;
+import by.vlad.library.model.dao.mapper.Mapper;
+import by.vlad.library.model.dao.mapper.impl.UserMapper;
 import by.vlad.library.model.pool.ConnectionPool;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
     private static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
-            "SELECT users.id, users.name, surname, email, password, login, passport_serial_number, mobile_phone, roles.name FROM users, roles " +
-            "WHERE roles_id = roles.id AND email = ? AND password = ?";
+            "SELECT * FROM users, roles " +
+            "WHERE roles_id = role_id AND user_email = ? AND user_password = ? AND user_is_banned = 0";
 
     private static final String SELECT_USER_COUNT_BY_EMAIL =
-            "SELECT COUNT(*) as users_count FROM users " +
-            "WHERE email = ?";
+            "SELECT COUNT(*) as count_col FROM users " +
+            "WHERE user_email = ?";
 
     private static final String INSERT_NEW_USER =
-            "INSERT INTO users(`name`, `login`, `surname`, `email`, `password`, `passport_serial_number`, `mobile_phone`) " +
+            "INSERT INTO users(`user_name`, `user_login`, `user_surname`, `user_email`, " +
+                    "`user_password`, `user_passport_serial_number`, `user_mobile_phone`) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_USER_DATA =
             "UPDATE users " +
-            "SET name = ?," +
-            "    surname = ?, " +
-            "    email = ?, " +
-            "    login = ?, " +
-            "    passport_serial_number = ?, " +
-            "    mobile_phone = ? " +
-            "WHERE email = ?;  ";
+            "SET user_name = ?," +
+            "    user_surname = ?, " +
+            "    user_email = ?, " +
+            "    user_login = ?, " +
+            "    user_passport_serial_number = ?, " +
+            "    user_mobile_phone = ? " +
+            "WHERE user_email = ?;  ";
 
     private static final String UPDATE_USER_PASSWORD_DATA =
             "UPDATE users " +
-            "SET password = ? " +
-            "WHERE email = ? AND password = ?";
+            "SET user_password = ? " +
+            "WHERE user_email = ? AND user_password = ?";
 
     private static final String GET_USER_BY_ID =
-            "SELECT name, surname, email, login, passport_serial_number, mobile_phone " +
-            "FROM users WHERE id = ?";
+            "SELECT * " +
+            "FROM users WHERE user_id = ?";
 
     private static final String FIND_ALL_USERS =
-            "SELECT * FROM users WHERE roles_id = 1";
+            "SELECT * FROM users, roles WHERE roles_id = 1 AND roles_id = role_id;";
+
+    private static final String UPDATE_USER_STATUS =
+            "UPDATE users" +
+                    " SET user_is_banned = ? " +
+                    " WHERE user_email = ? ";
 
     private static UserDaoImpl instance;
 
@@ -80,27 +87,19 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Optional<User> authenticate(String login, String password) throws DaoException {
         Optional<User> optionalUser = Optional.empty();
+        Mapper<User> userMapper = UserMapper.getInstance();
 
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL_AND_PASSWORD)) {
 
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
-            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()){
-                User temp = User.getBuilder()
-                        .withId(resultSet.getLong(1))
-                        .withName(resultSet.getString(5))
-                        .withSurname(resultSet.getString(6))
-                        .withEmail(resultSet.getString(3))
-                        .withLogin(resultSet.getString(2))
-                        .withPassportSerialNumber(resultSet.getString(7))
-                        .withMobilePhone(resultSet.getString(8))
-                        .withIsBanned(resultSet.getBoolean(9))
-                        .buildUser();
-
-                optionalUser = Optional.of(temp);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                List<User> users = userMapper.map(resultSet);
+                if (!users.isEmpty()) {
+                    optionalUser = Optional.of(users.get(0));
+                }
             }
         } catch (SQLException e) {
             throw new DaoException(e);
@@ -122,7 +121,9 @@ public class UserDaoImpl implements UserDao {
             statement.setString(4, userData.getEmail());
             statement.setString(5, userData.getPassword());
             statement.setString(6, userData.getPassportSerialNumber());
-            statement.setString(7, userData.getMobilePhone());
+            statement.setString(7,
+                    userData.getMobilePhone().length() == 0 ? null
+                    : userData.getMobilePhone());
 
             rows = statement.executeUpdate();
 
@@ -135,20 +136,17 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean isEmailExists(String email) throws DaoException {
-        boolean isExists = true;
+        boolean isExists = false;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_COUNT_BY_EMAIL)){
 
             preparedStatement.setString(1, email);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()){
-                int count = resultSet.getInt(1);
-
-                if (count == 0){
-                    isExists = false;
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    isExists = count == 0;
                 }
             }
         }catch (SQLException e) {
@@ -203,33 +201,39 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean changeAccountStatus(long userId, int status) throws DaoException {
-        return false;
+    public boolean changeAccountStatus(String userEmail, boolean status) throws DaoException {
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(UPDATE_USER_STATUS)){
+
+            statement.setBoolean(1, status);
+            statement.setString(2, userEmail);
+
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
     }
 
     @Override
     public Optional<User> findUserById(long id) throws DaoException {
         Optional<User> optionalUser = Optional.empty();
+        Mapper<User> userMapper = UserMapper.getInstance();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)){
 
             statement.setLong(1, id);
 
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()){
-                User temp = User.getBuilder()
-                        .withId(id)
-                        .withName(resultSet.getString(1))
-                        .withSurname(resultSet.getString(2))
-                        .withEmail(resultSet.getString(3))
-                        .withLogin(resultSet.getString(4))
-                        .withPassportSerialNumber(resultSet.getString(5))
-                        .withMobilePhone(resultSet.getString(6))
-                        .buildUser();
-
-                optionalUser = Optional.of(temp);
+            try(ResultSet resultSet = statement.executeQuery()){
+                List<User> users = userMapper.map(resultSet);
+                if (!users.isEmpty()) {
+                    optionalUser = Optional.of(users.get(0));
+                }
             }
 
         }catch (SQLException e){
@@ -241,27 +245,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findAllUsers() throws DaoException {
-        List<User> users = new ArrayList<>();
+        List<User> users;
+        Mapper<User> userMapper = UserMapper.getInstance();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             Statement statement = connection.createStatement()){
 
             try(ResultSet resultSet = statement.executeQuery(FIND_ALL_USERS)) {
-                while (resultSet.next()){
-                    User temp = User.getBuilder()
-                            .withId(resultSet.getLong(1))
-                            .withName(resultSet.getString(2))
-                            .withSurname(resultSet.getString(3))
-                            .withEmail(resultSet.getString(4))
-                            .withPassword(resultSet.getString(5))
-                            .withLogin(resultSet.getString(6))
-                            .withPassportSerialNumber(resultSet.getString(7))
-                            .withMobilePhone(resultSet.getString(8))
-                            .withRole(resultSet.getString(9))
-                            .buildUser();
-                    //перенести в mapper
-                    users.add(temp);
-                }
+                users = userMapper.map(resultSet);
             }
 
         }catch (SQLException e){

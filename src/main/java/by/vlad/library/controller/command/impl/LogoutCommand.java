@@ -11,6 +11,6 @@ public class LogoutCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
         request.getSession().invalidate();
-        return new Router(MAIN_PAGE, Router.Type.REDIRECT);// в константу
+        return new Router(MAIN_PAGE, Router.Type.REDIRECT);
     }
 }

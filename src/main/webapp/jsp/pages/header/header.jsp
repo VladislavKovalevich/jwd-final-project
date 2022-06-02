@@ -29,116 +29,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <span class="navbar-brand">${library}</span>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <c:choose>
-                    <c:when test="${role eq 'CLIENT'}">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <span class="navbar-brand mr-0 mr-md-2">${library}</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <c:choose>
+                <c:when test="${role eq 'CLIENT'}">
+                    <ul class="navbar-nav me-auto mb-1 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Orders
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="${path}/controller?command=create_order">Create
+                                    order</a></li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=get_order_list_by_user_id&user_id=${user_id}">Order
+                                    list</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav my-2 my-lg-0 justify-content-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                    ${change_local}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=change_local&language=RU">${ru}</a></li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=change_local&language=EN">${en}</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                    ${user_login}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="${path}/controller?command=logout">${sign_out}</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=go_to_change_password_page">${change_password}</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=go_to_update_account_data_page">${update_account_data}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </c:when>
+
+                <c:when test="${role eq 'ADMIN'}">
+                    <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                Book menu
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="${path}/controller?command=show_books_list">${get_books}</a>
+                                    <a class="nav-link"
+                                       href="${path}/controller?command=go_to_add_new_book_page">${add_new_book}</a>
+                                    <a class="nav-link"
+                                       href="${path}/controller?command=go_to_add_book_components_page">${add_book_components}</a>
+                                    <a class="nav-link"
+                                       href="${path}/controller?command=go_to_update_book_components_page">${update_book_components}</a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Orders list</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="${path}/controller?command=show_users_list">Users list</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav my-2 my-lg-0 justify-content-end">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                ${user_login}
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                    ${change_local}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="${path}/controller?command=logout">${sign_out}</a></li>
-                                <li><a class="dropdown-item" href="${path}/controller?command=go_to_change_password_page">${change_password}</a></li>
-                                <li><a class="dropdown-item" href="${path}/controller?command=go_to_update_account_data_page">${update_account_data}</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=change_local&language=RU">${ru}</a></li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=change_local&language=EN">${en}</a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    ${change_local}
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                    ${user_login}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="${path}/controller?command=change_local&language=RU">${ru}</a></li>
-                                <li><a class="dropdown-item" href="${path}/controller?command=change_local&language=EN">${en}</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="${path}/controller?command=logout">${sign_out}</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=go_to_change_password_page">${change_password}</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=go_to_update_account_data_page">${update_account_data}</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
-                    </c:when>
+                </c:when>
 
-                    <c:when test="${role eq 'ADMIN'}">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Book menu
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
-                                        <a class="nav-link" href="${path}/controller?command=go_to_add_new_book_page">${add_new_book}</a>
-                                        <a class="nav-link" href="${path}/controller?command=go_to_add_book_components_page">${add_book_components}</a>
-                                        <a class="nav-link" href="${path}/controller?command=go_to_update_book_components_page">${update_book_components}</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Orders list</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="${path}/controller?command=show_users_list">Users list</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    ${user_login}
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="${path}/controller?command=logout">${sign_out}</a></li>
-                                    <li><a class="dropdown-item" href="${path}/controller?command=go_to_change_password_page">${change_password}</a></li>
-                                    <li><a class="dropdown-item" href="${path}/controller?command=go_to_update_account_data_page">${update_account_data}</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        ${change_local}
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="${path}/controller?command=change_local&language=RU">${ru}</a></li>
-                                    <li><a class="dropdown-item" href="${path}/controller?command=change_local&language=EN">${en}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </c:when>
-
-                    <c:otherwise>
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <c:otherwise>
+                    <ul class="navbar-nav me-auto mb-1 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav my-2 my-lg-0 justify-content-end">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                    ${change_local}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=change_local&language=RU">${ru}</a></li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=change_local&language=EN">${en}</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
                                     ${guest_title}
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="${path}/controller?command=go_to_create_new_account_page">${create_new_account}</a></li>
-                                    <li><a class="dropdown-item" href="${path}/controller?command=go_to_login_page">${sign_in}</a></li>
-                                </ul>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        ${change_local}
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="${path}/controller?command=change_local&language=RU">${ru}</a></li>
-                                    <li><a class="dropdown-item" href="${path}/controller?command=change_local&language=EN">${en}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </c:otherwise>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=go_to_create_new_account_page">${create_new_account}</a>
+                                </li>
+                                <li><a class="dropdown-item"
+                                       href="${path}/controller?command=go_to_login_page">${sign_in}</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </c:otherwise>
 
-                </c:choose>
-            </div>
+            </c:choose>
         </div>
-    </nav>
+    </div>
+</nav>
 </body>
 </html>

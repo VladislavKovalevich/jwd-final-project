@@ -1,9 +1,6 @@
 package by.vlad.library.model.dao.impl;
 
-import by.vlad.library.entity.Author;
-import by.vlad.library.entity.Book;
-import by.vlad.library.entity.Genre;
-import by.vlad.library.entity.Publisher;
+import by.vlad.library.entity.*;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.BookDao;
 import by.vlad.library.model.dao.mapper.Mapper;
@@ -14,68 +11,58 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Year;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.model.dao.ColumnName.*;
 
 public class BookDaoImpl implements BookDao {
-    private static final String SELECT_ALL_BOOKS =
-            "SELECT books.id, books.title, authors.id, authors.name, authors.surname, publishers.id, " +
-                    "publishers.name, genres.name " +
-            "FROM library.books " +
-            "JOIN library.authors ON books.authors_id = authors.id " +
-            "JOIN library.publishers ON books.publishers_id = publishers.id " +
-            "JOIN library.genres ON books.genres_id = genres.id";
 
     private static final String SELECT_BOOK_BY_ID =
-            "SELECT books.id, books.title, books.copies_number, books.publish_year, books.number_of_pages, books.description, authors.id, " +
-                    "authors.name, authors.surname, genres.id, genres.name, publishers.id, publishers.name " +
-            "FROM library.books " +
-            "JOIN library.authors ON books.authors_id = authors.id " +
-            "JOIN library.publishers ON books.publishers_id = publishers.id " +
-            "JOIN library.genres ON books.genres_id = genres.id " +
-            "WHERE books.id = ?";
+            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
+                    "author_id, author_name, author_surname, genre_id, genre_name, publisher_id, publisher_name " +
+            "FROM books " +
+            "JOIN authors ON books.authors_id = author_id " +
+            "JOIN publishers ON publishers_id = publisher_id " +
+            "JOIN genres ON genres_id = genre_id " +
+            "WHERE book_id = ?";
 
     private static final String SELECT_NUMBER_OF_BOOKS =
             "SELECT COUNT(*) as count_col FROM books";
 
-    private static final String SELECT_PREVIOUS_BOOKS =
-            "SELECT * FROM (SELECT books.id as books_id, title, authors.id as authors_id, authors.name as author_name, " +
-                    "authors.surname, publishers.id as publisher_id, " +
-                    "publishers.name as publisher_name, genres.name as genre_name " +
-                    "FROM library.books " +
-                    "LEFT JOIN library.authors ON books.authors_id = authors.id " +
-                    "LEFT JOIN library.publishers ON books.publishers_id = publishers.id " +
-                    "LEFT JOIN library.genres ON books.genres_id = genres.id " +
-                    "WHERE books.id<? ORDER BY books.id DESC LIMIT ?) as reverse_table " +
-                    "ORDER BY books_id";
-
-    private static final String SELECT_NEXT_BOOKS =
-            "SELECT books.id, books.title, authors.id, authors.name, authors.surname, publishers.id, " +
-                    "publishers.name, genres.name " +
-                    "FROM library.books " +
-                    "JOIN library.authors ON books.authors_id = authors.id " +
-                    "JOIN library.publishers ON books.publishers_id = publishers.id " +
-                    "JOIN library.genres ON books.genres_id = genres.id " +
-                    "WHERE books.id>? ORDER BY books.id LIMIT ?";
-
     private static final String INSERT_NEW_BOOK =
-            "INSERT INTO books (`title`, `copies_number`, `publish_year`, `number_of_pages`, `description`, `authors_id`, `publishers_id`, `genres_id`) " +
+            "INSERT INTO books (`book_title`, `book_copies_number`, `book_publish_year`, `book_number_of_pages`, " +
+                    "`book_description`, `authors_id`, `publishers_id`, `genres_id`) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
     private static final String UPDATE_BOOK =
             "UPDATE books " +
-                    "SET title = ?," +
-                    "    copies_number = ?, " +
-                    "    publish_year = ?, " +
-                    "    number_of_pages = ?, " +
-                    "    description = ?, " +
+                    "SET book_title = ?," +
+                    "    book_copies_number = ?, " +
+                    "    book_publish_year = ?, " +
+                    "    book_number_of_pages = ?, " +
+                    "    book_description = ?, " +
                     "    authors_id = ? ," +
                     "    publishers_id = ? ," +
                     "    genres_id = ? " +
-                    "WHERE id = ?;  ";
+                    "WHERE book_id = ?;  ";
+
+    private static final String SELECT_BOOKS_PAGE =
+            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
+                    "author_id, author_name, author_surname, genre_id, genre_name, publisher_id, publisher_name " +
+                    "FROM books " +
+                    "JOIN authors ON authors_id = author_id " +
+                    "JOIN publishers ON publishers_id = publisher_id " +
+                    "JOIN genres ON genres_id = genre_id ";
+
+    private static final String SQL_LIMIT = "LIMIT ?, ?";
+
+    private static final String SQL_WHERE = " WHERE ";
+    private static final String SQL_IN_START = " IN(";
+    private static final String SQL_IN_END = ") ";
+    private static final String SQL_AND = " AND ";
 
     private static final long DEFAULT_ITEM_COUNT_PER_PAGE = 4;
 
@@ -112,12 +99,23 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> getBooks() throws DaoException {
+    public List<Book> getBooks(long pageNumber, Map<String, String> filterMap) throws DaoException {
         List<Book> books;
         Mapper<Book> mapper = BookMapper.getInstance();
 
+        StringBuilder resultSQL = new StringBuilder(SELECT_BOOKS_PAGE);
+
+        if (!filterMap.isEmpty()){
+            resultSQL.append(buildSQLFilterString(filterMap));
+        }
+
+        resultSQL.append(SQL_LIMIT);
+
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_BOOKS)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(resultSQL.toString())) {
+
+            preparedStatement.setLong(1, (pageNumber - 1) * DEFAULT_ITEM_COUNT_PER_PAGE);
+            preparedStatement.setLong(2, DEFAULT_ITEM_COUNT_PER_PAGE);
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 books = mapper.map(resultSet);
@@ -133,44 +131,18 @@ public class BookDaoImpl implements BookDao {
     @Override
     public Optional<Book> getBookById(long id) throws DaoException {
         Optional<Book> bookOptional = Optional.empty();
+        Mapper<Book> bookMapper = BookMapper.getInstance();
 
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOOK_BY_ID)){
 
             preparedStatement.setLong(1, id);
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()){
-                Author author = new Author(
-                        resultSet.getLong(AUTHORS_ID_COL),
-                        resultSet.getString(AUTHORS_NAME_COL),
-                        resultSet.getString(AUTHORS_SURNAME_COL)
-                );
-
-                Publisher publisher = new Publisher(
-                        resultSet.getLong(PUBLISHERS_ID_COL),
-                        resultSet.getString(PUBLISHERS_NAME_COL)
-                );
-
-                Genre genre = new Genre(
-                        resultSet.getLong(GENRES_ID_COL),
-                        resultSet.getString(GENRES_NAME_COL)
-                );
-
-                Book book = Book.getBuilder()
-                        .withId(resultSet.getLong(BOOKS_ID_COL))
-                        .withTitle(resultSet.getString(BOOKS_TITLE_COL))
-                        .withCopiesNumber(resultSet.getInt(BOOKS_COPIES_NUMBER_COL))
-                        .withReleaseYear(Year.of(resultSet.getInt(BOOKS_PUBLISH_YEAR_COL)))
-                        .withNumberOfPages(resultSet.getInt(BOOKS_NUMBER_OF_PAGES_COL))
-                        .withDescription(resultSet.getString(BOOKS_DESCRIPTION_COL))
-                        .withGenre(genre)
-                        .withPublisher(publisher)
-                        .withAuthor(author)
-                        .buildBook();
-
-                bookOptional = Optional.of(book);
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                List<Book> books = bookMapper.map(resultSet);
+                if (!books.isEmpty()) {
+                    bookOptional = Optional.of(books.get(0));
+                }
             }
 
         }catch (SQLException e){
@@ -181,12 +153,18 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public int findNumberOfBooks() throws DaoException {
+    public int findNumberOfPage(Map<String, String> filterMap) throws DaoException {
         int result;
         int booksNumber = 0;
 
+        StringBuilder resultSQL = new StringBuilder(SELECT_NUMBER_OF_BOOKS);
+
+        if (!filterMap.isEmpty()){
+            resultSQL.append(buildSQLFilterString(filterMap));
+        }
+
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NUMBER_OF_BOOKS)){
+            PreparedStatement preparedStatement = connection.prepareStatement(resultSQL.toString())){
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -205,48 +183,6 @@ public class BookDaoImpl implements BookDao {
         }
 
         return result;
-    }
-
-    @Override
-    public List<Book> findNextBooks(long lastId) throws DaoException {
-        List<Book> books;
-        Mapper<Book> mapper = BookMapper.getInstance();
-
-        try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_NEXT_BOOKS)){
-
-            preparePaginationDbRequest(preparedStatement, lastId);
-
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-                books = mapper.map(resultSet);
-            }
-
-        }catch (SQLException e){
-            throw new DaoException(e);
-        }
-
-        return books;
-    }
-
-    @Override
-    public List<Book> findPrevBooks(long firstId) throws DaoException {
-        List<Book> books;
-        Mapper<Book> mapper = BookMapper.getInstance();
-
-        try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PREVIOUS_BOOKS)){
-
-            preparePaginationDbRequest(preparedStatement, firstId);
-
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-                books = mapper.map(resultSet);
-            }
-
-        }catch (SQLException e){
-            throw new DaoException(e);
-        }
-
-        return books;
     }
 
     @Override
@@ -291,7 +227,7 @@ public class BookDaoImpl implements BookDao {
         return bookOptional;
     }
 
-    private void prepareInsertUpdateDbRequest(PreparedStatement statement, Book book, boolean isUpdate){
+    private void prepareInsertUpdateDbRequest(PreparedStatement statement, Book book, boolean isUpdate) throws SQLException {
         try {
             if (isUpdate){
                 statement.setLong(9, book.getId());
@@ -306,16 +242,42 @@ public class BookDaoImpl implements BookDao {
             statement.setLong(7, book.getPublisher().getId());
             statement.setLong(8, book.getGenre().getId());
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new SQLException(e);
         }
     }
 
-    private void preparePaginationDbRequest(PreparedStatement statement, long id){
-        try {
-            statement.setLong(1, id);
-            statement.setLong(2, BookDaoImpl.DEFAULT_ITEM_COUNT_PER_PAGE);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private String buildSQLFilterString(Map<String, String> filterMap){
+        StringBuilder sqlFilter = new StringBuilder(SQL_WHERE);
+
+        for (Map.Entry<String ,String> e: filterMap.entrySet()) {
+            switch (e.getKey()){
+                case GENRE -> {
+                    sqlFilter.append(GENRES_ID_COL)
+                            .append(SQL_IN_START)
+                            .append(e.getValue())
+                            .append(SQL_IN_END);
+                }
+
+                case PUBLISHER -> {
+                    sqlFilter.append(PUBLISHERS_ID_COL)
+                            .append(SQL_IN_START)
+                            .append(e.getValue())
+                            .append(SQL_IN_END);
+                }
+
+                case AUTHOR -> {
+                    sqlFilter.append(AUTHORS_ID_COL)
+                            .append(SQL_IN_START)
+                            .append(e.getValue())
+                            .append(SQL_IN_END);
+                }
+            }
+
+            sqlFilter.append(SQL_AND);
         }
+
+        sqlFilter.delete(sqlFilter.length() - SQL_AND.length(), sqlFilter.length() - 1);
+
+        return sqlFilter.toString();
     }
 }

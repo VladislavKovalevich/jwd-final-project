@@ -13,40 +13,37 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
-import static by.vlad.library.controller.command.PagePath.HOME_PAGE;
 
 public class AddNewBookCommand implements Command {
+    private static final String BOOK_ADDED_MARKER = "book has been added";
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Map<String,String> bookMap = (Map<String, String>) session.getAttribute(BOOK_FORM_DATA);
-        Router router;
 
-        cleanWrongMessages(bookMap);
-        fillUserDataMap(request, bookMap);
+        clearSessionMap(bookMap);
+        fillSessionMap(request, bookMap);
 
         BookService bookService = BookServiceImpl.getInstance();
 
         try {
-            if (bookService.addBook(bookMap)){
-                session.removeAttribute(AUTHORS);
-                session.removeAttribute(PUBLISHERS);
-                session.removeAttribute(BOOK_FORM_DATA);
-                session.setAttribute(CURRENT_PAGE, HOME_PAGE);
-                router = new Router(HOME_PAGE, Router.Type.FORWARD);
-            }else{
-                session.setAttribute(BOOK_FORM_DATA, bookMap);
-                session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
-                router = new Router(ADD_NEW_BOOK_PAGE, Router.Type.FORWARD);
+            if (bookService.addBook(bookMap)) {
+                bookMap.clear();
+                bookMap.put(ADD_BOOK_MSG, BOOK_ADDED_MARKER);
             }
+
+            session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
+            session.setAttribute(BOOK_FORM_DATA, bookMap);
+
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
 
-        return router;
+        return new Router(ADD_NEW_BOOK_PAGE, Router.Type.REDIRECT);
     }
 
-    private void fillUserDataMap(HttpServletRequest request, Map<String, String> booksMap) {
+    private void fillSessionMap(HttpServletRequest request, Map<String, String> booksMap) {
         booksMap.put(TITLE_FORM, request.getParameter(TITLE));
         booksMap.put(AUTHOR_FORM, request.getParameter(AUTHOR));
         booksMap.put(PUBLISHER_FORM, request.getParameter(PUBLISHER));
@@ -57,7 +54,7 @@ public class AddNewBookCommand implements Command {
         booksMap.put(DESCRIPTION_FORM, request.getParameter(DESCRIPTION));
     }
 
-    private void cleanWrongMessages(Map<String, String> booksMap) {
+    private void clearSessionMap(Map<String, String> booksMap) {
         booksMap.remove(WRONG_TITLE_FORM);
         booksMap.remove(WRONG_COPIES_NUMBER_FORM);
         booksMap.remove(WRONG_RELEASE_YEAR_FORM);

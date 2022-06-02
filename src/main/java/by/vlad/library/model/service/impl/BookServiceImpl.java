@@ -37,38 +37,28 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooks(String direction, Map<String, Long> paginationData) throws ServiceException {
+    public List<Book> getAllBooks(String direction, Map<String, Long> paginationData, Map<String, String> filterMap) throws ServiceException {
         List<Book> books;
 
         try {
 
             if (direction == null || paginationData.isEmpty()) {
                 direction = NEXT_PAGE;
-                initPaginationDataMap(paginationData);
+                initPaginationDataMap(paginationData, filterMap);
             }
 
             BookDao bookDAO = BookDaoImpl.getInstance();
+            long tempPage = paginationData.get(CURRENT_PAGE_NUM);
 
             if (direction.equals(NEXT_PAGE)){
-                long lastId = paginationData.get(LAST_ID);
-                books = bookDAO.findNextBooks(lastId);
+                tempPage++;
             }else{
-                long firstId = paginationData.get(FIRST_ID);
-                books = bookDAO.findPrevBooks(firstId);
+                tempPage--;
             }
 
-            if (!books.isEmpty()){
-                long newFirstId = books.get(0).getId();
-                long newLastId = books.get(books.size() - 1).getId();
+            books = bookDAO.getBooks(tempPage, filterMap);
 
-                paginationData.put(FIRST_ID, newFirstId);
-                paginationData.put(LAST_ID, newLastId);
-
-                long currPageNumber = paginationData.get(CURRENT_PAGE_NUM);
-                currPageNumber = currPageNumber + (direction.equals(NEXT_PAGE) ? 1 : -1);
-
-                paginationData.put(CURRENT_PAGE_NUM, currPageNumber);
-            }
+            paginationData.put(CURRENT_PAGE_NUM, tempPage);
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
@@ -76,12 +66,10 @@ public class BookServiceImpl implements BookService {
         return books;
     }
 
-    private void initPaginationDataMap(Map<String, Long> paginationData) throws DaoException {
-        long pagesNumber = BookDaoImpl.getInstance().findNumberOfBooks();
-        paginationData.put(PAGES_NUMBER, pagesNumber);
-        paginationData.put(CURRENT_PAGE_NUM, 0L);
-        paginationData.put(FIRST_ID, 0L);
-        paginationData.put(LAST_ID, 0L);
+    private void initPaginationDataMap(Map<String, Long> paginationMap, Map<String, String> filterMap) throws DaoException {
+        long pagesNumber = BookDaoImpl.getInstance().findNumberOfPage(filterMap);
+        paginationMap.put(PAGES_NUMBER, pagesNumber);
+        paginationMap.put(CURRENT_PAGE_NUM, 0L);
     }
 
     @Override

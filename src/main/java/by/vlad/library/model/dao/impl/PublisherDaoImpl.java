@@ -16,19 +16,19 @@ import java.util.Optional;
 import static by.vlad.library.model.dao.ColumnName.*;
 
 public class PublisherDaoImpl implements PublisherDao {
-    private static final String SELECT_ALL_PUBLISHER = "SELECT publishers.id, publishers.name FROM publishers";
+    private static final String SELECT_ALL_PUBLISHER = "SELECT publisher_id, publisher_name FROM publishers";
 
     private static final String INSERT_AUTHOR =
-            "INSERT INTO publishers (`name`) VALUES (?)";
+            "INSERT INTO publishers (`publisher_name`) VALUES (?)";
 
     private static final String IS_PUBLISHER_EXISTS =
             "SELECT COUNT(*) as count_col FROM publishers " +
-                    "WHERE name = ?";
+                    "WHERE publisher_name = ?";
 
     private static final String UPDATE_PUBLISHER =
             "UPDATE publishers " +
-                    "SET name = ? " +
-                    "WHERE id = ?";
+                    "SET publisher_name = ? " +
+                    "WHERE publisher_id = ?";
 
     private static PublisherDaoImpl instance;
 
@@ -79,8 +79,8 @@ public class PublisherDaoImpl implements PublisherDao {
                 while (resultSet.next()){
                     Publisher p = new Publisher();
 
-                    p.setId(resultSet.getLong(PUBLISHERS_ID_COL));
-                    p.setName(resultSet.getString(PUBLISHERS_NAME_COL));
+                    p.setId(resultSet.getLong(PUBLISHER_ID_COL));
+                    p.setName(resultSet.getString(PUBLISHER_NAME_COL));
 
                     publishers.add(p);
                 }

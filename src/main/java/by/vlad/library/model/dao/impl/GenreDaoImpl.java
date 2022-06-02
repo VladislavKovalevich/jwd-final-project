@@ -16,19 +16,19 @@ import java.util.Optional;
 import static by.vlad.library.model.dao.ColumnName.*;
 
 public class GenreDaoImpl implements GenreDao {
-    private static final String SELECT_ALL_GENRES = "SELECT genres.id, genres.name FROM genres";
+    private static final String SELECT_ALL_GENRES = "SELECT genre_id, genre_name FROM genres";
 
     private static final String IS_GENRE_EXISTS =
             "SELECT COUNT(*) as count_col FROM genres " +
-                    "WHERE name = ?";
+                    "WHERE genre_name = ?";
 
     private static final String INSERT_GENRE =
-            "INSERT INTO genres (`name`) VALUES (?)";
+            "INSERT INTO genres (`genre_name`) VALUES (?)";
 
     private static final String UPDATE_GENRE =
             "UPDATE genres " +
-                    "SET name = ? " +
-                    "WHERE id = ?";
+                    "SET genre_name = ? " +
+                    "WHERE genre_id = ?";
 
     private static GenreDaoImpl instance;
 
@@ -78,8 +78,8 @@ public class GenreDaoImpl implements GenreDao {
             try(ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
                     Genre genre = new Genre();
-                    genre.setId(resultSet.getLong(GENRES_ID_COL));
-                    genre.setName(resultSet.getString(GENRES_NAME_COL));
+                    genre.setId(resultSet.getLong(GENRE_ID_COL));
+                    genre.setName(resultSet.getString(GENRE_NAME_COL));
 
                     genres.add(genre);
                 }

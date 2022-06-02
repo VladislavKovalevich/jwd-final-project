@@ -10,7 +10,6 @@ import by.vlad.library.util.PasswordEncoder;
 import by.vlad.library.validator.UserValidator;
 import by.vlad.library.validator.impl.UserValidatorImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -209,5 +208,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return users;
+    }
+
+    @Override
+    public boolean changeAccountStatus(String email, boolean status) throws ServiceException {
+        boolean isUpdated;
+        UserDao userDao = UserDaoImpl.getInstance();
+
+        try {
+            isUpdated = userDao.changeAccountStatus(email, status);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+        return isUpdated;
     }
 }

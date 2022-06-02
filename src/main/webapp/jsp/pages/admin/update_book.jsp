@@ -32,146 +32,153 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
     <title>${title}</title>
-    <style>
-        .red-color {
-            color: red;
-        }
 
-        .green-color {
-            color: green;
-        }
-    </style>
+    <link rel="stylesheet" href="${path}/css/styles.css">
+
 </head>
-<body style="background-color: cadetblue">
-<div class="row mb-4 py-lg-5"></div>
-<div class="row py-lg-5">
-    <div class="col mb-2"></div>
+<body class="background-theme">
+<section class="container-fluid">
+    <div class="row mb-4 py-lg-5"></div>
+    <div class="row py-lg-5">
+        <div class="col mb-2"></div>
 
 
-    <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
-        <h3 class="py-md-3">${title}</h3>
-        <form class="row g-3 needs-validation" novalidate>
-            <input type="hidden" name="command" value="update_book_data">
+        <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
+            <h3 class="py-md-3">${title}</h3>
+            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                <input type="hidden" name="command" value="update_book_data">
 
-            <div class="col-md-4">
-                <label for="title" class="form-label">${book_title}</label>
-                <input type="text" class="form-control" name="title" id="title"
-                       value="${book_form_data['title_form']}" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_form_data['wrong_title_form']}">
-                        ${incorrect_data_format}
+                <div class="col-md-4">
+                    <label for="title" class="form-label">${book_title}</label>
+                    <input type="text" class="form-control" name="title" id="title"
+                           value="${book_form_data['title_form']}" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_form_data['wrong_title_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="col-md-3">
+                    <p class="form-label">${book_author}:</p>
+                    <select name="author">
+                        <c:forEach var="a" items="${authors}">
+                            <c:choose>
+                                <c:when test="${a eq book_form_data['author_form']}">
+                                    <option value="${a.id}|${a.name}|${a.surname}"
+                                            selected>${a.name} ${a.surname}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${a.id}|${a.name}|${a.surname}">${a.name} ${a.surname}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <p class="form-label">${book_publisher}:</p>
+                    <select name="publisher">
+                        <c:forEach var="p" items="${publishers}">
+                            <c:choose>
+                                <c:when test="${p eq book_form_data['publisher_form']}">
+                                    <option value="${p.id}|${p.name}" selected>${p.name}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${p.id}|${p.name}">${p.name}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <p class="form-label">${book_genre}:</p>
+                    <select name="genre">
+                        <c:forEach var="g" items="${genres}">
+                            <c:choose>
+                                <c:when test="${g eq book_form_data['genre_form']}">
+                                    <option value="${g.id}|${g.name}" selected>${g.name}</option>
+                                </c:when>
+                                <c:otherwise>
+                                    <option value="${g.id}|${g.name}">${g.name}</option>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:forEach>
+                    </select>
+                </div>
+
+                <hr/>
+
+                <div class="col-md-2">
+                    <label for="copies_number" class="form-label">${book_copies_number}</label>
+                    <input type="number" class="form-control" name="copies_number" id="copies_number"
+                           value="${book_form_data['copies_number_form']}" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_form_data['wrong_copies_number_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="release_year" class="form-label">${book_publish_year}</label>
+                    <input type="number" class="form-control" name="release_year" id="release_year"
+                           value="${book_form_data['release_year_form']}" aria-describedby="inputGroupPrepend" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_form_data['wrong_release_year_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="pages_count" class="form-label">${book_pages_count}</label>
+                    <input type="number" class="form-control" name="pages_count"
+                           value="${book_form_data['pages_count_form']}" id="pages_count" required>
+                    <div class="red-color">
+                        <c:if test="${not empty book_form_data['wrong_pages_count_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="col-md-10">
+                    <label for="description" class="form-label">${book_description}</label>
+                    <textarea type="text" class="form-control" name="description"
+                              rows="4" id="description"
+                              required>${book_form_data['description_form']}</textarea>
+                    <div class="red-color">
+                        <c:if test="${not empty book_form_data['wrong_description_form']}">
+                            ${incorrect_data_format}
+                        </c:if>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <c:if test="${not empty is_book_updated}">
+                        ${book_has_been_updated}
                     </c:if>
                 </div>
-            </div>
 
-            <hr/>
-
-            <div class="col-md-3">
-                <p class="form-label">${book_author}:</p>
-                <select name="author">
-                    <c:forEach var="a" items="${authors}">
-                        <c:choose>
-                            <c:when test="${a eq book_form_data['author_form']}">
-                                <option value="${a.id}|${a.name}|${a.surname}" selected>${a.name} ${a.surname}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${a.id}|${a.name}|${a.surname}">${a.name} ${a.surname}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <p class="form-label">${book_publisher}:</p>
-                <select name="publisher">
-                    <c:forEach var="p" items="${publishers}">
-                        <c:choose>
-                            <c:when test="${p eq book_form_data['publisher_form']}">
-                                <option value="${p.id}|${p.name}" selected>${p.name}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${p.id}|${p.name}">${p.name}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                </select>
-            </div>
-
-            <div class="col-md-3">
-                <p class="form-label">${book_genre}:</p>
-                <select name="genre">
-                    <c:forEach var="g" items="${genres}">
-                        <c:choose>
-                            <c:when test="${g eq book_form_data['genre_form']}">
-                                <option value="${g.id}|${g.name}" selected>${g.name}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${g.id}|${g.name}">${g.name}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
-                </select>
-            </div>
-
-            <hr/>
-
-            <div class="col-md-2">
-                <label for="copies_number" class="form-label">${book_copies_number}</label>
-                <input type="number" class="form-control" name="copies_number" id="copies_number"
-                       value="${book_form_data['copies_number_form']}" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_form_data['wrong_copies_number_form']}">
-                        ${incorrect_data_format}
-                    </c:if>
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">${update_book_btn}</button>
                 </div>
-            </div>
+            </form>
 
-            <div class="col-md-2">
-                <label for="release_year" class="form-label">${book_publish_year}</label>
-                <input type="number" class="form-control" name="release_year" id="release_year"
-                       value="${book_form_data['release_year_form']}" aria-describedby="inputGroupPrepend" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_form_data['wrong_release_year_form']}">
-                        ${incorrect_data_format}
-                    </c:if>
-                </div>
-            </div>
-
-            <div class="col-md-2">
-                <label for="pages_count" class="form-label">${book_pages_count}</label>
-                <input type="number" class="form-control" name="pages_count"
-                       value="${book_form_data['pages_count_form']}" id="pages_count" required>
-                <div class="red-color">
-                    <c:if test="${not empty book_form_data['wrong_pages_count_form']}">
-                        ${incorrect_data_format}
-                    </c:if>
-                </div>
-            </div>
-
-            <hr/>
-
-            <div class="col-md-10">
-                <label for="description" class="form-label">${book_description}</label>
-                <textarea type="text" class="form-control" name="description"
-                          rows="4" id="description"
-                          required>${book_form_data['description_form']}</textarea>
-                <div class="red-color">
-                    <c:if test="${not empty book_form_data['wrong_description_form']}">
-                        ${incorrect_data_format}
-                    </c:if>
-                </div>
-            </div>
+            <hr>
 
             <div class="col-12">
-                <c:if test="${not empty is_book_updated}">
-                    ${book_has_been_updated}
-                </c:if>
-            </div>
-
-            <div class="col-12">
-                <button class="btn btn-primary" type="submit">${update_book_btn}</button>
                 <form action="controller">
                     <input type="hidden" name="command" value="go_to_main_page">
                     <div class="col-12">
@@ -179,13 +186,10 @@
                     </div>
                 </form>
             </div>
-        </form>
-    </div>
+        </div>
 
-    <div class="col mb-3"></div>
-</div>
+        <div class="col mb-3"></div>
+    </div>
+</section>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
 </html>

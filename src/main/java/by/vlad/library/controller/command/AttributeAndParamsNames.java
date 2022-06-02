@@ -68,7 +68,6 @@ public class AttributeAndParamsNames {
     public static final String NEW_PASSWORD_FORM = "new_pass_form";
     public static final String NEW_REPEAT_PASSWORD_FORM = "new_repeat_pass_form";
 
-
     public static final String PAGINATION_DATA = "pagination_data";
     public static final String CURRENT_PAGE_NUM = "current_page_num";
     public static final String PAGES_NUMBER = "pages_number";
@@ -84,11 +83,26 @@ public class AttributeAndParamsNames {
 
     public static final String CURRENT_PAGE = "current_page";
 
+    public static final String ADD_BOOK_MSG = "add_book_msg";
+
+    public static final String PUBLISHER_ADDED_MSG = "is_publisher_added";
+    public static final String AUTHOR_ADDED_MSG = "is_author_added";
+    public static final String GENRE_ADDED_MSG = "is_genre_added";
+
+    public static final String PUBLISHER_UPDATED_MSG = "is_publisher_updated";
+    public static final String AUTHOR_UPDATED_MSG = "is_author_updated";
+    public static final String GENRE_UPDATED_MSG = "is_genre_updated";
+
+    public static final String FILTER_DATA = "filter_data";
+
     ////request params names
     public static final String PAGE_DIRECTION = "page_direction";
 
     public static final String COMMAND = "command";
     public static final String LANGUAGE = "language";
+
+    public static final String USER_ID_REQ_PARAM = "user_id";
+    public static final String USER_STATUS = "user_status";
 
     //user params
     public static final String EMAIL = "email";
@@ -121,13 +135,6 @@ public class AttributeAndParamsNames {
     public static final String GENRE_NAME = "genre_name";
 
     ////request attributes names
-    public static final String PUBLISHER_ADDED_MSG = "is_publisher_added";
-    public static final String AUTHOR_ADDED_MSG = "is_author_added";
-    public static final String GENRE_ADDED_MSG = "is_genre_added";
-
-    public static final String PUBLISHER_UPDATED_MSG = "is_publisher_updated";
-    public static final String AUTHOR_UPDATED_MSG = "is_author_updated";
-    public static final String GENRE_UPDATED_MSG = "is_genre_updated";
 
     public static final String USERS_LIST = "users_list";
     public static final String USER_NAME = "user_name";
@@ -142,4 +149,7 @@ public class AttributeAndParamsNames {
 
     public static final String IMAGES = "images";
 
+    public static final String ORDERS = "orders";
+
+    public static final String HOME_MESSAGE = "home_message";
 }

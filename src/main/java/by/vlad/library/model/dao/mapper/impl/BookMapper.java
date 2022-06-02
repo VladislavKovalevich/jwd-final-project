@@ -8,8 +8,11 @@ import by.vlad.library.model.dao.mapper.Mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+
+import static by.vlad.library.model.dao.ColumnName.*;
 
 public class BookMapper implements Mapper<Book> {
     private static BookMapper instance;
@@ -30,23 +33,28 @@ public class BookMapper implements Mapper<Book> {
 
         while (resultSet.next()) {
             Author author = new Author(
-                    resultSet.getLong(3),
-                    resultSet.getString(4),
-                    resultSet.getString(5)
+                    resultSet.getLong(AUTHOR_ID_COL),
+                    resultSet.getString(AUTHOR_NAME_COL),
+                    resultSet.getString(AUTHOR_SURNAME_COL)
             );
 
             Publisher publisher = new Publisher(
-                    resultSet.getLong(6),
-                    resultSet.getString(7)
+                    resultSet.getLong(PUBLISHER_ID_COL),
+                    resultSet.getString(PUBLISHER_NAME_COL)
             );
 
             Genre genre = new Genre(
-                    resultSet.getString(8)
+                    resultSet.getLong(GENRE_ID_COL),
+                    resultSet.getString(GENRE_NAME_COL)
             );
 
             Book book = Book.getBuilder()
-                    .withId(resultSet.getLong(1))
-                    .withTitle(resultSet.getString(2))
+                    .withId(resultSet.getLong(BOOK_ID_COL))
+                    .withTitle(resultSet.getString(BOOK_TITLE_COL))
+                    .withReleaseYear(Year.of(resultSet.getInt(BOOK_PUBLISH_YEAR_COL)))
+                    .withNumberOfPages(resultSet.getInt(BOOK_NUMBER_OF_PAGES_COL))
+                    .withDescription(resultSet.getString(BOOK_DESCRIPTION_COL))
+                    .withCopiesNumber(resultSet.getInt(BOOK_COPIES_NUMBER_COL))
                     .withAuthor(author)
                     .withPublisher(publisher)
                     .withGenre(genre)

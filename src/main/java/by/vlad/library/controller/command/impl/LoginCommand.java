@@ -46,14 +46,12 @@ public class LoginCommand implements Command {
 
                 session.setAttribute(CURRENT_PAGE, HOME_PAGE);
 
-                request.setAttribute(USER_SURNAME, user.getSurname());
-                request.setAttribute(USER_NAME, user.getName());
-
-                router = new Router(HOME_PAGE, Router.Type.FORWARD);
+                router = new Router(HOME_PAGE, Router.Type.REDIRECT);
             }else{
                 session.setAttribute(USER_FORM_DATA, userFormData);
                 session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
-                router = new Router(LOGIN_PAGE, Router.Type.FORWARD);
+
+                router = new Router(LOGIN_PAGE, Router.Type.REDIRECT);
             }
 
         } catch (ServiceException e) {
