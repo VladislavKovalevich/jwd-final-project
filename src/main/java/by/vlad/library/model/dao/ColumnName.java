@@ -56,6 +56,10 @@ public class ColumnName {
     public static final String ORDER_TYPE_ID_COL = "order_type_id";
     public static final String ORDER_TYPE_NAME_COL = "order_type_name";
 
+    //IMAGE TABLE
+    public static final String IMAGE_ID_COL = "image_id";
+    public static final String IMAGE_CONTENT_COL = "image_content";
+
     public static final String COUNT_COL = "count_col";
 
     private ColumnName(){}

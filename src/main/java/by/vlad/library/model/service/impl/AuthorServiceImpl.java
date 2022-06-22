@@ -44,15 +44,15 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> updateAuthor(Map<String, String> mapData) throws ServiceException {
+    public Optional<Author> updateAuthor(Map<String, String> mapData) throws ServiceException {
         AuthorValidator authorValidator = AuthorValidatorImpl.getInstance();
-        List<Author> authors = new ArrayList<>();
+        Optional<Author> optionalAuthor = Optional.empty();
 
         String[] oldAuthorsParams = mapData.get(AUTHOR_FORM).split(DELIMITER);
         long authorId = Long.parseLong(oldAuthorsParams[0]);
 
         if (!authorValidator.validateAuthorParams(mapData)){
-            return authors;
+            return optionalAuthor;
         }
 
         String name = mapData.get(AUTHOR_NAME_FORM);
@@ -63,12 +63,7 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             if(!authorDao.isAuthorExists(name, surname)){
                 Author author = new Author(authorId, name, surname);
-
-                Optional<Author> optionalAuthor = authorDao.updateAuthor(author);
-
-                if (optionalAuthor.isPresent()){
-                    authors = authorDao.findAll();
-                }
+                optionalAuthor = authorDao.updateAuthor(author);
             }else{
                 mapData.put(WRONG_AUTHOR_EXISTS_FORM, AUTHOR_EXISTS_MARKER);
             }
@@ -76,19 +71,19 @@ public class AuthorServiceImpl implements AuthorService {
             throw new ServiceException(e);
         }
 
-        return authors;
+        return optionalAuthor;
     }
 
     @Override
-    public boolean createNewAuthor(Map<String, String> mapData) throws ServiceException {
-        boolean isCreated = false;
+    public Optional<Author> createNewAuthor(Map<String, String> mapData) throws ServiceException {
+        Optional<Author> optionalAuthor = Optional.empty();
 
         AuthorValidator authorValidator = AuthorValidatorImpl.getInstance();
         String authorName = mapData.get(AUTHOR_NAME_FORM);
         String authorSurname = mapData.get(AUTHOR_SURNAME_FORM);
 
         if (!authorValidator.validateAuthorParams(mapData)){
-            return isCreated;
+            return optionalAuthor;
         }
 
         AuthorDaoImpl authorDaoImpl = AuthorDaoImpl.getInstance();
@@ -100,7 +95,7 @@ public class AuthorServiceImpl implements AuthorService {
                 author.setName(authorName);
                 author.setSurname(authorSurname);
 
-                isCreated = authorDaoImpl.insert(author);
+                optionalAuthor = authorDaoImpl.addAuthor(author);
             }else{
                 mapData.put(WRONG_AUTHOR_EXISTS_FORM, AuthorService.AUTHOR_EXISTS_MARKER);
             }
@@ -108,6 +103,6 @@ public class AuthorServiceImpl implements AuthorService {
             throw new ServiceException(e);
         }
 
-        return isCreated;
+        return optionalAuthor;
     }
 }

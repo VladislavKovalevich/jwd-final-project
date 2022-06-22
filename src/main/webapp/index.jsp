@@ -5,6 +5,6 @@
     <title>index</title>
 </head>
 <body>
-<jsp:forward page="controller?command=go_to_main_page"/>
+<jsp:forward page="controller?command=show_books_list"/>
 </body>
 </html>

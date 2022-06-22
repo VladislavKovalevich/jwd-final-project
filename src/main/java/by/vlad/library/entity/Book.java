@@ -11,6 +11,7 @@ public class Book extends AbstractEntity{
     private Genre genre;
     private Author author;
     private Publisher publisher;
+    private Image image;
 
     public Book(long id) {
         super(id);
@@ -88,6 +89,15 @@ public class Book extends AbstractEntity{
         this.publisher = publisher;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+
     public class BookBuilder {
         public BookBuilder withId(long id){
             Book.this.setId(id);
@@ -134,6 +144,11 @@ public class Book extends AbstractEntity{
             return this;
         }
 
+        public BookBuilder withImage(Image image){
+            Book.this.setImage(image);
+            return this;
+        }
+
         public Book buildBook(){
             return Book.this;
         }
@@ -143,6 +158,7 @@ public class Book extends AbstractEntity{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Book book = (Book) o;
 
@@ -151,14 +167,16 @@ public class Book extends AbstractEntity{
         if (!title.equals(book.title)) return false;
         if (!releaseYear.equals(book.releaseYear)) return false;
         if (!description.equals(book.description)) return false;
-        if (genre != book.genre) return false;
+        if (!genre.equals(book.genre)) return false;
         if (!author.equals(book.author)) return false;
-        return publisher.equals(book.publisher);
+        if (!publisher.equals(book.publisher)) return false;
+        return image.equals(book.image);
     }
 
     @Override
     public int hashCode() {
-        int result = title.hashCode();
+        int result = super.hashCode();
+        result = 31 * result + title.hashCode();
         result = 31 * result + copiesNumber;
         result = 31 * result + releaseYear.hashCode();
         result = 31 * result + numberOfPages;
@@ -166,6 +184,7 @@ public class Book extends AbstractEntity{
         result = 31 * result + genre.hashCode();
         result = 31 * result + author.hashCode();
         result = 31 * result + publisher.hashCode();
+        result = 31 * result + image.hashCode();
         return result;
     }
 
@@ -179,7 +198,8 @@ public class Book extends AbstractEntity{
                 .append(", description='").append(description).append('\'')
                 .append(", genre=").append(genre)
                 .append(", author=").append(author)
-                .append(", publisher=").append(publisher).append('}')
+                .append(", publisher=").append(publisher)
+                .append(", image=").append(image).append('}')
                 .toString();
     }
 }

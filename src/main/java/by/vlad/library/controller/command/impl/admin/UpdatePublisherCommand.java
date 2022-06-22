@@ -1,18 +1,19 @@
-package by.vlad.library.controller.command.impl.admin.book.book_components;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
-import by.vlad.library.controller.command.PagePath;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Publisher;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.PublisherService;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS_PAGE;
@@ -23,7 +24,7 @@ public class UpdatePublisherCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        List<Publisher> publishers;
+
         Map<String, String> componentsData = (Map<String, String>) session.getAttribute(BOOK_COMPONENTS_FORM_DATA);
 
         clearSessionMap(componentsData);
@@ -32,10 +33,16 @@ public class UpdatePublisherCommand implements Command {
         PublisherService publisherService = PublisherServiceImpl.getInstance();
 
         try {
-            publishers = publisherService.updatePublisher(componentsData);
+            Optional<Publisher> optionalPublisher = publisherService.updatePublisher(componentsData);
 
-            if (!publishers.isEmpty()){
-                componentsData.put(PUBLISHER_UPDATED_MSG, PUBLISHER_UPDATED_MARKER);
+            if (optionalPublisher.isPresent()){
+                Publisher publisher = optionalPublisher.get();
+
+                List<Publisher> publishers = (List<Publisher>) session.getAttribute(PUBLISHERS);
+                publishers.removeIf(p -> p.getId() == publisher.getId());
+                publishers.add(publisher);
+
+                componentsData.put(PUBLISHER_OPERATION_FEEDBACK, PUBLISHER_UPDATED_MARKER);
                 session.setAttribute(PUBLISHERS, publishers);
 
                 componentsData.remove(PUBLISHER_FORM);
@@ -52,9 +59,9 @@ public class UpdatePublisherCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(GENRE_UPDATED_MSG);
-        map.remove(PUBLISHER_UPDATED_MSG);
-        map.remove(AUTHOR_UPDATED_MSG);
+        map.remove(GENRE_OPERATION_FEEDBACK);
+        map.remove(PUBLISHER_OPERATION_FEEDBACK);
+        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_PUBLISHER_EXISTS_FORM);
         map.remove(WRONG_PUBLISHER_NAME_FORM);
     }

@@ -1,57 +1,73 @@
-package by.vlad.library.controller.command.impl.admin.book;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
+import by.vlad.library.entity.Image;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
+import by.vlad.library.model.service.ImageService;
 import by.vlad.library.model.service.impl.BookServiceImpl;
+import by.vlad.library.model.service.impl.ImageServiceImpl;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
-import static by.vlad.library.controller.command.PagePath.*;
+import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
 
-public class UpdateBookDataCommand implements Command {
+public class AddNewBookCommand implements Command {
+    private static final String BOOK_ADDED_MARKER = "book has been added";
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Map<String,String> bookMap = (Map<String, String>) session.getAttribute(BOOK_FORM_DATA);
-        Router router;
 
         clearSessionMap(bookMap);
         fillSessionMap(request, bookMap);
 
         BookService bookService = BookServiceImpl.getInstance();
-        Book book;
+        ImageService imageService = ImageServiceImpl.getInstance();
 
         try {
-            Optional<Book> optionalBook = bookService.updateBook(bookMap);
-            if (optionalBook.isPresent()){
-                book = optionalBook.get();
+            Optional<Book> optionalBook = bookService.addBook(bookMap);
 
-                //session.removeAttribute(GENRES);
-                //session.removeAttribute(AUTHORS);
-                //session.removeAttribute(PUBLISHERS);
-                session.removeAttribute(BOOK_FORM_DATA);
+            if (optionalBook.isPresent()) {
+                Part part = request.getPart(IMAGE);
 
-                request.setAttribute(BOOK, book);
-                session.setAttribute(CURRENT_PAGE, HOME_PAGE);
-                router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
-            }else{
-                session.setAttribute(BOOK_FORM_DATA, bookMap);
-                session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
-                router = new Router(UPDATE_BOOK_DATA_PAGE, Router.Type.FORWARD);
+                if (part != null) {
+                    InputStream in = part.getInputStream();
+                    byte[] image = in.readAllBytes();
+                    imageService.createNewImage(image, optionalBook.get());
+                }
+
+                List<Book> books = (List<Book>) session.getAttribute(BOOKS_LIST);
+                books.add(optionalBook.get());
+
+                session.setAttribute(BOOKS_LIST, books);
+
+                bookMap.clear();
+                bookMap.put(ADD_BOOK_MSG, BOOK_ADDED_MARKER);
             }
-        } catch (ServiceException e) {
+
+            session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
+            session.setAttribute(BOOK_FORM_DATA, bookMap);
+
+        } catch (ServiceException | ServletException | IOException e) {
             throw new CommandException(e);
         }
 
-        return router;
+        return new Router(ADD_NEW_BOOK_PAGE, Router.Type.REDIRECT);
     }
 
     private void fillSessionMap(HttpServletRequest request, Map<String, String> booksMap) {

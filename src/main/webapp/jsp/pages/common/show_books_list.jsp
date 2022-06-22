@@ -89,12 +89,6 @@
                             </c:forEach>
                         </div>
                     </div>
-
-                    <div class="mt-3">
-                        <label for="email">Год издания</label>
-                        <input type="number" name="email" id="email" class="form-control"
-                               value=""/>
-                    </div>
                     <div class="mt-3">
                         <label for="is_exists">Имеется в наличии</label>
                         <input type="checkbox" name="is_exists" id="is_exists" checked/>
@@ -114,8 +108,15 @@
                 <c:otherwise>
                     <c:forEach var="book" items="${books_list}">
                         <div class="row g-0 white-background">
-                            <figure class="col-md-3">
-                                <img src="${path}/img/not_found_image.jpg"/>
+                            <figure class="col-md-3" style="width: 200px; height: 300px;">
+                                <c:choose>
+                                    <c:when test="${not empty book.image.encodeImage}">
+                                        <img src="${book.image.encodeImage}" class="img-thumbnail">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${path}/img/not_found_image.jpg" class="img-thumbnail">
+                                    </c:otherwise>
+                                </c:choose>
                             </figure>
                             <div class="col-md-6">
                                 <div class="card-body">

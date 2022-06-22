@@ -1,19 +1,17 @@
 package by.vlad.library.controller.command;
 
 import by.vlad.library.controller.command.impl.*;
-import by.vlad.library.controller.command.impl.admin.book.AddNewBookCommand;
-import by.vlad.library.controller.command.impl.admin.user.ChangeUserStatusCommand;
-import by.vlad.library.controller.command.impl.admin.user.ShowUsersListCommand;
-import by.vlad.library.controller.command.impl.admin.book.UpdateBookDataCommand;
-import by.vlad.library.controller.command.impl.admin.book.book_components.*;
+import by.vlad.library.controller.command.impl.admin.*;
+import by.vlad.library.controller.command.impl.admin.ChangeUserStatusCommand;
+import by.vlad.library.controller.command.impl.admin.ShowUsersListCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddBookComponentsPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddNewBookPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookComponentsPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookDataPageCommand;
-import by.vlad.library.controller.command.impl.client.book.AddBookToOrderCommand;
-import by.vlad.library.controller.command.impl.client.book.RemoveBookFromOrderCommand;
-import by.vlad.library.controller.command.impl.client.order.CreateOrderCommand;
-import by.vlad.library.controller.command.impl.client.order.DeleteOrderCommand;
+import by.vlad.library.controller.command.impl.client.AddBookToOrderCommand;
+import by.vlad.library.controller.command.impl.client.RemoveBookFromOrderCommand;
+import by.vlad.library.controller.command.impl.client.CreateOrderCommand;
+import by.vlad.library.controller.command.impl.client.DeleteOrderCommand;
 import by.vlad.library.controller.command.impl.gotopage.*;
 
 public enum CommandType {
@@ -29,7 +27,9 @@ public enum CommandType {
     CREATE_ORDER(new CreateOrderCommand()),
     DEFAULT(new DefaultCommand()),
     DELETE_ORDER(new DeleteOrderCommand()),
+    GET_BOOKS_BY_ORDER_ID(new GetBooksByOrderIdCommand()),
     GET_ORDERS_BY_USER_ID(new GetOrdersByUserIdCommand()),
+    GET_ORDERS_LIST(new GetAllOrdersCommand()),
     GO_TO_ADD_BOOK_COMPONENTS_PAGE(new GoToAddBookComponentsPageCommand()),
     GO_TO_ADD_NEW_BOOK_PAGE(new GoToAddNewBookPageCommand()),
     GO_TO_CHANGE_PASSWORD_PAGE(new GoToChangeAccountPasswordPageCommand()),
@@ -71,5 +71,17 @@ public enum CommandType {
         }
 
         return commandType.getCommand();
+    }
+
+    public static CommandType getCommandType(String commandStr){
+        CommandType commandType;
+        try {
+            commandType = CommandType.valueOf(commandStr.toUpperCase());
+        }catch (IllegalArgumentException | NullPointerException e){
+            //logger
+            commandType = DEFAULT;
+        }
+
+        return commandType;
     }
 }

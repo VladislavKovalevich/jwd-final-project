@@ -1,15 +1,19 @@
-package by.vlad.library.controller.command.impl.admin.book.book_components;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
+import by.vlad.library.entity.Genre;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.GenreService;
 import by.vlad.library.model.service.impl.GenreServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
@@ -30,9 +34,17 @@ public class AddNewGenreCommand implements Command {
         GenreService genreService = GenreServiceImpl.getInstance();
 
         try {
-            if (genreService.createNewGenre(componentsData)){
+            Optional<Genre> optionalGenre = genreService.createNewGenre(componentsData);
+            if (optionalGenre.isPresent()){
+                Genre genre = optionalGenre.get();
+
+                List<Genre> genres = (List<Genre>) session.getAttribute(GENRES);
+                genres.add(genre);
+
+                session.setAttribute(GENRES, genres);
+
                 componentsData.remove(GENRE_NAME_FORM);
-                componentsData.put(GENRE_ADDED_MSG, GENRE_ADDED_MARKER);
+                componentsData.put(GENRE_OPERATION_FEEDBACK, GENRE_ADDED_MARKER);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
@@ -45,9 +57,9 @@ public class AddNewGenreCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(PUBLISHER_ADDED_MSG);
-        map.remove(GENRE_ADDED_MSG);
-        map.remove(AUTHOR_ADDED_MSG);
+        map.remove(PUBLISHER_OPERATION_FEEDBACK);
+        map.remove(GENRE_OPERATION_FEEDBACK);
+        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_GENRE_NAME_FORM);
         map.remove(WRONG_GENRE_EXISTS_FORM);
     }

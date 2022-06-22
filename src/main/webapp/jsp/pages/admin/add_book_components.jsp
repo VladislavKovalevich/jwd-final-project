@@ -65,8 +65,10 @@
 
                 <div class="col-md-3">
                     <label for="author_name" class="form-label">${author_name}</label>
-                    <input type="text" class="form-control" name="author_name" id="author_name"
-                           value="${book_components_form_data['author_name_form']}" required>
+                    <input type="text" class="form-control" maxlength="20" name="author_name" id="author_name"
+                           value="${book_components_form_data['author_name_form']}"
+                           pattern="[А-ЯЁ][а-яё]*"
+                           required oninvalid="this.setCustomValidity('surname rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_components_form_data['wrong_author_name_form']}">
                             ${incorrect_data_format}
@@ -78,8 +80,10 @@
 
                 <div class="col-md-3">
                     <label for="author_surname" class="form-label">${author_surname}</label>
-                    <input type="text" class="form-control" name="author_surname" id="author_surname"
-                           value="${book_components_form_data['author_surname_form']}" required>
+                    <input type="text" class="form-control" maxlength="40" name="author_surname" id="author_surname"
+                           value="${book_components_form_data['author_surname_form']}"
+                           pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
+                           required oninvalid="this.setCustomValidity('surname rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_components_form_data['wrong_author_surname_form']}">
                             ${incorrect_data_format}
@@ -98,7 +102,7 @@
                     </c:if>
                 </div>
                 <div class="col-12 green-color">
-                    <c:if test="${not empty book_components_form_data['is_author_added']}">
+                    <c:if test="${not empty book_components_form_data['author_operation_feedback']}">
                         ${author_has_been_added}
                     </c:if>
                 </div>
@@ -115,8 +119,10 @@
 
                 <div class="col-md-3">
                     <label for="publisher_name" class="form-label">${publisher_name}</label>
-                    <input type="text" class="form-control" name="publisher_name" id="publisher_name"
-                           value="${book_components_form_data['publisher_name_form']}" required>
+                    <input type="text" class="form-control" maxlength="40" name="publisher_name" id="publisher_name"
+                           value="${book_components_form_data['publisher_name_form']}"
+                           pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
+                           required oninvalid="this.setCustomValidity('surname rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_components_form_data['wrong_publisher_name_form']}">
                             ${incorrect_data_format}
@@ -135,7 +141,7 @@
                     </c:if>
                 </div>
                 <div class="col-12 green-color">
-                    <c:if test="${not empty book_components_form_data['is_publisher_added']}">
+                    <c:if test="${not empty book_components_form_data['publisher_operation_feedback']}">
                         ${publisher_has_been_added}
                     </c:if>
                 </div>
@@ -151,8 +157,10 @@
 
                 <div class="col-md-3">
                     <label for="genre_name" class="form-label">${genre_name}</label>
-                    <input type="text" class="form-control" name="genre_name" id="genre_name"
-                           value="${book_components_form_data['genre_name_form']}" required>
+                    <input type="text" class="form-control" maxlength="40" name="genre_name" id="genre_name"
+                           value="${book_components_form_data['genre_name_form']}"
+                           pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
+                           required oninvalid="this.setCustomValidity('surname rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_components_form_data['wrong_genre_name_form']}">
                             ${incorrect_data_format}
@@ -171,7 +179,7 @@
                     </c:if>
                 </div>
                 <div class="col-12 green-color">
-                    <c:if test="${not empty book_components_form_data['is_genre_added']}">
+                    <c:if test="${not empty book_components_form_data['genre_operation_feedback']}">
                         ${genre_has_been_added}
                     </c:if>
                 </div>

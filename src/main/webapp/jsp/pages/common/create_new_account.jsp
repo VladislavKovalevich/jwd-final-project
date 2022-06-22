@@ -31,6 +31,7 @@
 
 <html>
 <head>
+    <meta charset="UTF-8"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -51,15 +52,17 @@
         <div class="col mb-3"></div>
 
 
-        <div class="col-7 mb-3 py-3 px-3">
+        <div class="col-7 mb-3 py-3 px-3 white-background">
             <h3 class="py-md-5">${title}</h3>
             <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
                 <input type="hidden" name="command" value="create_new_account">
 
                 <div class="col-md-4">
                     <label for="name" class="form-label">${name}</label>
-                    <input type="text" class="form-control" name="name" id="name"
-                           value="${user_form_data['name_form']}" required>
+                    <input type="text" maxlength="25" class="form-control" name="name" id="name"
+                           value="${user_form_data['name_form']}"
+                           pattern="[А-ЯЁ][а-яё]*"
+                           required oninvalid="this.setCustomValidity('name rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_name_form']}">
                             ${incorrect_data_format}
@@ -69,8 +72,10 @@
 
                 <div class="col-md-4">
                     <label for="surname" class="form-label">${surname}</label>
-                    <input type="text" class="form-control" name="surname" id="surname"
-                           value="${user_form_data['surname_form']}" required>
+                    <input type="text" maxlength="30" class="form-control" name="surname" id="surname"
+                           value="${user_form_data['surname_form']}"
+                           pattern="[А-ЯЁ][а-яё]*"
+                           required oninvalid="this.setCustomValidity('surname rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_surname_form']}">
                             ${incorrect_data_format}
@@ -81,7 +86,9 @@
                 <div class="col-md-4">
                     <label for="login" class="form-label">${login}</label>
                     <input type="text" class="form-control" name="login" id="login"
-                           value="${user_form_data['login_form']}" aria-describedby="inputGroupPrepend" required>
+                           value="${user_form_data['login_form']}" aria-describedby="inputGroupPrepend"
+                           pattern="[\da-zA-Z]([\da-zA-Z_\-\.,!@]*){4,10}"
+                           required oninvalid="this.setCustomValidity('email rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_login_form']}">
                             ${incorrect_data_format}
@@ -92,12 +99,14 @@
                 <div class="col-md-4">
                     <label for="email" class="form-label">${email}</label>
                     <input type="text" class="form-control" name="email"
-                           value="${user_form_data['email_form']}" id="email" required>
+                           value="${user_form_data['email_form']}" id="email"
+                           pattern="[\da-z]([\da-z_\-\.]*)([\da-z_\-]*)@[\da-z_\-]{2,}\.[a-z]{2,6}"
+                           required oninvalid="this.setCustomValidity('email rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_email_form']}">
                             ${incorrect_data_format}
                         </c:if>
-                        <c:if test="${not empty user_form_data['wrong_email_exists']}">
+                        <c:if test="${not empty user_form_data['wrong_email_exists_form']}">
                             ${incorrect_email}
                         </c:if>
                     </div>
@@ -105,8 +114,10 @@
 
                 <div class="col-md-4">
                     <label for="mobile_phone" class="form-label">${mobile_phone}</label>
-                    <input type="text" class="form-control" name="phone_number"
-                           value="${user_form_data['phone_number_form']}" id="mobile_phone" required>
+                    <input type="text" maxlength="15" class="form-control" name="phone_number"
+                           value="${user_form_data['phone_number_form']}" id="mobile_phone"
+                           pattern="([+]?[\d]{7})?"
+                           oninvalid="this.setCustomValidity('phone')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_phone_number_form']}">
                             ${incorrect_data_format}
@@ -117,7 +128,9 @@
                 <div class="col-md-4">
                     <label for="passport_serial_number" class="form-label">${passport_serial_number}</label>
                     <input type="text" class="form-control" name="serial_number"
-                           value="${user_form_data['serial_number_form']}" id="passport_serial_number" required>
+                           value="${user_form_data['serial_number_form']}" id="passport_serial_number"
+                           pattern="([A-Z][\d]{7})"
+                           required oninvalid="this.setCustomValidity('number')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_serial_number_form']}">
                             ${incorrect_data_format}
@@ -128,7 +141,9 @@
                 <div class="col-md-4">
                     <label for="password" class="form-label">${password}</label>
                     <input type="password" class="form-control" name="pass"
-                           value="${user_form_data['pass_form']}" id="password" required>
+                           value="${user_form_data['pass_form']}" id="password"
+                           pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
+                           required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_pass_form']}">
                             ${incorrect_data_format}
@@ -139,7 +154,9 @@
                 <div class="col-md-4">
                     <label for="repeated_password" class="form-label">${repeated_password}</label>
                     <input type="password" class="form-control" name="repeated_pass"
-                           value="${user_form_data['repeat_pass_form']}" id="repeated_password" required>
+                           value="${user_form_data['repeat_pass_form']}" id="repeated_password"
+                           pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
+                           required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_repeat_pass_form']}">
                             ${mismatch_password}
@@ -155,8 +172,8 @@
 
             <hr/>
 
-            <form action="controller">
-                <input type="hidden" name="command" value="go_to_main_page">
+            <form action="${path}/controller" method="get">
+                <input type="hidden" name="command" value="go_to_login_page">
                 <div class="col-12">
                     <button class="btn btn-primary" type="submit">${back_btn}</button>
                 </div>

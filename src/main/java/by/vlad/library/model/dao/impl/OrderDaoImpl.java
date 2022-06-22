@@ -5,23 +5,41 @@ import by.vlad.library.entity.OrderStatus;
 import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.OrderDao;
+import by.vlad.library.model.dao.mapper.Mapper;
+import by.vlad.library.model.dao.mapper.impl.OrderMapper;
 import by.vlad.library.model.pool.ConnectionPool;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class OrderDaoImpl implements OrderDao {
     private static final String FIND_ORDERS_BY_USER_ID = "" +
-            "SELECT orders.id, create_date, ordered_date, rejected_date, returned_date, order_status.status, order_types.type " +
+            "SELECT order_id, order_create_date, order_ordered_date, order_rejected_date, order_returned_date, " +
+            "order_status_name, order_type_name " +
             "FROM library.orders " +
-            "JOIN library.order_status ON orders.order_status_id = order_status.id " +
-            "JOIN library.order_types ON orders.order_types_id = order_types.id " +
+            "JOIN order_status ON orders_status_id = order_status_id " +
+            "JOIN order_types ON orders_types_id = order_type_id " +
             "WHERE users_id = ? ";
 
     private static final String INSERT_ORDER = "" +
-            "INSERT INTO orders(`users_id`, `create_date`) VALUES(?, ?)";
+            "INSERT INTO orders(`users_id`, `order_create_date`, `orders_types_id`) VALUES(?, ?, ?)";
+
+    private static final String ADD_BOOK_TO_ORDER = "INSERT INTO books_orders (`orders_id`, `books_id`) VALUES (?, ?)";
+
+    private static final String DELETE_BOOK_FROM_ORDER = "DELETE FROM books_orders WHERE orders_id = ? AND books_id = ?";
+
+    private static final String DELETE_ORDER = "DELETE FROM orders WHERE order_id = ?";
+
+    private static final String FIND_ALL_ORDERS = "SELECT order_id, order_create_date, order_ordered_date, " +
+            "order_rejected_date, order_returned_date, order_status_name, order_type_name, user_id, user_login, " +
+            "user_email, user_name, user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
+            "FROM orders " +
+            "JOIN order_status ON orders_status_id = order_status_id " +
+            "JOIN order_types ON orders_types_id = order_type_id " +
+            "JOIN users ON users_id = user_id ";
 
     private static OrderDaoImpl instance;
 
@@ -87,23 +105,99 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Order findOrderById(long orderId) throws DaoException {
-        return null;
+    public List<Order> findAllOrders() throws DaoException {
+        List<Order> orders;
+        Mapper<Order> orderMapper = OrderMapper.getInstance();
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_ALL_ORDERS)){
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                orders = orderMapper.map(resultSet);
+            }
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return orders;
     }
 
     @Override
-    public boolean insertOrder(long userId, LocalDate createdDate) throws DaoException {
+    public Optional<Long> insertOrder(long userId, LocalDate createdDate, long orderTypeId) throws DaoException {
+        Optional<Long> insertedIdOrder = Optional.empty();
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_ORDER, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setLong(1, userId);
+            statement.setDate(2, Date.valueOf(createdDate));
+            statement.setLong(3, orderTypeId);
+
+            statement.executeUpdate();
+
+            try(ResultSet resultSet = statement.getGeneratedKeys()){
+                if (resultSet.next()){
+                    insertedIdOrder = Optional.of(resultSet.getLong(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+
+        return insertedIdOrder;
+    }
+
+    @Override
+    public boolean insertBookToOrder(long orderId, long bookId) throws DaoException {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_ORDER)) {
+            PreparedStatement statement = connection.prepareStatement(ADD_BOOK_TO_ORDER)){
 
-            statement.setLong(1, userId);
-            statement.setDate(2, Date.valueOf(createdDate));//?
+            statement.setLong(1, orderId);
+            statement.setLong(2, bookId);
 
             rows = statement.executeUpdate();
 
-        } catch (SQLException e) {
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
+    }
+
+    @Override
+    public boolean deleteBookFromOrder(long orderId, long bookId) throws DaoException {
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_BOOK_FROM_ORDER)){
+
+            statement.setLong(1, orderId);
+            statement.setLong(2, bookId);
+
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return rows == 1;
+    }
+
+    @Override
+    public boolean deleteOrder(long orderId) throws DaoException {
+        int rows;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(DELETE_ORDER)){
+
+            statement.setLong(1, orderId);
+
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
             throw new DaoException(e);
         }
 

@@ -1,18 +1,19 @@
-package by.vlad.library.controller.command.impl.admin.book.book_components;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
-import by.vlad.library.controller.command.PagePath;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Genre;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.GenreService;
 import by.vlad.library.model.service.impl.GenreServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS_PAGE;
@@ -24,7 +25,6 @@ public class UpdateGenreCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
 
-        List<Genre> genres;
         Map<String, String> componentsData = (Map<String, String>) session.getAttribute(BOOK_COMPONENTS_FORM_DATA);
 
         clearSessionMap(componentsData);
@@ -33,10 +33,16 @@ public class UpdateGenreCommand implements Command {
         GenreService genreService = GenreServiceImpl.getInstance();
 
         try {
-            genres = genreService.updateGenre(componentsData);
+            Optional<Genre> optionalGenre = genreService.updateGenre(componentsData);
 
-            if (!genres.isEmpty()){
-                componentsData.put(GENRE_UPDATED_MSG, GENRES_UPDATED_MARKER);
+            if (optionalGenre.isPresent()){
+                Genre genre = optionalGenre.get();
+
+                List<Genre> genres = (List<Genre>) session.getAttribute(GENRES);
+                genres.removeIf(g -> g.getId() == genre.getId());
+                genres.add(genre);
+
+                componentsData.put(GENRE_OPERATION_FEEDBACK, GENRES_UPDATED_MARKER);
                 session.setAttribute(GENRES, genres);
 
                 componentsData.remove(GENRE_FORM);
@@ -53,9 +59,9 @@ public class UpdateGenreCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(GENRE_UPDATED_MSG);
-        map.remove(PUBLISHER_UPDATED_MSG);
-        map.remove(AUTHOR_UPDATED_MSG);
+        map.remove(GENRE_OPERATION_FEEDBACK);
+        map.remove(PUBLISHER_OPERATION_FEEDBACK);
+        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_GENRE_EXISTS_FORM);
         map.remove(WRONG_GENRE_NAME_FORM);
     }

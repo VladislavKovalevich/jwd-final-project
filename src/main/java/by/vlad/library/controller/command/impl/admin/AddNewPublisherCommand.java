@@ -1,15 +1,19 @@
-package by.vlad.library.controller.command.impl.admin.book.book_components;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
+import by.vlad.library.entity.Publisher;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.PublisherService;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
@@ -25,12 +29,20 @@ public class AddNewPublisherCommand implements Command {
         clearSessionMap(componentsData);
         componentsData.put(PUBLISHER_NAME_FORM, request.getParameter(PUBLISHER_NAME));
 
-        PublisherService genreService = PublisherServiceImpl.getInstance();
+        PublisherService publisherService = PublisherServiceImpl.getInstance();
 
         try {
-            if (genreService.addNewPublisher(componentsData)){
+            Optional<Publisher> optionalPublisher = publisherService.addNewPublisher(componentsData);
+            if (optionalPublisher.isPresent()){
+                Publisher publisher = optionalPublisher.get();
+
+                List<Publisher> publishers = (List<Publisher>) session.getAttribute(PUBLISHERS);
+                publishers.add(publisher);
+
+                session.setAttribute(PUBLISHERS, publishers);
+
                 componentsData.remove(PUBLISHER_NAME_FORM);
-                componentsData.put(PUBLISHER_ADDED_MSG, PUBLISHER_ADDED_MARKER);
+                componentsData.put(PUBLISHER_OPERATION_FEEDBACK, PUBLISHER_ADDED_MARKER);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
@@ -43,9 +55,9 @@ public class AddNewPublisherCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(PUBLISHER_ADDED_MSG);
-        map.remove(GENRE_ADDED_MSG);
-        map.remove(AUTHOR_ADDED_MSG);
+        map.remove(PUBLISHER_OPERATION_FEEDBACK);
+        map.remove(GENRE_OPERATION_FEEDBACK);
+        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_PUBLISHER_NAME_FORM);
         map.remove(WRONG_PUBLISHER_EXISTS_FORM);
     }

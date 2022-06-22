@@ -9,4 +9,6 @@ public interface GenreDao extends BasicDao<Genre> {
     boolean isGenreExists(String name) throws DaoException;
 
     Optional<Genre> updateGenre(Genre genre) throws DaoException;
+
+    Optional<Genre> addGenre(Genre genre) throws DaoException;
 }

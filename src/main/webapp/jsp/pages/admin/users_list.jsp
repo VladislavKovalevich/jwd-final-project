@@ -58,18 +58,24 @@
                                 </p>
                             </div>
                             <div class="col-3">
-                                <p class="py-3">
-                                <c:choose>
-                                    <c:when test="${user.banned}">
-                                        <a class="btn btn-primary" href="${path}/controller?command=change_user_status&user_id=${user.email}&user_status=false">Unblock</a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a class="btn btn-danger" href="${path}/controller?command=change_user_status&user_id=${user.email}&user_status=true">Block</a>
-                                    </c:otherwise>
-                                </c:choose>
-                                </p>
+                                <form type="post" action="${path}/controller">
+                                    <input type="hidden" name="command" value="change_user_status">
+                                    <input type="hidden" name="user_id" value="${user.email}">
+                                    <p class="py-3">
+                                        <c:choose>
+                                            <c:when test="${user.banned}">
+                                                <input type="hidden" name="user_status" value="false">
+                                                <input type="submit" class="btn btn-primary" value="Unblock">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="hidden" name="user_status" value="true">
+                                                <input type="submit" class="btn btn-danger" value="Block">
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                </form>
                                 <p class="py-1">
-                                <a class="btn btn-primary" href="#">Get all orders</a>
+                                    <a class="btn btn-primary" href="#">Get all orders</a>
                                 </p>
                             </div>
                         </div>

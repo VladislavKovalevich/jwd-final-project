@@ -139,4 +139,23 @@ public class GenreDaoImpl implements GenreDao {
 
         return optionalGenre;
     }
+
+    @Override
+    public Optional<Genre> addGenre(Genre genre) throws DaoException {
+        Optional<Genre> optionalGenre;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_GENRE)){
+
+            statement.setString(1, genre.getName());
+
+            int rows = statement.executeUpdate();
+
+            optionalGenre = rows == 1 ? Optional.of(genre) : Optional.empty();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+        return optionalGenre;
+    }
 }

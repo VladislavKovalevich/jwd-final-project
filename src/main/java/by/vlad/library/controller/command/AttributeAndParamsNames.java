@@ -7,6 +7,7 @@ public class AttributeAndParamsNames {
     //session attributes names
     public static final String BOOK_FORM_DATA = "book_form_data";
 
+    public static final String IMAGE_FORM = "image_form";
     public static final String TITLE_FORM = "title_form";
     public static final String AUTHOR_FORM = "author_form";
     public static final String GENRE_FORM = "genre_form";
@@ -42,6 +43,8 @@ public class AttributeAndParamsNames {
     public static final String WRONG_EMAIL_OR_PASS = "wrong_email_or_pass";
     public static final String NOT_FOUND_USER = "not_found_user";
 
+    public static final String USER_FORM_DATA = "user_form_data";
+
     public static final String WRONG_NAME_FORM = "wrong_name_form";
     public static final String WRONG_SURNAME_FORM = "wrong_surname_form";
     public static final String WRONG_LOGIN_FORM = "wrong_login_form";
@@ -54,8 +57,6 @@ public class AttributeAndParamsNames {
     public static final String WRONG_REPEAT_PASSWORD_FORM = "wrong_repeat_pass_form";
     public static final String WRONG_NEW_PASSWORD_FORM = "wrong_new_pass_form";
     public static final String WRONG_NEW_REPEAT_PASSWORD_FORM = "wrong_new_repeat_pass_form";
-
-    public static final String USER_FORM_DATA = "user_form_data";
 
     public static final String NAME_FORM = "name_form";
     public static final String SURNAME_FORM = "surname_form";
@@ -71,9 +72,7 @@ public class AttributeAndParamsNames {
     public static final String PAGINATION_DATA = "pagination_data";
     public static final String CURRENT_PAGE_NUM = "current_page_num";
     public static final String PAGES_NUMBER = "pages_number";
-    public static final String FIRST_ID = "first_id";
-    public static final String LAST_ID = "last_id";
-
+    
     public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "user_login";
     public static final String USER_EMAIL = "user_email";
@@ -85,16 +84,20 @@ public class AttributeAndParamsNames {
 
     public static final String ADD_BOOK_MSG = "add_book_msg";
 
-    public static final String PUBLISHER_ADDED_MSG = "is_publisher_added";
-    public static final String AUTHOR_ADDED_MSG = "is_author_added";
-    public static final String GENRE_ADDED_MSG = "is_genre_added";
-
-    public static final String PUBLISHER_UPDATED_MSG = "is_publisher_updated";
-    public static final String AUTHOR_UPDATED_MSG = "is_author_updated";
-    public static final String GENRE_UPDATED_MSG = "is_genre_updated";
+    public static final String PUBLISHER_OPERATION_FEEDBACK = "publisher_operation_feedback";
+    public static final String AUTHOR_OPERATION_FEEDBACK = "author_operation_feedback";
+    public static final String GENRE_OPERATION_FEEDBACK = "genre_operation_feedback";
+    public static final String BOOK_OPERATION_FEEDBACK = "book_operation_feedback";
 
     public static final String FILTER_DATA = "filter_data";
 
+    public static final String USER_ORDERS = "user_orders";
+
+    public static final String CREATE_ACCOUNT_FEEDBACK = "create_account_feedback";
+
+    public static final String ORDER_STATUS = "order_status";
+
+    public static final String ORDER_INFO = "order_info";
     ////request params names
     public static final String PAGE_DIRECTION = "page_direction";
 
@@ -103,6 +106,8 @@ public class AttributeAndParamsNames {
 
     public static final String USER_ID_REQ_PARAM = "user_id";
     public static final String USER_STATUS = "user_status";
+
+    public static final String ORDER_BOOKS = "order_books";
 
     //user params
     public static final String EMAIL = "email";
@@ -118,6 +123,7 @@ public class AttributeAndParamsNames {
 
     //book params
     public static final String BOOK_ID = "book_id";
+    public static final String IMAGE_ID = "image_id";
 
     public static final String TITLE = "title";
     public static final String AUTHOR = "author";
@@ -134,11 +140,13 @@ public class AttributeAndParamsNames {
     public static final String PUBLISHER_NAME = "publisher_name";
     public static final String GENRE_NAME = "genre_name";
 
+    public static final String ORDER_ID = "order_id";
+
+    public static final String IMAGE = "image";
+
     ////request attributes names
 
     public static final String USERS_LIST = "users_list";
-    public static final String USER_NAME = "user_name";
-    public static final String USER_SURNAME = "user_surname";
 
     public static final String BOOK = "book";
     public static final String BOOKS_LIST = "books_list";
@@ -151,5 +159,5 @@ public class AttributeAndParamsNames {
 
     public static final String ORDERS = "orders";
 
-    public static final String HOME_MESSAGE = "home_message";
+    public static final String ORDER = "order";
 }

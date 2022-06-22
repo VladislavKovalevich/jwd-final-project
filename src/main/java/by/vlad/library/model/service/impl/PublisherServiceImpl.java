@@ -44,14 +44,14 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public boolean addNewPublisher(Map<String, String> mapData) throws ServiceException {
-        boolean isCreated = false;
+    public Optional<Publisher> addNewPublisher(Map<String, String> mapData) throws ServiceException {
+        Optional<Publisher> optionalPublisher = Optional.empty();
         String newPublisherName = mapData.get(PUBLISHER_NAME_FORM);
         PublisherValidator publisherValidator = PublisherValidatorImpl.getInstance();
 
         if (!publisherValidator.validatePublisherName(newPublisherName)){
             mapData.put(WRONG_PUBLISHER_NAME_FORM, PublisherValidator.WRONG_FORMAT_MARKER);
-            return isCreated;
+            return optionalPublisher;
         }
 
         PublisherDao publisherDao = PublisherDaoImpl.getInstance();
@@ -61,7 +61,7 @@ public class PublisherServiceImpl implements PublisherService {
                 Publisher publisher = new Publisher();
                 publisher.setName(newPublisherName);
 
-                isCreated = publisherDao.insert(publisher);
+                optionalPublisher = publisherDao.addPublisher(publisher);
             }else{
                 mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_EXISTS_MARKER);
             }
@@ -69,13 +69,13 @@ public class PublisherServiceImpl implements PublisherService {
             throw new ServiceException(e);
         }
 
-        return isCreated;
+        return optionalPublisher;
     }
 
     @Override
-    public List<Publisher> updatePublisher(Map<String, String> mapData) throws ServiceException {
+    public Optional<Publisher> updatePublisher(Map<String, String> mapData) throws ServiceException {
         PublisherValidator publisherValidator = PublisherValidatorImpl.getInstance();
-        List<Publisher> publishers = new ArrayList<>();
+        Optional<Publisher> optionalPublisher = Optional.empty();
 
         String publisherName = mapData.get(PUBLISHER_NAME_FORM);
         String[] oldPublisherParams = mapData.get(PUBLISHER_FORM).split(DELIMITER);
@@ -83,7 +83,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         if (!publisherValidator.validatePublisherName(publisherName)){
             mapData.put(WRONG_PUBLISHER_NAME_FORM, PublisherValidator.WRONG_FORMAT_MARKER);
-            return publishers;
+            return optionalPublisher;
         }
 
         PublisherDao publisherDao = PublisherDaoImpl.getInstance();
@@ -91,11 +91,8 @@ public class PublisherServiceImpl implements PublisherService {
         try {
             if(!publisherDao.isPublisherExists(publisherName)){
                 Publisher publisher = new Publisher(publisherId, publisherName);
-                Optional<Publisher> optionalPublisher = publisherDao.updatePublisher(publisher);
+                optionalPublisher = publisherDao.updatePublisher(publisher);
 
-                if (optionalPublisher.isPresent()){
-                    publishers = publisherDao.findAll();
-                }
             }else{
                 mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_EXISTS_MARKER);
             }
@@ -103,6 +100,6 @@ public class PublisherServiceImpl implements PublisherService {
             throw new ServiceException(e);
         }
 
-        return publishers;
+        return optionalPublisher;
     }
 }

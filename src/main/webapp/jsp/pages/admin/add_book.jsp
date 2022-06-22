@@ -51,13 +51,15 @@
 
         <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
             <h3 class="py-md-3">${title}</h3>
-            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+            <form method="post" action="${path}/controller" enctype="multipart/form-data" class="row g-3 needs-validation" novalidate>
                 <input type="hidden" name="command" value="add_new_book">
 
                 <div class="col-md-4">
                     <label for="title" class="form-label">${book_title}</label>
                     <input type="text" class="form-control" name="title" id="title"
-                           value="${book_form_data['title_form']}" required>
+                           value="${book_form_data['title_form']}"
+                           pattern="[А-ЯЁ][а-яё\d\s]+[А-ЯЁа-яё\d\s]*(:\s[А-ЯЁа-яё\d\s]+)*"
+                           required oninvalid="this.setCustomValidity('name rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_form_data['wrong_title_form']}">
                             ${incorrect_data_format}
@@ -120,7 +122,9 @@
                 <div class="col-md-2">
                     <label for="copies_number" class="form-label">${book_copies_number}</label>
                     <input type="number" class="form-control" name="copies_number" id="copies_number"
-                           value="${book_form_data['copies_number_form']}" required>
+                           value="${book_form_data['copies_number_form']}"
+                           pattern="[1-9][\d]*"
+                           required oninvalid="this.setCustomValidity('name rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_form_data['wrong_copies_number_form']}">
                             ${incorrect_data_format}
@@ -131,7 +135,9 @@
                 <div class="col-md-2">
                     <label for="release_year" class="form-label">${book_publish_year}</label>
                     <input type="number" class="form-control" name="release_year" id="release_year"
-                           value="${book_form_data['release_year_form']}" aria-describedby="inputGroupPrepend" required>
+                           value="${book_form_data['release_year_form']}" aria-describedby="inputGroupPrepend"
+                           pattern="([12][\d]{3})|([1-9]{1,3})"
+                           required oninvalid="this.setCustomValidity('name rules')">
                     <div class="red-color">
                         <c:if test="${not empty book_form_data['wrong_release_year_form']}">
                             ${incorrect_data_format}
@@ -142,7 +148,9 @@
                 <div class="col-md-2">
                     <label for="pages_count" class="form-label">${book_pages_count}</label>
                     <input type="number" class="form-control" name="pages_count"
-                           value="${book_form_data['pages_count_form']}" id="pages_count" required>
+                           value="${book_form_data['pages_count_form']}" id="pages_count"
+                           pattern="[1-9][\d]{1,4}"
+                           required oninvalid="this.setCustomValidity('')">
                     <div class="red-color">
                         <c:if test="${not empty book_form_data['wrong_pages_count_form']}">
                             ${incorrect_data_format}
@@ -155,13 +163,17 @@
                 <div class="col-md-10">
                     <label for="description" class="form-label">${book_description}</label>
                     <textarea type="text" class="form-control" name="description"
-                              rows="4" id="description"
-                              required>${book_form_data['description_form']}</textarea>
+                              rows="4" id="description" required>${book_form_data['description_form']}</textarea>
                     <div class="red-color">
                         <c:if test="${not empty book_form_data['wrong_description_form']}">
                             ${incorrect_data_format}
                         </c:if>
                     </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="image">Choose image</label>
+                    <input type="file" id="image" name="image" class="form-control" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff">
                 </div>
 
                 <div class="col-12">

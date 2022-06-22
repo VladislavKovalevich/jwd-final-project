@@ -23,6 +23,7 @@
 <fmt:message key="label.book_pages_count" var="book_pages_count"/>
 <fmt:message key="label.book_publish_year" var="book_publish_year"/>
 <fmt:message key="label.book_publisher" var="book_publisher"/>
+<fmt:message key="button.back_to_main" var="back_btn"/>
 
 <html>
 <head>
@@ -48,7 +49,14 @@
         <div class="row">
             <div class="col-4 white-background">
                 <div class="">
-                    <img src="${path}/img/not_found_image.jpg"/>
+                    <c:choose>
+                        <c:when test="${not empty book.image.encodeImage}">
+                            <img src="${book.image.encodeImage}" class="img-thumbnail">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="${path}/img/not_found_image.jpg" class="img-thumbnail">
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
             <div class="col-8 white-background">
@@ -71,14 +79,92 @@
                 </div>
             </div>
         </div>
-        <div class="row white-background">
-            <c:if test="${user_role eq 'ADMIN'}">
-                <a href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">Update book</a>
-            </c:if>
 
-            <c:if test="${user_role eq 'CLIENT'}">
-                <a href="#">Add book to order</a>
-            </c:if>
+        <div class="row white-background">
+            <c:choose>
+                <c:when test="${user_role eq 'ADMIN'}">
+                    <a class="btn btn-primary"
+                       href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">
+                        Update book
+                    </a>
+                </c:when>
+                <c:when test="${user_role eq 'CLIENT'}">
+                    <c:if test="${not empty feedback_success}">
+                        <div class="green-color">
+                            Book was added to new order
+                        </div>
+                    </c:if>
+                    <div class="col-4 my-2">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop">
+                            Add book to order
+                        </button>
+                    </div>
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Choose the order</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Create new order:</p>
+                                    <div class="col-12 mt-2">
+                                        <form action="${path}/controller" method="post">
+                                            <input type="hidden" name="command" value="create_order">
+                                            <input type="hidden" name="book_id" value="${book.id}">
+                                            <p>
+                                                <label for="order_type"></label>
+                                                <select id="order_type" name="order_type">
+                                                    <c:forEach var="order_type" items="${order_types}">
+                                                        <option value="${order_type}">${order_type}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </p>
+                                            <input type="submit" class="btn btn-primary" value="Create order" name="sub">
+                                        </form>
+                                    </div>
+
+                                    <div class="col-12 mt-2">
+                                        <c:if test="${not empty user_orders}">
+                                            <form action="${path}/controller" method="post">
+                                                <input type="hidden" name="book_id" value="${book.id}">
+                                                <input type="hidden" name="command" value="add_book_to_order">
+                                                <label for="orders">Or choose the exists order:</label>
+                                                <p><select id="orders" name="order_id">
+                                                    <c:forEach var="order" items="${user_orders}">
+                                                        <c:if test="${order.status eq 'CREATED'}">
+                                                            <option value="${order.id}">${order.id} ${order.createdDate} ${order.type}</option>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </select>
+                                                </p>
+                                                <button type="submit" class="btn btn-primary">Add to order</button>
+                                            </form>
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:when>
+            </c:choose>
+
+            <hr/>
+
+            <form method="get" action="${path}/controller">
+                <input type="hidden" name="command" value="go_to_main_page">
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">${back_btn}</button>
+                </div>
+            </form>
+
         </div>
     </div>
 </section>

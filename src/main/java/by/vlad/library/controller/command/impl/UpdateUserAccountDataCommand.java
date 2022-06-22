@@ -34,9 +34,9 @@ public class UpdateUserAccountDataCommand implements Command {
                 session.setAttribute(USER_EMAIL, userFormData.get(EMAIL_FORM));
                 session.setAttribute(USER_LOGIN, userFormData.get(LOGIN_FORM));
 
-                session.setAttribute(CURRENT_PAGE, HOME_PAGE);
+                session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
 
-                router = new Router(HOME_PAGE, Router.Type.REDIRECT);
+                router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.REDIRECT);
             }else{
                 request.setAttribute(USER_FORM_DATA, userFormData);
                 router = new Router(CHANGE_ACCOUNT_DATA_PAGE, Router.Type.REDIRECT);

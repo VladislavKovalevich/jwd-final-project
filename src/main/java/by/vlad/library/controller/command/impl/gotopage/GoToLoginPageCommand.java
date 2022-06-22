@@ -20,6 +20,7 @@ public class GoToLoginPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Map<String, String> userFormData = new HashMap<>();
+
         session.setAttribute(USER_FORM_DATA, userFormData);
         session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));
         return new Router(PagePath.LOGIN_PAGE, Router.Type.FORWARD);

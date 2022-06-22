@@ -30,10 +30,11 @@ public class CreateNewAccountCommand implements Command {
         try {
             if(userService.createNewAccount(userData)){
                 session.removeAttribute(USER_FORM_DATA);
-                session.setAttribute(CURRENT_PAGE, MAIN_PAGE);
-                router = new Router(MAIN_PAGE, Router.Type.REDIRECT);
+                session.setAttribute(CREATE_ACCOUNT_FEEDBACK, true);
+                session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
+                router = new Router(LOGIN_PAGE, Router.Type.REDIRECT);
             }else{
-                request.setAttribute(USER_FORM_DATA, userData);
+                session.setAttribute(USER_FORM_DATA, userData);
                 router = new Router(CREATE_NEW_ACCOUNT_PAGE, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {

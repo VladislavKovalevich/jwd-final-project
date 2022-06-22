@@ -9,4 +9,6 @@ public interface PublisherDao extends BasicDao<Publisher> {
     boolean isPublisherExists(String publisherName) throws DaoException;
 
     Optional<Publisher> updatePublisher(Publisher publisher) throws DaoException;
+
+    Optional<Publisher> addPublisher(Publisher publisher) throws DaoException;
 }

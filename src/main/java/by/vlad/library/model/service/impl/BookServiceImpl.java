@@ -1,9 +1,6 @@
 package by.vlad.library.model.service.impl;
 
-import by.vlad.library.entity.Author;
-import by.vlad.library.entity.Book;
-import by.vlad.library.entity.Genre;
-import by.vlad.library.entity.Publisher;
+import by.vlad.library.entity.*;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.dao.BookDao;
@@ -87,13 +84,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean addBook(Map<String, String> bookData) throws ServiceException {
-        boolean isAdded = false;
+    public Optional<Book> addBook(Map<String, String> bookData) throws ServiceException {
+        Optional<Book> optionalBook = Optional.empty();
 
         BookValidator bookValidator = BookValidatorImpl.getInstance();
 
         if (!bookValidator.validateBookData(bookData)){
-            return isAdded;
+            return optionalBook;
         }
 
         String title = bookData.get(TITLE_FORM);
@@ -118,14 +115,16 @@ public class BookServiceImpl implements BookService {
                     .withDescription(description)
                     .withNumberOfPages(pages_count)
                     .withReleaseYear(Year.of(year))
+                    .withImage(new Image())
                     .buildBook();
 
-            isAdded = bookDao.addNewBook(book);
+            optionalBook = bookDao.addNewBook(book);
+
         } catch (DaoException e) {
             throw new ServiceException(e);
         }
 
-        return isAdded;
+        return optionalBook;
     }
 
     @Override
@@ -143,6 +142,7 @@ public class BookServiceImpl implements BookService {
         String[] publisherParams = bookData.get(PUBLISHER_FORM).split(BOOK_COMPONENTS_DELIMITER);
 
         long bookId = Long.parseLong(bookData.get(BOOK_ID));
+        long imageId = Long.parseLong(bookData.get(IMAGE_ID));
         String title = bookData.get(TITLE_FORM);
         String description = bookData.get(DESCRIPTION_FORM);
         int pages_count = Integer.parseInt(bookData.get(PAGES_COUNT_FORM));
@@ -163,6 +163,7 @@ public class BookServiceImpl implements BookService {
                     .withDescription(description)
                     .withNumberOfPages(pages_count)
                     .withReleaseYear(Year.of(year))
+                    .withImage(new Image(imageId))
                     .buildBook();
 
             optionalBook = bookDao.updateBook(book);
@@ -171,5 +172,19 @@ public class BookServiceImpl implements BookService {
         }
 
         return optionalBook;
+    }
+
+    @Override
+    public List<Book> getBooksByOrderId(long orderId) throws ServiceException {
+        List<Book> books;
+        BookDao bookDao = BookDaoImpl.getInstance();
+
+        try {
+            books = bookDao.getBooksByOrderId(orderId);
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+        return books;
     }
 }

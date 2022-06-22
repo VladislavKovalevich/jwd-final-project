@@ -31,34 +31,35 @@
 </header>
 <body class="background-theme">
 <section class="container-fluid">
-    <div class="row">
+    <div class="row m-lg-5 m-5">
         <div class="col-2"></div>
         <div class="col-8">
             <div class="row" style="background-color: aliceblue">
                 <c:forEach var="order" items="${orders}">
-                    <div class="col-11 m-2" style="background-color: #c7b39b">
+                    <div class="col-1 my-1"></div>
+                    <div class="col-10 my-1" style="background-color: #c7b39b; border-color: #333333">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-9">
                                 <p>Order #${order.id}</p>
-                                <p>Create date: ${order.createDate}</p>
+                                <p>Create date: ${order.createdDate}</p>
                                 <p>Order type: ${order.type}</p>
                                 <p>Order status: ${order.status}</p>
                             </div>
                             <div class="col-3">
-                                <p>
-                                    <a href="#" class="btn btn-primary my-2">Change order type</a>
+                                <p class="mt-3">
+                                    <a href="${path}/controller?command=get_books_by_order_id&order=${order}"
+                                       class="btn btn-primary my-2">Get books list</a>
                                 </p>
-                                <p>
-                                    <a href="#" class="btn btn-primary my-2">Get books list</a>
-                                </p>
-                                <p>
+                                <p class="mb-2">
                                     <c:if test="${order.status eq 'CREATED'}">
-                                        <a href="#" class=" btn btn-primary my-2">Delete</a>
+                                        <a href="${path}/controller?command=delete_order&order_id=${order.id}"
+                                           class=" btn btn-primary my-2">Delete</a>
                                     </c:if>
                                 </p>
                             </div>
                         </div>
                     </div>
+                    <div class="col-1 my-1"></div>
                 </c:forEach>
             </div>
         </div>

@@ -13,6 +13,7 @@ import by.vlad.library.model.service.impl.AuthorServiceImpl;
 import by.vlad.library.model.service.impl.BookServiceImpl;
 import by.vlad.library.model.service.impl.GenreServiceImpl;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -52,14 +53,14 @@ public class ShowBooksListCommand implements Command {
             session.setAttribute(AUTHORS, authorService.findAllAuthors());
             session.setAttribute(PUBLISHERS, publisherService.findAllPublishers());
             session.setAttribute(GENRES, genreService.findAllGenres());
+            session.setAttribute(BOOKS_LIST, bookList);
 
             session.setAttribute(FILTER_DATA, filterData);
             session.setAttribute(PAGINATION_DATA, paginationData);
+
             session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
 
-            session.setAttribute(BOOKS_LIST, bookList);
-
-            router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.REDIRECT);
+            router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.FORWARD);
         } catch (ServiceException e) {
             throw new CommandException(e);
         }

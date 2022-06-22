@@ -1,15 +1,19 @@
-package by.vlad.library.controller.command.impl.admin.book.book_components;
+package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
+import by.vlad.library.entity.Author;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.AuthorService;
 import by.vlad.library.model.service.impl.AuthorServiceImpl;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
@@ -30,10 +34,17 @@ public class AddNewAuthorCommand implements Command {
 
         try {
 
-            if (authorService.createNewAuthor(componentsData)){
-                componentsData.remove(AUTHOR_NAME_FORM);
-                componentsData.remove(AUTHOR_SURNAME_FORM);
-                componentsData.put(AUTHOR_ADDED_MSG, AUTHOR_ADDED_MARKER);
+            Optional<Author> optionalAuthor = authorService.createNewAuthor(componentsData);
+            if (optionalAuthor.isPresent()){
+                Author author = optionalAuthor.get();
+
+                List<Author> authors = (List<Author>) session.getAttribute(AUTHORS);
+                authors.add(author);
+
+                session.setAttribute(AUTHORS, authors);
+
+                componentsData.clear();
+                componentsData.put(AUTHOR_OPERATION_FEEDBACK, AUTHOR_ADDED_MARKER);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
@@ -52,9 +63,9 @@ public class AddNewAuthorCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> componentsData) {
-        componentsData.remove(PUBLISHER_ADDED_MSG);
-        componentsData.remove(GENRE_ADDED_MSG);
-        componentsData.remove(AUTHOR_ADDED_MSG);
+        componentsData.remove(PUBLISHER_OPERATION_FEEDBACK);
+        componentsData.remove(GENRE_OPERATION_FEEDBACK);
+        componentsData.remove(AUTHOR_OPERATION_FEEDBACK);
         componentsData.remove(WRONG_AUTHOR_NAME_FORM);
         componentsData.remove(WRONG_AUTHOR_SURNAME_FORM);
         componentsData.remove(WRONG_AUTHOR_EXISTS_FORM);

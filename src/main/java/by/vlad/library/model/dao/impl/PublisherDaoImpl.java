@@ -18,7 +18,7 @@ import static by.vlad.library.model.dao.ColumnName.*;
 public class PublisherDaoImpl implements PublisherDao {
     private static final String SELECT_ALL_PUBLISHER = "SELECT publisher_id, publisher_name FROM publishers";
 
-    private static final String INSERT_AUTHOR =
+    private static final String INSERT_PUBLISHER =
             "INSERT INTO publishers (`publisher_name`) VALUES (?)";
 
     private static final String IS_PUBLISHER_EXISTS =
@@ -46,7 +46,7 @@ public class PublisherDaoImpl implements PublisherDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)){
+            PreparedStatement statement = connection.prepareStatement(INSERT_PUBLISHER)){
 
             statement.setString(1, publisher.getName());
             rows = statement.executeUpdate();
@@ -134,6 +134,25 @@ public class PublisherDaoImpl implements PublisherDao {
             }else{
                 optionalPublisher = Optional.empty();
             }
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return optionalPublisher;
+    }
+
+    @Override
+    public Optional<Publisher> addPublisher(Publisher publisher) throws DaoException {
+        Optional<Publisher> optionalPublisher;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_PUBLISHER)){
+
+            statement.setString(1, publisher.getName());
+            int rows = statement.executeUpdate();
+
+            optionalPublisher = rows == 1 ? Optional.of(publisher) : Optional.empty();
+
         }catch (SQLException e){
             throw new DaoException(e);
         }

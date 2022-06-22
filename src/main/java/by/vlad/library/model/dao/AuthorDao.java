@@ -9,4 +9,6 @@ public interface AuthorDao extends BasicDao<Author>{
     boolean isAuthorExists(String name, String surname) throws DaoException;
 
     Optional<Author> updateAuthor(Author author) throws DaoException;
+
+    Optional<Author> addAuthor(Author author) throws  DaoException;
 }

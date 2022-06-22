@@ -12,7 +12,7 @@ public interface AuthorService {
 
     List<Author> findAllAuthors() throws ServiceException;
 
-    List<Author> updateAuthor(Map<String, String> mapData) throws ServiceException;
+    Optional<Author> updateAuthor(Map<String, String> mapData) throws ServiceException;
 
-    boolean createNewAuthor(Map<String, String> mapData) throws ServiceException;
+    Optional<Author> createNewAuthor(Map<String, String> mapData) throws ServiceException;
 }

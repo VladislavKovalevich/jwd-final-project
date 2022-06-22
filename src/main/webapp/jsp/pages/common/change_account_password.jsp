@@ -70,7 +70,9 @@
                 <div class="col-md-4">
                     <label for="pass" class="form-label">${old_password}</label>
                     <input type="password" class="form-control" name="pass"
-                           value="${user_form_data['pass_form']}" id="pass" required>
+                           value="${user_form_data['pass_form']}" id="pass"
+                           pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
+                           required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_pass_form']}">
                             ${incorrect_data_format}
@@ -86,7 +88,9 @@
                 <div class="col-md-4">
                     <label for="new_pass" class="form-label">${new_password}</label>
                     <input type="password" class="form-control" name="new_pass"
-                           value="${user_form_data['new_pass_form']}" id="new_pass" required>
+                           value="${user_form_data['new_pass_form']}" id="new_pass"
+                           pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
+                           required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_new_pass_form']}">
                             ${incorrect_data_format}
@@ -99,7 +103,9 @@
                 <div class="col-md-4">
                     <label for="new_repeat_pass" class="form-label">${repeated_new_password}</label>
                     <input type="password" class="form-control" name="new_repeat_pass"
-                           value="${user_form_data['new_repeat_pass_form']}" id="new_repeat_pass" required>
+                           value="${user_form_data['new_repeat_pass_form']}" id="new_repeat_pass"
+                           pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
+                           required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_new_repeat_pass_form']}">
                             ${mismatch_password}
@@ -116,7 +122,7 @@
 
             <hr/>
 
-            <form action="controller">
+            <form method="get" action="${path}/controller">
                 <input type="hidden" name="command" value="go_to_main_page">
                 <div class="col-12">
                     <button class="btn btn-primary" type="submit">${back_btn}</button>

@@ -1,11 +1,10 @@
 package by.vlad.library.model.dao.mapper.impl;
 
-import by.vlad.library.entity.Author;
-import by.vlad.library.entity.Book;
-import by.vlad.library.entity.Genre;
-import by.vlad.library.entity.Publisher;
+import by.vlad.library.entity.*;
 import by.vlad.library.model.dao.mapper.Mapper;
+import by.vlad.library.util.ImageEncoder;
 
+import java.sql.Blob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Year;
@@ -32,6 +31,21 @@ public class BookMapper implements Mapper<Book> {
         List<Book> books = new ArrayList<>();
 
         while (resultSet.next()) {
+
+            Image image = new Image();
+            long imageId = resultSet.getLong(IMAGE_ID_COL);
+
+            if (imageId > 0) {
+                Blob blob = resultSet.getBlob(IMAGE_CONTENT_COL);
+                if (blob != null) {
+                    byte[] imageData = blob.getBytes(1, (int) blob.length());
+                    image.setId(imageId);
+                    image.setContent(imageData);
+                    ImageEncoder imageEncoder = ImageEncoder.getInstance();
+                    image.setEncodeImage(imageEncoder.encodeImage(imageData));
+                }
+            }
+
             Author author = new Author(
                     resultSet.getLong(AUTHOR_ID_COL),
                     resultSet.getString(AUTHOR_NAME_COL),
@@ -48,7 +62,7 @@ public class BookMapper implements Mapper<Book> {
                     resultSet.getString(GENRE_NAME_COL)
             );
 
-            Book book = Book.getBuilder()
+            Book.BookBuilder bookBuilder = Book.getBuilder()
                     .withId(resultSet.getLong(BOOK_ID_COL))
                     .withTitle(resultSet.getString(BOOK_TITLE_COL))
                     .withReleaseYear(Year.of(resultSet.getInt(BOOK_PUBLISH_YEAR_COL)))
@@ -57,10 +71,10 @@ public class BookMapper implements Mapper<Book> {
                     .withCopiesNumber(resultSet.getInt(BOOK_COPIES_NUMBER_COL))
                     .withAuthor(author)
                     .withPublisher(publisher)
-                    .withGenre(genre)
-                    .buildBook();
+                    .withImage(image)
+                    .withGenre(genre);
 
-            books.add(book);
+            books.add(bookBuilder.buildBook());
         }
 
         return books;

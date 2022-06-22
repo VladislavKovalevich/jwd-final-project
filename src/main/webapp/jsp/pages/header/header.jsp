@@ -12,7 +12,6 @@
 <fmt:message key="dropdown_menu_title.guest" var="guest_title"/>
 <fmt:message key="reference.sign_in" var="sign_in"/>
 <fmt:message key="reference.sign_out" var="sign_out"/>
-<fmt:message key="reference.create_new_account" var="create_new_account"/>
 <fmt:message key="reference.change_account_password" var="change_password"/>
 <fmt:message key="reference.update_account_data" var="update_account_data"/>
 <fmt:message key="reference.get_books_list" var="get_books"/>
@@ -51,7 +50,7 @@
                                 <li><a class="dropdown-item" href="${path}/controller?command=create_order">Create
                                     order</a></li>
                                 <li><a class="dropdown-item"
-                                       href="${path}/controller?command=get_order_list_by_user_id&user_id=${user_id}">Order
+                                       href="${path}/controller?command=get_orders_by_user_id&user_id=${user_id}">Order
                                     list</a></li>
                             </ul>
                         </li>
@@ -109,7 +108,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Orders list</a>
+                            <a class="nav-link" href="${path}/controller?command=get_orders_list">Orders list</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="${path}/controller?command=show_users_list">Users list</a>
@@ -166,18 +165,9 @@
                                        href="${path}/controller?command=change_local&language=EN">${en}</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                    ${guest_title}
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=go_to_create_new_account_page">${create_new_account}</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=go_to_login_page">${sign_in}</a></li>
-                            </ul>
+                        <li class="nav-item">
+                                <a class="nav-link"
+                                       href="${path}/controller?command=go_to_login_page">${sign_in}</a>
                         </li>
                     </ul>
                 </c:otherwise>

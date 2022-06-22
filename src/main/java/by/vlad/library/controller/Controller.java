@@ -5,6 +5,7 @@ import by.vlad.library.controller.command.CommandType;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,9 @@ import java.io.*;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.COMMAND;
 
 @WebServlet(name = "controllerServlet", value = {"/controller", "*.do"})
+@MultipartConfig(fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 25)
 public class Controller extends HttpServlet {
 
     public void init() {

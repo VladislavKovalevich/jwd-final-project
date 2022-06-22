@@ -42,7 +42,7 @@ public class UserDaoImpl implements UserDao {
 
     private static final String GET_USER_BY_ID =
             "SELECT * " +
-            "FROM users WHERE user_id = ?";
+            "FROM users, roles WHERE user_id = ? AND roles_id = role_id";
 
     private static final String FIND_ALL_USERS =
             "SELECT * FROM users, roles WHERE roles_id = 1 AND roles_id = role_id;";
@@ -146,7 +146,7 @@ public class UserDaoImpl implements UserDao {
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int count = resultSet.getInt(1);
-                    isExists = count == 0;
+                    isExists = count >= 1;
                 }
             }
         }catch (SQLException e) {

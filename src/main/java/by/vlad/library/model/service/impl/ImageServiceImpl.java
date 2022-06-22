@@ -1,0 +1,54 @@
+package by.vlad.library.model.service.impl;
+
+import by.vlad.library.entity.Book;
+import by.vlad.library.entity.Image;
+import by.vlad.library.exception.DaoException;
+import by.vlad.library.exception.ServiceException;
+import by.vlad.library.model.dao.ImageDao;
+import by.vlad.library.model.dao.impl.ImageDaoImpl;
+import by.vlad.library.model.service.ImageService;
+import by.vlad.library.util.ImageEncoder;
+
+public class ImageServiceImpl implements ImageService {
+    private static ImageServiceImpl instance;
+
+    public static ImageServiceImpl getInstance() {
+        if (instance == null){
+            instance = new ImageServiceImpl();
+        }
+        return instance;
+    }
+
+    private ImageServiceImpl(){}
+
+    @Override
+    public void createNewImage(byte[] imageContent, Book book) throws ServiceException {
+        ImageDao imageDao = ImageDaoImpl.getInstance();
+        Image image = new Image(imageContent);
+
+        try {
+            if (imageDao.insertImage(image, book.getId())){
+                image.setEncodeImage(ImageEncoder.getInstance().encodeImage(imageContent));
+                book.setImage(image);
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+
+    }
+
+    @Override
+    public void updateImage(long imageId, byte[] imageContent, Book book) throws ServiceException {
+        ImageDao imageDao = ImageDaoImpl.getInstance();
+
+        try {
+            if (imageDao.updateImage(imageId, imageContent)){
+                Image image = new Image(imageId, imageContent);
+                image.setEncodeImage(ImageEncoder.getInstance().encodeImage(imageContent));
+                book.setImage(image);
+            }
+        }catch (DaoException e){
+            throw new ServiceException(e);
+        }
+    }
+}

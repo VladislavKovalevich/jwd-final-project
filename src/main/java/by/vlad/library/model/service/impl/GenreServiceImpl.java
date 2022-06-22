@@ -9,7 +9,6 @@ import by.vlad.library.model.service.GenreService;
 import by.vlad.library.validator.GenreValidator;
 import by.vlad.library.validator.impl.GenreValidatorImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,15 +44,15 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public boolean createNewGenre(Map<String, String> mapData) throws ServiceException {
-        boolean isCreated = false;
+    public Optional<Genre> createNewGenre(Map<String, String> mapData) throws ServiceException {
+        Optional<Genre> optionalGenre = Optional.empty();
         String genreName = mapData.get(GENRE_NAME_FORM);
 
         GenreValidator genreValidator = GenreValidatorImpl.getInstance();
 
         if (!genreValidator.validateGenreName(genreName)){
             mapData.put(WRONG_GENRE_NAME_FORM, GenreValidator.WRONG_FORMAT_MARKER);
-            return isCreated;
+            return optionalGenre;
         }
 
         GenreDao genreDao = GenreDaoImpl.getInstance();
@@ -62,7 +61,7 @@ public class GenreServiceImpl implements GenreService {
             if(!genreDao.isGenreExists(genreName)){
                 Genre genre = new Genre(genreName);
 
-                isCreated = genreDao.insert(genre);
+                optionalGenre = genreDao.addGenre(genre);
             }else{
                 mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
             }
@@ -70,13 +69,13 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException(e);
         }
 
-        return isCreated;
+        return optionalGenre;
     }
 
     @Override
-    public List<Genre> updateGenre(Map<String, String> mapData) throws ServiceException {
+    public Optional<Genre> updateGenre(Map<String, String> mapData) throws ServiceException {
         GenreValidator genreValidator = GenreValidatorImpl.getInstance();
-        List<Genre> genres = new ArrayList<>();
+        Optional<Genre> optionalGenre = Optional.empty();
 
         String[] genreParams = mapData.get(GENRE_FORM).split(DELIMITER);
         long genreId = Long.parseLong(genreParams[0]);
@@ -84,7 +83,7 @@ public class GenreServiceImpl implements GenreService {
 
         if (!genreValidator.validateGenreName(genreName)){
             mapData.put(WRONG_GENRE_NAME_FORM, GenreValidator.WRONG_FORMAT_MARKER);
-            return genres;
+            return optionalGenre;
         }
 
         GenreDao genreDao = GenreDaoImpl.getInstance();
@@ -92,11 +91,7 @@ public class GenreServiceImpl implements GenreService {
         try {
             if(!genreDao.isGenreExists(genreName)){
                 Genre genre = new Genre(genreId, genreName);
-                Optional<Genre> optionalGenre = genreDao.updateGenre(genre);
-
-                if (optionalGenre.isPresent()){
-                    genres = genreDao.findAll();
-                }
+                optionalGenre = genreDao.updateGenre(genre);
             }else{
                 mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
             }
@@ -104,6 +99,6 @@ public class GenreServiceImpl implements GenreService {
             throw new ServiceException(e);
         }
 
-        return genres;
+        return optionalGenre;
     }
 }

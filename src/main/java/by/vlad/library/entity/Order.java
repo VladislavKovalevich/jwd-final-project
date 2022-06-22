@@ -3,7 +3,8 @@ package by.vlad.library.entity;
 import java.time.LocalDate;
 
 public class Order extends AbstractEntity{
-    private LocalDate createDate;
+    private LocalDate createdDate;
+    private LocalDate reservedDate;
     private LocalDate orderedDate;
     private LocalDate rejectedDate;
     private LocalDate returnedDate;
@@ -18,12 +19,12 @@ public class Order extends AbstractEntity{
         super(id);
     }
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 
     public LocalDate getOrderedDate() {
@@ -79,6 +80,14 @@ public class Order extends AbstractEntity{
         return new Order().new OrderBuilder();
     }
 
+    public LocalDate getReservedDate() {
+        return reservedDate;
+    }
+
+    public void setReservedDate(LocalDate reservedDate) {
+        this.reservedDate = reservedDate;
+    }
+
     public class OrderBuilder{
         public OrderBuilder withId(long id){
             Order.this.setId(id);
@@ -86,7 +95,12 @@ public class Order extends AbstractEntity{
         }
 
         public OrderBuilder withCreateDate(LocalDate date){
-            Order.this.setCreateDate(date);
+            Order.this.setCreatedDate(date);
+            return this;
+        }
+
+        public OrderBuilder withReservedDate(LocalDate date){
+            Order.this.setReservedDate(date);
             return this;
         }
 
@@ -123,5 +137,42 @@ public class Order extends AbstractEntity{
         public Order buildOrder(){
             return Order.this;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Order order = (Order) o;
+
+        if (!createdDate.equals(order.createdDate)) return false;
+        if (orderedDate != null ? !orderedDate.equals(order.orderedDate) : order.orderedDate != null) return false;
+        if (rejectedDate != null ? !rejectedDate.equals(order.rejectedDate) : order.rejectedDate != null) return false;
+        if (returnedDate != null ? !returnedDate.equals(order.returnedDate) : order.returnedDate != null) return false;
+        if (type != order.type) return false;
+        if (status != order.status) return false;
+        return user.equals(order.user);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + createdDate.hashCode();
+        result = 31 * result + (orderedDate != null ? orderedDate.hashCode() : 0);
+        result = 31 * result + (rejectedDate != null ? rejectedDate.hashCode() : 0);
+        result = 31 * result + (returnedDate != null ? returnedDate.hashCode() : 0);
+        result = 31 * result + type.hashCode();
+        result = 31 * result + status.hashCode();
+        result = 31 * result + user.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder(String.valueOf(this.getId()))
+                .append( ",")
+                .append(this.status).toString();
     }
 }

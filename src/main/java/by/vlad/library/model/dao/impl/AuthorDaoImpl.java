@@ -146,4 +146,25 @@ public class AuthorDaoImpl implements AuthorDao {
 
         return optionalAuthor;
     }
+
+    @Override
+    public Optional<Author> addAuthor(Author author) throws DaoException {
+        Optional<Author> optionalAuthor;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)){
+
+            statement.setString(1, author.getName());
+            statement.setString(2, author.getSurname());
+
+            int rows = statement.executeUpdate();
+
+            optionalAuthor = rows == 1 ? Optional.of(author) : Optional.empty();
+
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+
+        return optionalAuthor;
+    }
 }

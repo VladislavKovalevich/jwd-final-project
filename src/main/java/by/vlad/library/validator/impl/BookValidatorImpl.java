@@ -11,7 +11,7 @@ public class BookValidatorImpl implements BookValidator {
     private static final String COPIES_NUMBER_REGEX = "^[1-9][\\d]*$";
     private static final String PAGES_COUNT_REGEX = "^[1-9][\\d]{1,4}$";
     private static final String YEAR_REGEX = "^([12][\\d]{3})|([1-9]{1,3})$";
-    private static final String DESCRIPTION_REGEX = "^[а-яА-ЯЁё\\w\\d\\p{Punct}\\s]+$";
+    private static final String DESCRIPTION_REGEX = "^[а-яА-ЯЁё\\w\\d\\p{Punct}\\s]*$";
 
     private static BookValidatorImpl instance;
 

@@ -12,8 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
-import static by.vlad.library.controller.command.PagePath.CHANGE_PASSWORD_PAGE;
-import static by.vlad.library.controller.command.PagePath.HOME_PAGE;
+import static by.vlad.library.controller.command.PagePath.*;
 
 public class ChangeAccountPasswordCommand implements Command {
     @Override
@@ -32,8 +31,8 @@ public class ChangeAccountPasswordCommand implements Command {
         try {
             if(userService.changePassword(passwordData)){
                 session.removeAttribute(USER_FORM_DATA);
-                session.setAttribute(CURRENT_PAGE, HOME_PAGE);
-                router = new Router(HOME_PAGE, Router.Type.REDIRECT);
+                session.setAttribute(CURRENT_PAGE, CHANGE_PASSWORD_PAGE);
+                router = new Router(CHANGE_PASSWORD_PAGE, Router.Type.REDIRECT);
             }else{
                 session.setAttribute(USER_FORM_DATA, passwordData);
                 session.setAttribute(CURRENT_PAGE, CHANGE_PASSWORD_PAGE);

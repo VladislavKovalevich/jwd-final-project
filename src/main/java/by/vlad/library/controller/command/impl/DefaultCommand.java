@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.CURRENT_PAGE;
-import static by.vlad.library.controller.command.AttributeAndParamsNames.USER_EMAIL;
 import static by.vlad.library.controller.command.PagePath.*;
 
 public class DefaultCommand implements Command {
@@ -16,13 +15,8 @@ public class DefaultCommand implements Command {
         HttpSession session = request.getSession();
         Router router;
 
-        if (session.getAttribute(USER_EMAIL) != null){
-            session.setAttribute(CURRENT_PAGE, HOME_PAGE);
-            router = new Router(HOME_PAGE);
-        }else{
-            session.setAttribute(CURRENT_PAGE, MAIN_PAGE);
-            router = new Router(MAIN_PAGE);
-        }
+        session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
+        router = new Router(SHOW_BOOKS_LIST_PAGE);
 
         return router;
     }

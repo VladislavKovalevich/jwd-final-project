@@ -14,7 +14,9 @@ public interface BookDao extends BasicDao<Book> {
 
     int findNumberOfPage(Map<String, String> filterMap) throws DaoException;
 
-    boolean addNewBook(Book book) throws DaoException;
+    Optional<Book> addNewBook(Book book) throws DaoException;
 
     Optional<Book> updateBook(Book book) throws DaoException;
+
+    List<Book> getBooksByOrderId(long orderId) throws DaoException;
 }
