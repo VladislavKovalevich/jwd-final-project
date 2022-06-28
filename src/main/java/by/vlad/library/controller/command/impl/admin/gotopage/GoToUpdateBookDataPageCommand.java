@@ -19,6 +19,8 @@ import by.vlad.library.model.service.impl.GenreServiceImpl;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_DATA_PAGE;
 
 public class GoToUpdateBookDataPageCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -69,7 +73,8 @@ public class GoToUpdateBookDataPageCommand implements Command {
                 booksData.put(IMAGE_ID, String.valueOf(book.getImage().getId()));
             }
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("GoToUpdateBookDataPageCommand execution failed");
+            throw new CommandException("GoToUpdateBookDataPageCommand execution failed", e);
         }
 
         session.setAttribute(PUBLISHERS, publishers);

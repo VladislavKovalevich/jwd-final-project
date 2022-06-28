@@ -19,4 +19,6 @@ public interface BookDao extends BasicDao<Book> {
     Optional<Book> updateBook(Book book) throws DaoException;
 
     List<Book> getBooksByOrderId(long orderId) throws DaoException;
+
+    List<Integer> findBooksCopiesNumber(String bookCopiesMap) throws DaoException;
 }

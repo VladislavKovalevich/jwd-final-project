@@ -33,6 +33,8 @@ public class GoToMainPageCommand implements Command {
         }
 
         if(session.getAttribute(CURRENT_PAGE).equals(SHOW_BOOK_INFO_PAGE)){
+            session.removeAttribute(BOOK_OPERATION_FEEDBACK);
+            session.removeAttribute(ORDER_OPERATION_FEEDBACK);
             session.removeAttribute(BOOK);
         }
 

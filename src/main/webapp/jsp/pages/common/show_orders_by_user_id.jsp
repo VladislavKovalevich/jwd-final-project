@@ -47,7 +47,7 @@
                             </div>
                             <div class="col-3">
                                 <p class="mt-3">
-                                    <a href="${path}/controller?command=get_books_by_order_id&order=${order}"
+                                    <a href="${path}/controller?command=get_books_by_order_id&order_id=${order.id}"
                                        class="btn btn-primary my-2">Get books list</a>
                                 </p>
                                 <p class="mb-2">

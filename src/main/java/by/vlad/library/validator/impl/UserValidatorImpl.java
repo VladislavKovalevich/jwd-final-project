@@ -7,12 +7,12 @@ import java.util.Map;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class UserValidatorImpl implements UserValidator {
-    private static final String EMAIL_REGEX = "^(\\w+\\.)*\\w+@\\w+(\\.\\w+)*\\.[\\p{Lower}]{2,6}$";
-    private static final String PASSWORD_REGEX = "^([\\w]){9,16}$";
+    private static final String EMAIL_REGEX = "^[\\d\\p{Lower}]([\\d\\p{Lower}_\\-\\.]*)[\\d\\p{Lower}_\\-]@[\\d\\p{Lower}_\\-]{2,}\\.\\p{Lower}{2,6}$";
+    private static final String PASSWORD_REGEX = "^([\\p{Graph}&&[^\\<\\>]]){7,16}$";
     private static final String NAME_AND_SURNAME_REGEX = "^([а-яА-ЯЁё]){3,30}$";
-    private static final String LOGIN_REGEX = "^[\\w-]{3,25}$";
+    private static final String LOGIN_REGEX = "^([\\p{Lower}\\p{Upper}_.-]([\\d])*){3,25}$";
     private static final String SERIAL_NUMBER_REGEX = "^[\\p{Upper}]{2}[\\d]{7}$";
-    private static final String MOBILE_PHONE_REGEX = "^[+]?[\\d]{7,15}$";
+    private static final String MOBILE_PHONE_REGEX = "^\\+375(29|33|44|17)[\\d]{7}$";
 
     private static UserValidatorImpl instance;
 

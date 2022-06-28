@@ -7,9 +7,10 @@ import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.AuthorService;
 import by.vlad.library.model.service.impl.AuthorServiceImpl;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PA
 
 public class AddNewAuthorCommand implements Command {
     private static final String AUTHOR_ADDED_MARKER = "author has been added";
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -51,7 +53,8 @@ public class AddNewAuthorCommand implements Command {
             session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
 
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("AddNewAuthorCommand execution failed");
+            throw new CommandException("AddNewAuthorCommand execution failed", e);
         }
 
         return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);

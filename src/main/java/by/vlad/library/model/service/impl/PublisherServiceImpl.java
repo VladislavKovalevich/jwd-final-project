@@ -8,8 +8,9 @@ import by.vlad.library.model.dao.impl.PublisherDaoImpl;
 import by.vlad.library.model.service.PublisherService;
 import by.vlad.library.validator.PublisherValidator;
 import by.vlad.library.validator.impl.PublisherValidatorImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class PublisherServiceImpl implements PublisherService {
+    private static final Logger logger = LogManager.getLogger();
     private static final String DELIMITER = "\\|";
     private static PublisherServiceImpl instance;
 
@@ -37,7 +39,8 @@ public class PublisherServiceImpl implements PublisherService {
         try {
             publishers = publisherDaoImpl.findAll();
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method findAllPublishers from publisher service was failed" + e);
+            throw new ServiceException("Method findAllPublishers from publisher service was failed", e);
         }
 
         return publishers;
@@ -66,7 +69,8 @@ public class PublisherServiceImpl implements PublisherService {
                 mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_EXISTS_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method addNewPublisher from publisher service was failed" + e);
+            throw new ServiceException("Method addNewPublisher from publisher service was failed", e);
         }
 
         return optionalPublisher;
@@ -97,7 +101,8 @@ public class PublisherServiceImpl implements PublisherService {
                 mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_EXISTS_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method updatePublisher from publisher service was failed" + e);
+            throw new ServiceException("Method updatePublisher from publisher service was failed", e);
         }
 
         return optionalPublisher;

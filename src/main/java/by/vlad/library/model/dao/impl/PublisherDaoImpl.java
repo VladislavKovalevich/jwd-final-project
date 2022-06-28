@@ -4,6 +4,8 @@ import by.vlad.library.entity.Publisher;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.PublisherDao;
 import by.vlad.library.model.pool.ConnectionPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +18,8 @@ import java.util.Optional;
 import static by.vlad.library.model.dao.ColumnName.*;
 
 public class PublisherDaoImpl implements PublisherDao {
+    private static final Logger logger = LogManager.getLogger();
+
     private static final String SELECT_ALL_PUBLISHER = "SELECT publisher_id, publisher_name FROM publishers";
 
     private static final String INSERT_PUBLISHER =
@@ -52,7 +56,8 @@ public class PublisherDaoImpl implements PublisherDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request insert for table library.publishers was failed" + e);
+            throw new DaoException("SQL request insert for table library.publishers was failed", e);
         }
 
         return rows == 1;
@@ -60,12 +65,14 @@ public class PublisherDaoImpl implements PublisherDao {
 
     @Override
     public boolean delete(Publisher publisher) throws DaoException {
-        return false;
+        logger.error("Unavailable operation to entity Publisher");
+        throw new UnsupportedOperationException("Unavailable operation to entity Publisher");
     }
 
     @Override
     public Publisher update(Publisher publisher) throws DaoException {
-        return null;
+        logger.error("Unavailable operation to entity Publisher");
+        throw new UnsupportedOperationException("Unavailable operation to entity Publisher");
     }
 
     @Override
@@ -87,7 +94,8 @@ public class PublisherDaoImpl implements PublisherDao {
             }
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request findAll for table library.publishers was failed" + e);
+            throw new DaoException("SQL request findAll for table library.publishers was failed", e);
         }
 
         return publishers;
@@ -111,7 +119,8 @@ public class PublisherDaoImpl implements PublisherDao {
             }
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request isPublisherExists for table library.publishers was failed" + e);
+            throw new DaoException("SQL request isPublisherExists for table library.publishers was failed", e);
         }
 
         return rows == 1;
@@ -135,7 +144,8 @@ public class PublisherDaoImpl implements PublisherDao {
                 optionalPublisher = Optional.empty();
             }
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request updatePublisher for table library.publishers was failed" + e);
+            throw new DaoException("SQL request updatePublisher for table library.publishers was failed", e);
         }
 
         return optionalPublisher;
@@ -154,7 +164,8 @@ public class PublisherDaoImpl implements PublisherDao {
             optionalPublisher = rows == 1 ? Optional.of(publisher) : Optional.empty();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request addPublisher for table library.publishers was failed" + e);
+            throw new DaoException("SQL request addPublisher for table library.publishers was failed", e);
         }
 
         return optionalPublisher;

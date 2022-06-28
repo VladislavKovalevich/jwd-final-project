@@ -8,6 +8,8 @@ import by.vlad.library.model.dao.impl.GenreDaoImpl;
 import by.vlad.library.model.service.GenreService;
 import by.vlad.library.validator.GenreValidator;
 import by.vlad.library.validator.impl.GenreValidatorImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class GenreServiceImpl implements GenreService {
+    private static final Logger logger = LogManager.getLogger();
     private static final String DELIMITER = "\\|";
     private static GenreServiceImpl instance;
 
@@ -37,7 +40,8 @@ public class GenreServiceImpl implements GenreService {
         try {
             genres = genreDao.findAll();
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method findAllGenres from genre service was failed" + e);
+            throw new ServiceException("Method findAllGenres from genre service was failed", e);
         }
 
         return genres;
@@ -66,7 +70,8 @@ public class GenreServiceImpl implements GenreService {
                 mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method createNewGenre from genre service was failed" + e);
+            throw new ServiceException("Method createNewGenre from genre service was failed", e);
         }
 
         return optionalGenre;
@@ -96,7 +101,8 @@ public class GenreServiceImpl implements GenreService {
                 mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method updateGenre from genre service was failed" + e);
+            throw new ServiceException("Method updateGenre from genre service was failed", e);
         }
 
         return optionalGenre;

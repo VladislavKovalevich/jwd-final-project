@@ -49,7 +49,7 @@
                             <th scope="col">Ordered</th>
                             <th scope="col">Rejected</th>
                             <th scope="col">Returned</th>
-                            <th scope="col">Action</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
 
@@ -98,9 +98,10 @@
                                     </c:otherwise>
                                 </c:choose>
 
+
                                 <td>
                                     <form method="get" action="${path}/controller">
-                                        <input type="hidden" name="order" value="${order.id},${order.status}">
+                                        <input type="hidden" name="order_id" value="${order.id}">
                                         <input type="hidden" name="command" value="get_books_by_order_id">
                                         <input type="submit" class="btn btn-primary" value="More">
                                     </form>

@@ -7,7 +7,6 @@ public class AttributeAndParamsNames {
     //session attributes names
     public static final String BOOK_FORM_DATA = "book_form_data";
 
-    public static final String IMAGE_FORM = "image_form";
     public static final String TITLE_FORM = "title_form";
     public static final String AUTHOR_FORM = "author_form";
     public static final String GENRE_FORM = "genre_form";
@@ -88,6 +87,7 @@ public class AttributeAndParamsNames {
     public static final String AUTHOR_OPERATION_FEEDBACK = "author_operation_feedback";
     public static final String GENRE_OPERATION_FEEDBACK = "genre_operation_feedback";
     public static final String BOOK_OPERATION_FEEDBACK = "book_operation_feedback";
+    public static final String ORDER_OPERATION_FEEDBACK = "order_operation_feedback";
 
     public static final String FILTER_DATA = "filter_data";
 
@@ -96,8 +96,8 @@ public class AttributeAndParamsNames {
     public static final String CREATE_ACCOUNT_FEEDBACK = "create_account_feedback";
 
     public static final String ORDER_STATUS = "order_status";
+    public static final String ORDER_TYPES = "order_types";
 
-    public static final String ORDER_INFO = "order_info";
     ////request params names
     public static final String PAGE_DIRECTION = "page_direction";
 
@@ -108,6 +108,8 @@ public class AttributeAndParamsNames {
     public static final String USER_STATUS = "user_status";
 
     public static final String ORDER_BOOKS = "order_books";
+    public static final String ORDER_TYPE = "order_type";
+    public static final String ORDER_STATUS_ID = "order_status_id";
 
     //user params
     public static final String EMAIL = "email";
@@ -134,6 +136,8 @@ public class AttributeAndParamsNames {
     public static final String PAGES_COUNT = "pages_count";
     public static final String DESCRIPTION = "description";
 
+    public static final String IS_EXISTS = "is_exists";
+
     //book components params
     public static final String AUTHOR_NAME = "author_name";
     public static final String AUTHOR_SURNAME = "author_surname";
@@ -154,8 +158,6 @@ public class AttributeAndParamsNames {
     public static final String AUTHORS = "authors";
     public static final String PUBLISHERS = "publishers";
     public static final String GENRES = "genres";
-
-    public static final String IMAGES = "images";
 
     public static final String ORDERS = "orders";
 

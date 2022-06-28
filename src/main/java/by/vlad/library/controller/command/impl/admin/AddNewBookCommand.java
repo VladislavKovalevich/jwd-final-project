@@ -3,18 +3,18 @@ package by.vlad.library.controller.command.impl.admin;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
-import by.vlad.library.entity.Image;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
 import by.vlad.library.model.service.ImageService;
 import by.vlad.library.model.service.impl.BookServiceImpl;
 import by.vlad.library.model.service.impl.ImageServiceImpl;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +27,7 @@ import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
 
 public class AddNewBookCommand implements Command {
     private static final String BOOK_ADDED_MARKER = "book has been added";
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -64,7 +65,8 @@ public class AddNewBookCommand implements Command {
             session.setAttribute(BOOK_FORM_DATA, bookMap);
 
         } catch (ServiceException | ServletException | IOException e) {
-            throw new CommandException(e);
+            logger.error("AddNewBookCommand execution failed");
+            throw new CommandException("AddNewBookCommand execution failed", e);
         }
 
         return new Router(ADD_NEW_BOOK_PAGE, Router.Type.REDIRECT);

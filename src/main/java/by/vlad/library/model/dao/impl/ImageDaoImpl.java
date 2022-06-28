@@ -4,11 +4,15 @@ import by.vlad.library.entity.Image;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.ImageDao;
 import by.vlad.library.model.pool.ConnectionPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
 
 public class ImageDaoImpl implements ImageDao {
+    private static final Logger logger = LogManager.getLogger();
+
     private static final String INSERT_IMAGE = "INSERT INTO images(`image_content`) VALUES (?)";
 
     private static final String ADD_IMAGE_TO_BOOK = "UPDATE books SET " +
@@ -30,22 +34,26 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public boolean insert(Image image) throws DaoException {
-        return false;
+        logger.error("Unavailable operation to entity Image");
+        throw new UnsupportedOperationException("Unavailable operation to entity Image");
     }
 
     @Override
     public boolean delete(Image image) throws DaoException {
-        return false;
+        logger.error("Unavailable operation to entity Image");
+        throw new UnsupportedOperationException("Unavailable operation to entity Image");
     }
 
     @Override
     public Image update(Image image) throws DaoException {
-        return null;
+        logger.error("Unavailable operation to entity Image");
+        throw new UnsupportedOperationException("Unavailable operation to entity Image");
     }
 
     @Override
     public List<Image> findAll() throws DaoException {
-        return null;
+        logger.error("Unavailable operation to entity Image");
+        throw new UnsupportedOperationException("Unavailable operation to entity Image");
     }
 
     @Override
@@ -55,7 +63,6 @@ public class ImageDaoImpl implements ImageDao {
         ConnectionPool pool = ConnectionPool.getInstance();
         Connection connection = null;
         PreparedStatement statement = null;
-        //PreparedStatement statement = connection.prepareStatement(INSERT_IMAGE, Statement.RETURN_GENERATED_KEYS)){
 
         try{
             connection = pool.getConnection();
@@ -80,15 +87,18 @@ public class ImageDaoImpl implements ImageDao {
 
             rows = statement.executeUpdate();
 
+
             if (rows == 1){
                 connection.commit();
             }
 
         } catch (SQLException e) {
+            logger.error("SQL request insertImage for table library.images was failed" + e);
             try{
                 connection.rollback();
             } catch (SQLException ex) {
-                throw new DaoException(ex);
+                logger.error("Rollback for table library.images was failed" + ex);
+                throw new DaoException("Rollback for table library.images was failed", ex);
             }
         } finally {
             try {
@@ -96,7 +106,8 @@ public class ImageDaoImpl implements ImageDao {
                 statement.close();
                 connection.close();
             } catch (SQLException e) {
-                throw new DaoException(e);
+                logger.error("Connection or statement close was failed" + e);
+                throw new DaoException("Connection or statement close was failed", e);
             }
         }
 
@@ -105,7 +116,7 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public boolean updateImage(long imageId, byte[] imageContent) throws DaoException {
-        int rows = 0;
+        int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_IMAGE)){
@@ -116,7 +127,8 @@ public class ImageDaoImpl implements ImageDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request updateImage for table library.genres was failed" + e);
+            throw new DaoException("SQL request updateImage for table library.images was failed", e);
         }
 
         return rows == 1;

@@ -6,8 +6,8 @@ import by.vlad.library.exception.DaoException;
 import java.util.List;
 
 public interface BasicDao<T extends AbstractEntity> {
-    public abstract boolean insert(T t) throws DaoException;
-    public abstract boolean delete(T t) throws DaoException;
-    public abstract T update(T t) throws DaoException;
-    public abstract List<T> findAll() throws DaoException;
+    boolean insert(T t) throws DaoException;
+    boolean delete(T t) throws DaoException;
+    T update(T t) throws DaoException;
+    List<T> findAll() throws DaoException;
 }

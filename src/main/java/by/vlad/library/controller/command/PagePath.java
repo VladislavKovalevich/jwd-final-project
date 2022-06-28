@@ -15,7 +15,7 @@ public class PagePath {
     public static final String UPDATE_BOOK_COMPONENTS_PAGE = "jsp/pages/admin/update_book_components.jsp";
     public static final String ORDERS_LIST_BY_USER_ID_PAGE = "jsp/pages/common/show_orders_by_user_id.jsp";
     public static final String ORDERS_LIST_PAGE = "jsp/pages/admin/show_orders.jsp";
-    public static final String BOOKS_BY_ORDER_ID_PAGE = "jsp/pages/common/books_by_order_id.jsp";
+    public static final String BOOKS_BY_ORDER_ID_PAGE = "jsp/pages/common/order_info.jsp";
 
     private PagePath(){}
 }

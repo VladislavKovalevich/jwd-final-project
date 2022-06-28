@@ -9,6 +9,8 @@ import by.vlad.library.model.service.UserService;
 import by.vlad.library.util.PasswordEncoder;
 import by.vlad.library.validator.UserValidator;
 import by.vlad.library.validator.impl.UserValidatorImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class UserServiceImpl implements UserService {
+    private static final Logger logger = LogManager.getLogger();
     private static UserServiceImpl instance;
 
     private UserServiceImpl(){}
@@ -39,7 +42,6 @@ public class UserServiceImpl implements UserService {
 
         if (!validator.validateEmail(login) || !validator.validatePassword(password)){
             userData.put(WRONG_EMAIL_OR_PASS, UserValidator.WRONG_FORMAT_MARKER);
-            //log
             return optionalUser;
         }
 
@@ -52,8 +54,8 @@ public class UserServiceImpl implements UserService {
                 userData.put(NOT_FOUND_USER, UserValidator.WRONG_FORMAT_MARKER);
             }
         } catch (DaoException e) {
-            //logger msg
-            throw new ServiceException(e);
+            logger.error("Method authenticate from user service was failed" + e);
+            throw new ServiceException("Method authenticate from user service was failed", e);
         }
 
         return optionalUser;
@@ -99,7 +101,8 @@ public class UserServiceImpl implements UserService {
 
             isCreated = userDao.createNewAccount(newUser);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method createNewAccount from user service was failed" + e);
+            throw new ServiceException("Method createNewAccount from user service was failed", e);
         }
 
         return isCreated;
@@ -145,7 +148,8 @@ public class UserServiceImpl implements UserService {
             isUpdated = userDao.updateUserAccountData(user, userData.get(USER_EMAIL));
 
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method updatePersonalData from user service was failed" + e);
+            throw new ServiceException("Method updatePersonalData from user service was failed", e);
         }
 
         return isUpdated;
@@ -176,7 +180,8 @@ public class UserServiceImpl implements UserService {
                 passwordData.put(WRONG_PASSWORD_VALUE, UserValidator.WRONG_FORMAT_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method changePassword from user service was failed" + e);
+            throw new ServiceException("Method changePassword from user service was failed", e);
         }
         return isChanged;
     }
@@ -190,7 +195,8 @@ public class UserServiceImpl implements UserService {
         try {
             optionalUser = userDao.findUserById(id);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method findUserById from user service was failed" + e);
+            throw new ServiceException("Method findUserById from user service was failed", e);
         }
 
         return optionalUser;
@@ -204,7 +210,8 @@ public class UserServiceImpl implements UserService {
         try {
             users = userDao.findAllUsers();
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method getAllUsers from user service was failed" + e);
+            throw new ServiceException("Method getAllUsers from user service was failed", e);
         }
 
         return users;
@@ -218,7 +225,8 @@ public class UserServiceImpl implements UserService {
         try {
             isUpdated = userDao.changeAccountStatus(email, status);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method changeAccountStatus from user service was failed" + e);
+            throw new ServiceException("Method changeAccountStatus from user service was failed", e);
         }
 
         return isUpdated;

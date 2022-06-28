@@ -53,10 +53,12 @@ public class OrderMapper implements Mapper<Order> {
             String returnedDate = resultSet.getString(ORDER_RETURNED_DATE_COL);
             String rejectedDate = resultSet.getString(ORDER_REJECTED_DATE_COL);
             String orderedDate = resultSet.getString(ORDER_ORDERED_DATE_COL);
+            String reservedDate = resultSet.getString(ORDER_RESERVED_DATE_COL);
 
+            orderBuilder = reservedDate != null ? orderBuilder.withReservedDate(LocalDate.parse(reservedDate)) : orderBuilder;
             orderBuilder = rejectedDate != null ? orderBuilder.withRejectedDate(LocalDate.parse(rejectedDate)) : orderBuilder;
             orderBuilder = returnedDate != null ? orderBuilder.withReturnedDate(LocalDate.parse(returnedDate)) : orderBuilder;
-            orderBuilder = orderedDate != null ? orderBuilder.withRejectedDate(LocalDate.parse(orderedDate)) : orderBuilder;
+            orderBuilder = orderedDate != null ? orderBuilder.withOrderedDate(LocalDate.parse(orderedDate)) : orderBuilder;
 
             Order tempOrder = orderBuilder.buildOrder();
 

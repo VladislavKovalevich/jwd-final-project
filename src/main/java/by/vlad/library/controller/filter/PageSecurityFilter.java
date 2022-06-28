@@ -40,6 +40,7 @@ public class PageSecurityFilter implements Filter {
                 SHOW_BOOKS_LIST_PAGE,
                 SHOW_BOOK_INFO_PAGE,
                 ORDERS_LIST_BY_USER_ID_PAGE,
+                ORDERS_LIST_PAGE,
                 CHANGE_PASSWORD_PAGE,
                 CHANGE_ACCOUNT_DATA_PAGE,
                 ADD_NEW_BOOK_PAGE,

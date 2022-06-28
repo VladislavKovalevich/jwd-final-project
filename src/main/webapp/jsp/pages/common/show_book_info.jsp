@@ -66,7 +66,16 @@
                     <h6>${book_author}: ${book.author.name} ${book.author.surname} </h6>
                     <div class="">
                         <br/>
-                        <p class="">${book_copies_number}: ${book.copiesNumber}</p>
+                        <p class="">${book_copies_number}:
+                            <c:choose>
+                                <c:when test="${book.copiesNumber > 0}">
+                                    В наличии ${book.copiesNumber} копий(-я)
+                                </c:when>
+                                <c:otherwise>
+                                    Нет в наличии
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
                         <p class="">${book_pages_count}: ${book.numberOfPages}</p>
                         <br/>
                         <p class="">${book_genre}: ${book.genre.name}</p>
@@ -83,23 +92,32 @@
         <div class="row white-background">
             <c:choose>
                 <c:when test="${user_role eq 'ADMIN'}">
-                    <a class="btn btn-primary"
-                       href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">
-                        Update book
-                    </a>
+                    <div class="col-4 my-2">
+                        <a class="btn btn-primary"
+                           href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">
+                            Update book
+                        </a>
+                    </div>
                 </c:when>
                 <c:when test="${user_role eq 'CLIENT'}">
-                    <c:if test="${not empty feedback_success}">
+                    <c:if test="${not empty order_operation_feedback}">
                         <div class="green-color">
                             Book was added to new order
                         </div>
                     </c:if>
-                    <div class="col-4 my-2">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#staticBackdrop">
-                            Add book to order
-                        </button>
-                    </div>
+                    <c:if test="${not empty book_operation_feedback}">
+                        <div class="green-color">
+                            Book was added existed order
+                        </div>
+                    </c:if>
+                    <c:if test="${book.copiesNumber > 0}">
+                        <div class="col-4 my-2">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdrop">
+                                Add book to order
+                            </button>
+                        </div>
+                    </c:if>
                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
                          tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
@@ -123,7 +141,8 @@
                                                     </c:forEach>
                                                 </select>
                                             </p>
-                                            <input type="submit" class="btn btn-primary" value="Create order" name="sub">
+                                            <input type="submit" class="btn btn-primary" value="Create order"
+                                                   name="sub">
                                         </form>
                                     </div>
 

@@ -12,6 +12,8 @@ import by.vlad.library.model.service.impl.OrderServiceImpl;
 import by.vlad.library.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.util.*;
@@ -20,6 +22,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
 
 public class LoginCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -35,7 +39,6 @@ public class LoginCommand implements Command {
         fillUserMap(userFormData, request);
 
         UserService userService = UserServiceImpl.getInstance();
-        //OrderService orderService = OrderServiceImpl.getInstance();
 
         Router router;
 
@@ -44,14 +47,10 @@ public class LoginCommand implements Command {
             if (optionalUser.isPresent()){
                 User user = optionalUser.get();
 
-                //List<Order> orders = orderService.getOrdersByUserId(user.getId());
-
                 session.setAttribute(USER_EMAIL, user.getEmail());
                 session.setAttribute(USER_ROLE, user.getRole().name().toUpperCase(Locale.ROOT));
                 session.setAttribute(USER_LOGIN, user.getLogin());
                 session.setAttribute(USER_ID, user.getId());
-
-                //session.setAttribute(USER_ORDERS, orders);
 
                 session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
 
@@ -64,7 +63,8 @@ public class LoginCommand implements Command {
             }
 
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("LoginCommand execution failed");
+            throw new CommandException("LoginCommand execution failed", e);
         }
 
         return router;

@@ -10,6 +10,8 @@ import by.vlad.library.model.service.impl.UserServiceImpl;
 import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.CHANGE_ACCOUNT_DATA_PAGE;
 
 public class GoToUpdateAccountDataPageCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -43,7 +47,8 @@ public class GoToUpdateAccountDataPageCommand implements Command {
                 session.setAttribute(USER_FORM_DATA, userData);
             }
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("GoToUpdateAccountDataPageCommand execution failed");
+            throw new CommandException("GoToUpdateAccountDataPageCommand execution failed", e);
         }
 
         session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));

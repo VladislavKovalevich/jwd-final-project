@@ -1,5 +1,8 @@
 package by.vlad.library.model.pool;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -13,6 +16,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
+    private static final Logger logger = LogManager.getLogger();
+
     private static final String DB_PROP_PATH = "config/database.properties";
     private static final String DB_DRIVER_PROPERTY = "driver";
     private static final String DB_USER_PROPERTY = "user";
@@ -47,11 +52,11 @@ public class ConnectionPool {
 
             Class.forName(DB_DRIVER);
         } catch (IOException e) {
-            //log
-            throw new RuntimeException(e);
+            logger.fatal("Property file not found or has incorrect data " + DB_PROP_PATH);
+            throw new RuntimeException("Property file not found or has incorrect data ", e);
         } catch (ClassNotFoundException e) {
-            //log
-            throw new RuntimeException(e);
+            logger.fatal("Driver not found");
+            throw new RuntimeException("Driver not found", e);
         }
     }
 
@@ -66,6 +71,7 @@ public class ConnectionPool {
                 Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                 proxyConnection = new ProxyConnection(connection);
             } catch (SQLException e) {
+                logger.error("Connection was not created");
                 throw new ExceptionInInitializerError(e);
             }
             freeConnection.add(proxyConnection);
@@ -93,7 +99,7 @@ public class ConnectionPool {
             proxyConnection = freeConnection.take();
             givenAwayConnection.put(proxyConnection);
         } catch (InterruptedException e) {
-            //logger
+            logger.error("Try to get connection from pool was failed " + e);
             Thread.currentThread().interrupt();
         }
 
@@ -106,10 +112,11 @@ public class ConnectionPool {
                 givenAwayConnection.remove((ProxyConnection) connection);
                 freeConnection.put((ProxyConnection) connection);
             } catch (InterruptedException e) {
+                logger.error("Try to release connection from pool was failed " + e);
                 Thread.currentThread().interrupt();
             }
         }else{
-            // logger
+            logger.fatal("Unknown connection");
         }
     }
 
@@ -118,10 +125,10 @@ public class ConnectionPool {
             try {
                 freeConnection.take().reallyClose();
             } catch (InterruptedException e) {
-              Thread.currentThread().interrupt();
-              // log e.printStackTrace();
+                Thread.currentThread().interrupt();
+                logger.error("Try to destroy connection was failed " + e);
             } catch (SQLException e){
-             //logger
+                logger.error("Try to destroy connection was failed " + e);
             }
         }
 
@@ -133,7 +140,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(d);
             } catch (SQLException e) {
-                //logger;
+                logger.error("Try to deregister driver " + d + " was failed");
             }
         });
     }

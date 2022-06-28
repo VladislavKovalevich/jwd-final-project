@@ -8,13 +8,13 @@ import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddBookCompone
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToAddNewBookPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookComponentsPageCommand;
 import by.vlad.library.controller.command.impl.admin.gotopage.GoToUpdateBookDataPageCommand;
-import by.vlad.library.controller.command.impl.client.AddBookToOrderCommand;
-import by.vlad.library.controller.command.impl.client.RemoveBookFromOrderCommand;
-import by.vlad.library.controller.command.impl.client.CreateOrderCommand;
-import by.vlad.library.controller.command.impl.client.DeleteOrderCommand;
+import by.vlad.library.controller.command.impl.client.*;
 import by.vlad.library.controller.command.impl.gotopage.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public enum CommandType {
+    ACCEPT_ORDER(new AcceptOrderCommand()),
     ADD_BOOK_TO_ORDER(new AddBookToOrderCommand()),
     ADD_NEW_AUTHOR(new AddNewAuthorCommand()),
     ADD_NEW_BOOK(new AddNewBookCommand()),
@@ -29,19 +29,23 @@ public enum CommandType {
     DELETE_ORDER(new DeleteOrderCommand()),
     GET_BOOKS_BY_ORDER_ID(new GetBooksByOrderIdCommand()),
     GET_ORDERS_BY_USER_ID(new GetOrdersByUserIdCommand()),
-    GET_ORDERS_LIST(new GetAllOrdersCommand()),
+    GET_ORDERS_LIST(new GetActiveOrdersCommand()),
     GO_TO_ADD_BOOK_COMPONENTS_PAGE(new GoToAddBookComponentsPageCommand()),
     GO_TO_ADD_NEW_BOOK_PAGE(new GoToAddNewBookPageCommand()),
     GO_TO_CHANGE_PASSWORD_PAGE(new GoToChangeAccountPasswordPageCommand()),
     GO_TO_CREATE_NEW_ACCOUNT_PAGE(new GoToCreateNewAccountPageCommand()),
     GO_TO_LOGIN_PAGE(new GoToLoginPageCommand()),
     GO_TO_MAIN_PAGE(new GoToMainPageCommand()),
+    GO_TO_ORDER_LIST_PAGE(new GoToOrdersListPageCommand()),
     GO_TO_UPDATE_ACCOUNT_DATA_PAGE(new GoToUpdateAccountDataPageCommand()),
     GO_TO_UPDATE_BOOK_COMPONENTS_PAGE(new GoToUpdateBookComponentsPageCommand()),
     GO_TO_UPDATE_BOOK_DATA_PAGE(new GoToUpdateBookDataPageCommand()),
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
+    REJECT_ORDER(new RejectOrderCommand()),
     REMOVE_BOOK_FROM_ORDER(new RemoveBookFromOrderCommand()),
+    RESERVE_ORDER(new ReserveOrderCommand()),
+    RETURN_ORDER(new ReturnOrderCommand()),
     SHOW_BOOKS_LIST(new ShowBooksListCommand()),
     SHOW_BOOK_INFO(new ShowBookByIdCommand()),
     SHOW_USERS_LIST(new ShowUsersListCommand()),
@@ -51,6 +55,7 @@ public enum CommandType {
     UPDATE_BOOK_DATA(new UpdateBookDataCommand()),
     UPDATE_USER_ACCOUNT_DATA(new UpdateUserAccountDataCommand());
 
+    private static final Logger logger = LogManager.getLogger();
     Command command;
 
     CommandType(Command command){
@@ -61,24 +66,12 @@ public enum CommandType {
         return command;
     }
 
-    public static Command define(String commandStr){
-        CommandType commandType;
-        try {
-            commandType = CommandType.valueOf(commandStr.toUpperCase());
-        }catch (IllegalArgumentException | NullPointerException e){
-            //logger
-            commandType = DEFAULT;
-        }
-
-        return commandType.getCommand();
-    }
-
     public static CommandType getCommandType(String commandStr){
         CommandType commandType;
         try {
             commandType = CommandType.valueOf(commandStr.toUpperCase());
         }catch (IllegalArgumentException | NullPointerException e){
-            //logger
+            logger.warn("Command " + commandStr + " does not exist");
             commandType = DEFAULT;
         }
 

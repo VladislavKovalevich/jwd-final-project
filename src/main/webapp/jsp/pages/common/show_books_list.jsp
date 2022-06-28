@@ -45,6 +45,14 @@
             height: 100%; /* Высота изображении */
             object-fit: cover; /* Вписываем фотографию в область */
         }
+
+
+        .clip {
+            white-space: nowrap; /* Запрещаем перенос строк */
+            overflow: hidden; /* Обрезаем все, что не помещается в область */
+            text-overflow: ellipsis; /* Добавляем многоточие */
+        }
+
     </style>
 </head>
 <header>
@@ -91,7 +99,7 @@
                     </div>
                     <div class="mt-3">
                         <label for="is_exists">Имеется в наличии</label>
-                        <input type="checkbox" name="is_exists" id="is_exists" checked/>
+                        <input type="checkbox" name="is_exists" id="is_exists"/>
                     </div>
 
                     <div class="mt-4">
@@ -107,29 +115,31 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="book" items="${books_list}">
-                        <div class="row g-0 white-background">
-                            <figure class="col-md-3" style="width: 200px; height: 300px;">
-                                <c:choose>
-                                    <c:when test="${not empty book.image.encodeImage}">
-                                        <img src="${book.image.encodeImage}" class="img-thumbnail">
-                                    </c:when>
-                                    <c:otherwise>
-                                        <img src="${path}/img/not_found_image.jpg" class="img-thumbnail">
-                                    </c:otherwise>
-                                </c:choose>
-                            </figure>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <a class=" card-title link-secondary text-decoration-none"
-                                       href="${path}/controller?command=show_book_info&book_id=${book.id}">
-                                            ${book.id}. ${book.title}
-                                    </a>
-                                    <p class="card-text">${book_author}: ${book.author.name} ${book.author.surname}</p>
-                                    <p class="card-text">${book_genre}: ${book.genre.name}</p>
-                                    <p class="card-text">${book_publisher}: ${book.publisher.name}</p>
+                        <a class="card-title link-secondary text-decoration-none"
+                           href="${path}/controller?command=show_book_info&book_id=${book.id}" data-toggle="tooltip">
+                            <div class="row g-0 white-background link">
+                                <figure class="col-md-3" style="width: 200px; height: 300px;">
+                                    <c:choose>
+                                        <c:when test="${not empty book.image.encodeImage}">
+                                            <img src="${book.image.encodeImage}" class="img-thumbnail">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${path}/img/not_found_image.jpg" class="img-thumbnail">
+                                        </c:otherwise>
+                                    </c:choose>
+                                </figure>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+
+                                        <h4>${book.title}</h4>
+                                        <p class="card-text">${book_author}: ${book.author.name} ${book.author.surname}</p>
+                                        <p class="card-text">${book_genre}: ${book.genre.name}</p>
+                                        <p class="card-text">${book_publisher}: ${book.publisher.name}</p>
+                                        <div class="clip">${book_description}: ${book.description}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </c:forEach>
                     <div class="row">
                         <div class="col-md-3 text-center me-auto">
@@ -153,6 +163,11 @@
     </div>
 </section>
 </body>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 <footer>
     <jsp:include page="../footer/footer.jsp"/>
 </footer>

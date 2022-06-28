@@ -8,6 +8,8 @@ import by.vlad.library.model.service.UserService;
 import by.vlad.library.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -15,6 +17,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
 
 public class ChangeAccountPasswordCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Map<String, String> passwordData;
@@ -39,7 +43,8 @@ public class ChangeAccountPasswordCommand implements Command {
                 router = new Router(CHANGE_PASSWORD_PAGE, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("ChangeAccountPasswordCommand execution failed");
+            throw new CommandException("ChangeAccountPasswordCommand execution failed", e);
         }
 
         return router;

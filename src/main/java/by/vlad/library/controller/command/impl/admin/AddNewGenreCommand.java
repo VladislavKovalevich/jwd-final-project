@@ -10,6 +10,8 @@ import by.vlad.library.model.service.impl.GenreServiceImpl;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -19,8 +21,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
 
 public class AddNewGenreCommand implements Command {
-
     private static final String GENRE_ADDED_MARKER = "genre has been added";
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -50,7 +52,8 @@ public class AddNewGenreCommand implements Command {
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
             session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("AddNewGenreCommand execution failed");
+            throw new CommandException("AddNewGenreCommand execution failed", e);
         }
 
         return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);

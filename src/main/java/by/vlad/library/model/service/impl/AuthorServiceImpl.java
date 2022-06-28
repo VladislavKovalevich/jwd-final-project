@@ -8,8 +8,9 @@ import by.vlad.library.model.dao.impl.AuthorDaoImpl;
 import by.vlad.library.model.service.AuthorService;
 import by.vlad.library.validator.AuthorValidator;
 import by.vlad.library.validator.impl.AuthorValidatorImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class AuthorServiceImpl implements AuthorService {
+    private static final Logger logger = LogManager.getLogger();
     private static final String DELIMITER = "\\|";
     private static AuthorServiceImpl instance;
 
@@ -37,7 +39,8 @@ public class AuthorServiceImpl implements AuthorService {
         try {
             authors = authorDaoImpl.findAll();
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("findAllAuthors from author services was failed" + e);
+            throw new ServiceException("findAllAuthors from author services was failed", e);
         }
 
         return authors;
@@ -68,7 +71,8 @@ public class AuthorServiceImpl implements AuthorService {
                 mapData.put(WRONG_AUTHOR_EXISTS_FORM, AUTHOR_EXISTS_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("updateAuthor from author services was failed" + e);
+            throw new ServiceException("updateAuthor from author services was failed", e);
         }
 
         return optionalAuthor;
@@ -100,7 +104,8 @@ public class AuthorServiceImpl implements AuthorService {
                 mapData.put(WRONG_AUTHOR_EXISTS_FORM, AuthorService.AUTHOR_EXISTS_MARKER);
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("createNewAuthor from author services was failed" + e);
+            throw new ServiceException("createNewAuthor from author services was failed", e);
         }
 
         return optionalAuthor;

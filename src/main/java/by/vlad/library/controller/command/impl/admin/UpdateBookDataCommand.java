@@ -9,11 +9,12 @@ import by.vlad.library.model.service.BookService;
 import by.vlad.library.model.service.ImageService;
 import by.vlad.library.model.service.impl.BookServiceImpl;
 import by.vlad.library.model.service.impl.ImageServiceImpl;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
 
 public class UpdateBookDataCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -78,7 +81,8 @@ public class UpdateBookDataCommand implements Command {
                 router = new Router(UPDATE_BOOK_DATA_PAGE, Router.Type.FORWARD);
             }
         } catch (ServiceException | IOException | ServletException e) {
-            throw new CommandException(e);
+            logger.error("UpdateBookDataCommand execution failed");
+            throw new CommandException("UpdateBookDataCommand execution failed", e);
         }
 
         return router;

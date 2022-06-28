@@ -6,8 +6,11 @@ import by.vlad.library.model.dao.BookDao;
 import by.vlad.library.model.dao.mapper.Mapper;
 import by.vlad.library.model.dao.mapper.impl.BookMapper;
 import by.vlad.library.model.pool.ConnectionPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +19,7 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.model.dao.ColumnName.*;
 
 public class BookDaoImpl implements BookDao {
+    private static final Logger logger = LogManager.getLogger();
 
     private static final String SELECT_BOOK_BY_ID =
             "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
@@ -65,6 +69,10 @@ public class BookDaoImpl implements BookDao {
 
     private static final long DEFAULT_ITEM_COUNT_PER_PAGE = 4;
 
+    private static final String FIND_COPIES_NUMBER_BY_BOOK_ID = "" +
+            "SELECT book_copies_number " +
+            "   FROM library.books WHERE book_id ";
+
     private static final String FIND_BOOKS_BY_ORDER_ID =
             "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
                     "author_id, author_name, author_surname, genre_id, genre_name, publisher_id, publisher_name, image_id, image_content " +
@@ -90,22 +98,26 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public boolean insert(Book book) throws DaoException {
-        return false;
+        logger.error("Unavailable operation to entity Book");
+        throw new UnsupportedOperationException("Unavailable operation to entity Book");
     }
 
     @Override
     public boolean delete(Book book) throws DaoException {
-        return false;
+        logger.error("Unavailable operation to entity Book");
+        throw new UnsupportedOperationException("Unavailable operation to entity Book");
     }
 
     @Override
     public Book update(Book book) throws DaoException {
-        return null;
+        logger.error("Unavailable operation to entity Book");
+        throw new UnsupportedOperationException("Unavailable operation to entity Book");
     }
 
     @Override
     public List<Book> findAll() throws DaoException {
-        return null;
+        logger.error("Unavailable operation to entity Book");
+        throw new UnsupportedOperationException("Unavailable operation to entity Book");
     }
 
     @Override
@@ -132,7 +144,8 @@ public class BookDaoImpl implements BookDao {
             }
 
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.error("SQL request getBooks for table library.books was failed" + e);
+            throw new DaoException("SQL request getBooks for table library.books was failed", e);
         }
 
         return books;
@@ -156,7 +169,8 @@ public class BookDaoImpl implements BookDao {
             }
 
         }catch (SQLException e){
-            throw  new DaoException(e);
+            logger.error("SQL request getBookById for table library.books was failed" + e);
+            throw new DaoException("SQL request getBookById for table library.books was failed", e);
         }
 
         return bookOptional;
@@ -183,7 +197,8 @@ public class BookDaoImpl implements BookDao {
             }
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request findNumberOfPage for table library.books was failed" + e);
+            throw new DaoException("SQL request findNumberOfPage for table library.books was failed", e);
         }
 
         result = (int) (booksNumber / DEFAULT_ITEM_COUNT_PER_PAGE);
@@ -215,7 +230,8 @@ public class BookDaoImpl implements BookDao {
             }
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request addNewBook for table library.books was failed" + e);
+            throw new DaoException("SQL request addNewBook for table library.books was failed", e);
         }
 
         return optionalBook;
@@ -233,7 +249,8 @@ public class BookDaoImpl implements BookDao {
 
             rows = statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.error("SQL request updateBook for table library.books was failed" + e);
+            throw new DaoException("SQL request updateBook for table library.books was failed", e);
         }
 
         if (rows == 1){
@@ -259,10 +276,35 @@ public class BookDaoImpl implements BookDao {
                 books = bookMapper.map(resultSet);
             }
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request getBooksByOrderId for table library.books was failed" + e);
+            throw new DaoException("SQL request getBooksByOrderId for table library.books was failed", e);
         }
 
         return books;
+    }
+
+    @Override
+    public List<Integer> findBooksCopiesNumber(String bookIdsString) throws DaoException {
+        List<Integer> copiesList = new ArrayList<>();
+
+        String sqlTemp = new StringBuilder(FIND_COPIES_NUMBER_BY_BOOK_ID)
+                .append(SQL_IN_START).append(bookIdsString)
+                .append(SQL_IN_END).toString();
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(sqlTemp)){
+
+            try(ResultSet resultSet = statement.executeQuery()) {
+                 while (resultSet.next()){
+                     copiesList.add(resultSet.getInt(BOOK_COPIES_NUMBER_COL));
+                 }
+            }
+        }catch (SQLException e){
+            logger.error("SQL request findBooksCopiesNumber for table library.books was failed" + e);
+            throw new DaoException("SQL request findBooksCopiesNumber for table library.books was failed", e);
+        }
+
+        return copiesList;
     }
 
     private void prepareInsertUpdateDbRequest(PreparedStatement statement, Book book, boolean isUpdate) throws SQLException {
@@ -280,7 +322,8 @@ public class BookDaoImpl implements BookDao {
             statement.setLong(7, book.getPublisher().getId());
             statement.setLong(8, book.getGenre().getId());
         } catch (SQLException e) {
-            throw new SQLException(e);
+            logger.error("Try to prepare SQL request was failed" + e);
+            throw new SQLException("Try to prepare SQL request was failed", e);
         }
     }
 
@@ -308,6 +351,11 @@ public class BookDaoImpl implements BookDao {
                             .append(SQL_IN_START)
                             .append(e.getValue())
                             .append(SQL_IN_END);
+                }
+
+                case "is_exists" -> {
+                    sqlFilter.append(BOOK_COPIES_NUMBER_COL)
+                            .append("> 0");
                 }
             }
 

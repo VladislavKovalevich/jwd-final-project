@@ -4,6 +4,8 @@ import by.vlad.library.entity.Author;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.AuthorDao;
 import by.vlad.library.model.pool.ConnectionPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,6 +18,8 @@ import java.util.Optional;
 import static by.vlad.library.model.dao.ColumnName.*;
 
 public class AuthorDaoImpl implements AuthorDao {
+    private static final Logger logger = LogManager.getLogger();
+
     private static final String SELECT_ALL_AUTHORS =
             "SELECT * FROM authors";
 
@@ -57,7 +61,8 @@ public class AuthorDaoImpl implements AuthorDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request insert for table library.author was failed" + e);
+            throw new DaoException("SQL request insert for table library.author was failed", e);
         }
 
         return rows == 1;
@@ -65,12 +70,14 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public boolean delete(Author author) throws DaoException {
-        return false;
+        logger.error("Unavailable operation to entity Author");
+        throw new UnsupportedOperationException("Unavailable operation to entity Author");
     }
 
     @Override
     public Author update(Author author) throws DaoException {
-        return null;
+        logger.error("Unavailable operation to entity Author");
+        throw new UnsupportedOperationException("Unavailable operation to entity Author");
     }
 
     @Override
@@ -92,7 +99,8 @@ public class AuthorDaoImpl implements AuthorDao {
                 }
             }
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request findAll for table library.author was failed" + e);
+            throw new DaoException("SQL request findAll for table library.author was failed", e);
         }
 
         return authors;
@@ -116,7 +124,8 @@ public class AuthorDaoImpl implements AuthorDao {
                 }
             }
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request isAuthorExists for table library.author was failed" + e);
+            throw new DaoException("SQL request isAuthorExists for table library.author was failed", e);
         }
 
         return rows == 1;
@@ -141,7 +150,8 @@ public class AuthorDaoImpl implements AuthorDao {
                 optionalAuthor = Optional.empty();
             }
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request updateAuthor for table library.author was failed" + e);
+            throw new DaoException("SQL request updateAuthor for table library.author was failed", e);
         }
 
         return optionalAuthor;
@@ -162,7 +172,8 @@ public class AuthorDaoImpl implements AuthorDao {
             optionalAuthor = rows == 1 ? Optional.of(author) : Optional.empty();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request addAuthor for table library.author was failed" + e);
+            throw new DaoException("SQL request addAuthor for table library.author was failed", e);
         }
 
         return optionalAuthor;

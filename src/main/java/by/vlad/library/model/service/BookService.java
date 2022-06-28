@@ -17,4 +17,6 @@ public interface BookService {
     Optional<Book> updateBook(Map<String, String> bookData) throws ServiceException;
 
     List<Book> getBooksByOrderId(long orderId) throws ServiceException;
+
+    boolean isBooksCopiesExists(List<Book> books) throws ServiceException;
 }

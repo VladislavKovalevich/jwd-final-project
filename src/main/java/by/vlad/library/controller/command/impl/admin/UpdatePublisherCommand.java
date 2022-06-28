@@ -10,6 +10,8 @@ import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS_PAGE;
 
 public class UpdatePublisherCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
     private static final String PUBLISHER_UPDATED_MARKER = "genre has been updated";
 
     @Override
@@ -52,7 +55,8 @@ public class UpdatePublisherCommand implements Command {
             session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_COMPONENTS_PAGE);
             session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("UpdatePublisherCommand execution failed");
+            throw new CommandException("UpdatePublisherCommand execution failed", e);
         }
 
         return new Router(UPDATE_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);

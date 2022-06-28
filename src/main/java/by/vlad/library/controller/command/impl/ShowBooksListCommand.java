@@ -16,6 +16,8 @@ import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -23,6 +25,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.SHOW_BOOKS_LIST_PAGE;
 
 public class ShowBooksListCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         BookService bookService = BookServiceImpl.getInstance();
@@ -62,7 +66,8 @@ public class ShowBooksListCommand implements Command {
 
             router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.FORWARD);
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("ShowBooksListCommand execution failed");
+            throw new CommandException("ShowBooksListCommand execution failed", e);
         }
 
         return router;
@@ -89,5 +94,10 @@ public class ShowBooksListCommand implements Command {
         convertArrayToCSVString(request, GENRE, map);
         convertArrayToCSVString(request, AUTHOR, map);
         convertArrayToCSVString(request, PUBLISHER, map);
+        String isExists = request.getParameter(IS_EXISTS);
+
+        if (isExists != null){
+            map.put(IS_EXISTS, isExists);
+        }
     }
 }

@@ -6,12 +6,16 @@ import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.mapper.Mapper;
 import by.vlad.library.model.dao.mapper.impl.UserMapper;
 import by.vlad.library.model.pool.ConnectionPool;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
+    private static final Logger logger = LogManager.getLogger();
+
     private static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
             "SELECT * FROM users, roles " +
             "WHERE roles_id = role_id AND user_email = ? AND user_password = ? AND user_is_banned = 0";
@@ -66,22 +70,26 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean insert(User user) {
-        return false;
+        logger.error("Unavailable operation to entity User");
+        throw new UnsupportedOperationException("Unavailable operation to entity User");
     }
 
     @Override
     public boolean delete(User user) {
-        return false;
+        logger.error("Unavailable operation to entity User");
+        throw new UnsupportedOperationException("Unavailable operation to entity User");
     }
 
     @Override
     public User update(User user) {
-        return null;
+        logger.error("Unavailable operation to entity User");
+        throw new UnsupportedOperationException("Unavailable operation to entity User");
     }
 
     @Override
     public List<User> findAll() {
-        return null;
+        logger.error("Unavailable operation to entity User");
+        throw new UnsupportedOperationException("Unavailable operation to entity User");
     }
 
     @Override
@@ -102,7 +110,8 @@ public class UserDaoImpl implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            throw new DaoException(e);
+            logger.error("SQL request authenticate for table library.users was failed" + e);
+            throw new DaoException("SQL request authenticate for table library.users was failed", e);
         }
 
         return optionalUser;
@@ -128,7 +137,8 @@ public class UserDaoImpl implements UserDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request createNewAccount for table library.users was failed" + e);
+            throw new DaoException("SQL request createNewAccount for table library.users was failed", e);
         }
 
         return rows == 1;
@@ -150,7 +160,8 @@ public class UserDaoImpl implements UserDao {
                 }
             }
         }catch (SQLException e) {
-            throw new DaoException(e);
+            logger.error("SQL request isEmailExists for table library.users was failed" + e);
+            throw new DaoException("SQL request isEmailExists for table library.users was failed", e);
         }
 
         return isExists;
@@ -174,7 +185,8 @@ public class UserDaoImpl implements UserDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request updateUserAccountData for table library.users was failed" + e);
+            throw new DaoException("SQL request updateUserAccountData for table library.users was failed", e);
         }
 
         return rows == 1;
@@ -194,7 +206,8 @@ public class UserDaoImpl implements UserDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request changeAccountPassword for table library.users was failed" + e);
+            throw new DaoException("SQL request changeAccountPassword for table library.users was failed", e);
         }
 
         return rows == 1;
@@ -213,7 +226,8 @@ public class UserDaoImpl implements UserDao {
             rows = statement.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request changeAccountStatus for table library.users was failed" + e);
+            throw new DaoException("SQL request changeAccountStatus for table library.users was failed", e);
         }
 
         return rows == 1;
@@ -237,7 +251,8 @@ public class UserDaoImpl implements UserDao {
             }
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request findUserById for table library.users was failed" + e);
+            throw new DaoException("SQL request findUserById for table library.users was failed", e);
         }
 
         return optionalUser;
@@ -256,7 +271,8 @@ public class UserDaoImpl implements UserDao {
             }
 
         }catch (SQLException e){
-            throw new DaoException(e);
+            logger.error("SQL request findAllUsers for table library.users was failed" + e);
+            throw new DaoException("SQL request findAllUsers for table library.users was failed", e);
         }
 
         return users;

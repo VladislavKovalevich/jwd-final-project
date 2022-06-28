@@ -10,6 +10,8 @@ import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,9 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
 
 public class AddNewPublisherCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
     private static final String PUBLISHER_ADDED_MARKER = "publisher has been added";
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -48,7 +52,8 @@ public class AddNewPublisherCommand implements Command {
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
             session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("AddNewPublisherCommand execution failed");
+            throw new CommandException("AddNewPublisherCommand execution failed", e);
         }
 
         return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);

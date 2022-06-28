@@ -8,8 +8,11 @@ import by.vlad.library.model.dao.impl.BookDaoImpl;
 import by.vlad.library.model.service.BookService;
 import by.vlad.library.validator.BookValidator;
 import by.vlad.library.validator.impl.BookValidatorImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.Year;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +20,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class BookServiceImpl implements BookService {
+    private static final Logger logger = LogManager.getLogger();
     private static final String BOOK_COMPONENTS_DELIMITER = "\\|";
     private static final String PREV_PAGE = "prev";
     private static final String NEXT_PAGE = "next";
@@ -57,7 +61,8 @@ public class BookServiceImpl implements BookService {
 
             paginationData.put(CURRENT_PAGE_NUM, tempPage);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method getAllBooks from book service was failed" + e);
+            throw new ServiceException("Method getAllBooks from book service was failed", e);
         }
 
         return books;
@@ -77,7 +82,8 @@ public class BookServiceImpl implements BookService {
         try {
             optionalBook = bookDAO.getBookById(id);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method getBookById from book service was failed" + e);
+            throw new ServiceException("Method getBookById from book service was failed", e);
         }
 
         return optionalBook;
@@ -121,7 +127,8 @@ public class BookServiceImpl implements BookService {
             optionalBook = bookDao.addNewBook(book);
 
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method addBook from book service was failed" + e);
+            throw new ServiceException("Method addBook from book service was failed", e);
         }
 
         return optionalBook;
@@ -168,7 +175,8 @@ public class BookServiceImpl implements BookService {
 
             optionalBook = bookDao.updateBook(book);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method updateBook from book service was failed" + e);
+            throw new ServiceException("Method updateBook from book service was failed", e);
         }
 
         return optionalBook;
@@ -182,9 +190,35 @@ public class BookServiceImpl implements BookService {
         try {
             books = bookDao.getBooksByOrderId(orderId);
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.error("Method getBooksByOrderId from book service was failed" + e);
+            throw new ServiceException("Method getBooksByOrderId from book service was failed", e);
         }
 
         return books;
+    }
+
+    @Override
+    public boolean isBooksCopiesExists(List<Book> books) throws ServiceException {
+        boolean isExists;
+        BookDao bookDao = BookDaoImpl.getInstance();
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+        for (Book book : books) {
+            stringBuilder.append(book.getId()).append(',');
+        }
+
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+        try {
+            List<Integer> copiesList = bookDao.findBooksCopiesNumber(stringBuilder.toString());
+
+            isExists = !copiesList.contains(0);
+        } catch (DaoException e) {
+            logger.error("Method isBooksCopiesExists from book service was failed" + e);
+            throw new ServiceException("Method isBooksCopiesExists from book service was failed", e);
+        }
+
+        return isExists;
     }
 }

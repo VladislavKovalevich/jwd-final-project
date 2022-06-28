@@ -46,10 +46,13 @@ public class ControllerSecurityFilter implements Filter {
                 GET_ORDERS_BY_USER_ID,
                 GET_BOOKS_BY_ORDER_ID,
                 CREATE_ORDER,
+                RESERVE_ORDER,
+                RETURN_ORDER,
                 DELETE_ORDER,
                 ADD_BOOK_TO_ORDER,
                 REMOVE_BOOK_FROM_ORDER,
                 GO_TO_CHANGE_PASSWORD_PAGE,
+                GO_TO_ORDER_LIST_PAGE,
                 GO_TO_UPDATE_ACCOUNT_DATA_PAGE,
                 GO_TO_MAIN_PAGE
         );
@@ -71,6 +74,8 @@ public class ControllerSecurityFilter implements Filter {
                 UPDATE_GENRE,
                 UPDATE_PUBLISHER,
                 UPDATE_BOOK_DATA,
+                ACCEPT_ORDER,
+                REJECT_ORDER,
                 GET_ORDERS_LIST,
                 GET_ORDERS_BY_USER_ID,
                 GET_BOOKS_BY_ORDER_ID,
@@ -78,6 +83,7 @@ public class ControllerSecurityFilter implements Filter {
                 GO_TO_ADD_NEW_BOOK_PAGE,
                 GO_TO_UPDATE_BOOK_COMPONENTS_PAGE,
                 GO_TO_UPDATE_BOOK_DATA_PAGE,
+                GO_TO_ORDER_LIST_PAGE,
                 GO_TO_MAIN_PAGE,
                 GO_TO_CHANGE_PASSWORD_PAGE,
                 GO_TO_UPDATE_ACCOUNT_DATA_PAGE
@@ -89,11 +95,13 @@ public class ControllerSecurityFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
-       /* httpResponse.setHeader("Cache-Control","no-cache no-store, must-revalidate");
+        /*
+        httpResponse.setHeader("Cache-Control","no-cache no-store, must-revalidate");
         httpResponse.addHeader("Cache-Control", "post-check=0, pre-check=0");
         httpResponse.setDateHeader ("Expires", 0);
         httpResponse.setHeader("Pragma","no-cache");
-*/
+        */
+
         HttpSession session = httpRequest.getSession();
 
         String commandName = httpRequest.getParameter(COMMAND);

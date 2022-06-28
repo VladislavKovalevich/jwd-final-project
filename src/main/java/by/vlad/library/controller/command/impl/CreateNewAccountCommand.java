@@ -9,6 +9,8 @@ import by.vlad.library.model.service.UserService;
 import by.vlad.library.model.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
@@ -16,6 +18,8 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
 
 public class CreateNewAccountCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -38,7 +42,8 @@ public class CreateNewAccountCommand implements Command {
                 router = new Router(CREATE_NEW_ACCOUNT_PAGE, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("CreateNewAccountCommand execution failed");
+            throw new CommandException("CreateNewAccountCommand execution failed", e);
         }
 
         return router;

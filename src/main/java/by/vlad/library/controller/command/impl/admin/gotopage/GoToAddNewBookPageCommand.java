@@ -16,6 +16,8 @@ import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +27,7 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
 
 public class GoToAddNewBookPageCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -43,7 +46,8 @@ public class GoToAddNewBookPageCommand implements Command {
             publishers = publisherService.findAllPublishers();
             genres = genreService.findAllGenres();
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("GoToAddNewBookPageCommand execution failed");
+            throw new CommandException("GoToAddNewBookPageCommand execution failed", e);
         }
 
         session.setAttribute(PUBLISHERS, publishers);

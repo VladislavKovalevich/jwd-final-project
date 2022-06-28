@@ -44,6 +44,7 @@ public class ColumnName {
     //ORDER TABLE
     public static final String ORDER_ID_COL = "order_id";
     public static final String ORDER_CREATE_DATE_COL = "order_create_date";
+    public static final String ORDER_RESERVED_DATE_COL = "order_reserved_date";
     public static final String ORDER_ORDERED_DATE_COL = "order_ordered_date";
     public static final String ORDER_REJECTED_DATE_COL = "order_rejected_date";
     public static final String ORDER_RETURNED_DATE_COL = "order_returned_date";

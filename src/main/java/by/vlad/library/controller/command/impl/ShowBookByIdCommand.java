@@ -13,16 +13,18 @@ import by.vlad.library.model.service.impl.BookServiceImpl;
 import by.vlad.library.model.service.impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.SHOW_BOOK_INFO_PAGE;
 
 public class ShowBookByIdCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -42,15 +44,18 @@ public class ShowBookByIdCommand implements Command {
                     long userId = (long) session.getAttribute(USER_ID);
                     List<Order> orders = orderService.getOrdersByUserId(userId);
                     OrderType[] orderTypes = OrderType.values();
-                    session.setAttribute("order_types", orderTypes);
+                    session.setAttribute(ORDER_TYPES, orderTypes);
                     session.setAttribute(USER_ORDERS, orders);
                 }
             }
 
+            session.setAttribute(CURRENT_PAGE, SHOW_BOOK_INFO_PAGE);
+
             router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
 
         } catch (ServiceException e) {
-            throw new CommandException(e);
+            logger.error("ShowBookByIdCommand execution failed");
+            throw new CommandException("ShowBookByIdCommand execution failed", e);
         }
 
         return router;
