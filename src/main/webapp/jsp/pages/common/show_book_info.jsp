@@ -24,6 +24,18 @@
 <fmt:message key="label.book_publish_year" var="book_publish_year"/>
 <fmt:message key="label.book_publisher" var="book_publisher"/>
 <fmt:message key="button.back_to_main" var="back_btn"/>
+<fmt:message key="button.update_book" var="update_book"/>
+<fmt:message key="message.available" var="available_msg"/>
+<fmt:message key="message.not_available" var="not_available_msg"/>
+<fmt:message key="message.copies" var="copies_msg"/>
+<fmt:message key="button.create_order" var="create_order"/>
+<fmt:message key="button.add_book_to_order" var="add_book_to_order"/>
+<fmt:message key="label.create_new_order" var="create_new_order"/>
+<fmt:message key="label.order_type" var="order_type_label"/>
+<fmt:message key="label.choose_order" var="choose_order"/>
+<fmt:message key="label.choose_exists_order" var="choose_exists_order"/>
+<fmt:message key="label.book_was_added_existed_order" var="book_was_added_existed_order"/>
+<fmt:message key="label.book_was_added_new_order" var="book_was_added_new_order"/>
 
 <html>
 <head>
@@ -39,6 +51,8 @@
     <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
+
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>
@@ -69,10 +83,10 @@
                         <p class="">${book_copies_number}:
                             <c:choose>
                                 <c:when test="${book.copiesNumber > 0}">
-                                    В наличии ${book.copiesNumber} копий(-я)
+                                    ${available_msg} ${book.copiesNumber} ${copies_msg}
                                 </c:when>
                                 <c:otherwise>
-                                    Нет в наличии
+                                    ${not_available_msg}
                                 </c:otherwise>
                             </c:choose>
                         </p>
@@ -83,7 +97,7 @@
                         <p class="">${book_publisher}: ${book.publisher.name}</p>
                         <p class="">${book_publish_year}: ${book.releaseYear}</p>
                         <br/>
-                        <p class="">${book_description}: ${book.description}</p>
+                        <div class="">${book_description}: ${book.description}</div>
                     </div>
                 </div>
             </div>
@@ -95,26 +109,41 @@
                     <div class="col-4 my-2">
                         <a class="btn btn-primary"
                            href="${path}/controller?command=go_to_update_book_data_page&book_id=${book.id}">
-                            Update book
+                                ${update_book}
                         </a>
                     </div>
                 </c:when>
                 <c:when test="${user_role eq 'CLIENT'}">
-                    <c:if test="${not empty order_operation_feedback}">
+                    <c:if test="${not empty book_order_data['order_operation_feedback']}">
                         <div class="green-color">
-                            Book was added to new order
+                                ${book_was_added_new_order}
                         </div>
                     </c:if>
-                    <c:if test="${not empty book_operation_feedback}">
+                    <c:if test="${not empty book_order_data['book_operation_feedback']}">
                         <div class="green-color">
-                            Book was added existed order
+                                ${book_was_added_existed_order}
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty book_order_data['book_is_already_exists']}">
+                        <div class="red-color col-12 mt-2">
+                            this book is already in order
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty book_order_data['book_limit_in_order']}">
+                        <div class="red-color col-12 mt-2">
+                            the number of books in the order is exceeded
+                        </div>
+                    </c:if>
+                    <c:if test="${not empty book_order_data['orders_limit']}">
+                        <div class="red-color col-12 mt-2">
+                            the number of orders exceeded
                         </div>
                     </c:if>
                     <c:if test="${book.copiesNumber > 0}">
                         <div class="col-4 my-2">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#staticBackdrop">
-                                Add book to order
+                                    ${add_book_to_order}
                             </button>
                         </div>
                     </c:if>
@@ -123,26 +152,26 @@
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="staticBackdropLabel">Choose the order</h5>
+                                    <h5 class="modal-title" id="staticBackdropLabel">${choose_order}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Create new order:</p>
+                                    <p>${create_new_order}:</p>
                                     <div class="col-12 mt-2">
                                         <form action="${path}/controller" method="post">
                                             <input type="hidden" name="command" value="create_order">
                                             <input type="hidden" name="book_id" value="${book.id}">
                                             <p>
-                                                <label for="order_type"></label>
+                                                <label for="order_type">${order_type_label}</label>
                                                 <select id="order_type" name="order_type">
                                                     <c:forEach var="order_type" items="${order_types}">
                                                         <option value="${order_type}">${order_type}</option>
                                                     </c:forEach>
                                                 </select>
                                             </p>
-                                            <input type="submit" class="btn btn-primary" value="Create order"
-                                                   name="sub">
+                                            <input type="submit" class="btn btn-primary" value=${create_order}
+                                                    name="sub">
                                         </form>
                                     </div>
 
@@ -151,7 +180,7 @@
                                             <form action="${path}/controller" method="post">
                                                 <input type="hidden" name="book_id" value="${book.id}">
                                                 <input type="hidden" name="command" value="add_book_to_order">
-                                                <label for="orders">Or choose the exists order:</label>
+                                                <label for="orders">${choose_exists_order}:</label>
                                                 <p><select id="orders" name="order_id">
                                                     <c:forEach var="order" items="${user_orders}">
                                                         <c:if test="${order.status eq 'CREATED'}">
@@ -160,13 +189,14 @@
                                                     </c:forEach>
                                                 </select>
                                                 </p>
-                                                <button type="submit" class="btn btn-primary">Add to order</button>
+                                                <button type="submit"
+                                                        class="btn btn-primary">${add_book_to_order}</button>
                                             </form>
                                         </c:if>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${back_btn}
                                     </button>
                                 </div>
                             </div>

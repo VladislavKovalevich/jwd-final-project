@@ -17,6 +17,11 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code GenreServiceImpl} class implements functional of {@link GenreService}
+ * @see Genre
+ * @see GenreService
+ */
 public class GenreServiceImpl implements GenreService {
     private static final Logger logger = LogManager.getLogger();
     private static final String DELIMITER = "\\|";
@@ -59,12 +64,11 @@ public class GenreServiceImpl implements GenreService {
             return optionalGenre;
         }
 
+        Genre genre = new Genre(genreName);
         GenreDao genreDao = GenreDaoImpl.getInstance();
 
         try {
-            if(!genreDao.isGenreExists(genreName)){
-                Genre genre = new Genre(genreName);
-
+            if(!genreDao.isGenreExists(genre)){
                 optionalGenre = genreDao.addGenre(genre);
             }else{
                 mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
@@ -91,11 +95,11 @@ public class GenreServiceImpl implements GenreService {
             return optionalGenre;
         }
 
+        Genre genre = new Genre(genreId, genreName);
         GenreDao genreDao = GenreDaoImpl.getInstance();
 
         try {
-            if(!genreDao.isGenreExists(genreName)){
-                Genre genre = new Genre(genreId, genreName);
+            if(!genreDao.isGenreExists(genre)){
                 optionalGenre = genreDao.updateGenre(genre);
             }else{
                 mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);

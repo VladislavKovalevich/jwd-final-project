@@ -19,6 +19,10 @@
 <fmt:message key="reference.add_book_components" var="add_book_components"/>
 <fmt:message key="reference.update_book_components" var="update_book_components"/>
 <fmt:message key="dropdown_menu_title.locale" var="change_local"/>
+<fmt:message key="dropdown_menu_title.book_menu" var="book_menu"/>
+<fmt:message key="reference.orders_list" var="orders_list_ref"/>
+<fmt:message key="reference.users_list" var="users_list_ref"/>
+
 <fmt:message key="local.en" var="en"/>
 <fmt:message key="local.ru" var="ru"/>
 
@@ -43,16 +47,9 @@
                             <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Orders
+                            <a class="nav-link" href="${path}/controller?command=get_orders_by_user_id&user_id=${user_id}">
+                                ${orders_list_ref}
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="${path}/controller?command=create_order">Create
-                                    order</a></li>
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=get_orders_by_user_id&user_id=${user_id}">Order
-                                    list</a></li>
-                            </ul>
                         </li>
                     </ul>
                     <ul class="navbar-nav my-2 my-lg-0 justify-content-end">
@@ -92,7 +89,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                aria-expanded="false">
-                                Book menu
+                                ${book_menu}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li class="nav-item">
@@ -108,10 +105,10 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${path}/controller?command=get_orders_list">Orders list</a>
+                            <a class="nav-link" href="${path}/controller?command=get_orders_list">${orders_list_ref}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="${path}/controller?command=show_users_list">Users list</a>
+                            <a class="nav-link" href="${path}/controller?command=show_users_list">${users_list_ref}</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav my-2 my-lg-0 justify-content-end">

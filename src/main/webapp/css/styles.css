@@ -1,0 +1,31 @@
+.background-theme{
+    background-color: #333333;
+}
+
+.white-background{
+    background-color: aliceblue;
+}
+
+.red-color{
+    color: red;
+}
+
+.green-color{
+    color: green;
+}
+
+.custom-scroll-container {
+    border:2px solid #ccc;
+    width:200px;
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.link {
+}
+
+.link a {
+    display: block; /* Ссылка как блочный элемент */
+    text-align: center; /* Выравнивание по центру */
+    height: 100%; /* Высота на весь слой */
+}

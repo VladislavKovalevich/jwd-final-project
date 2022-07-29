@@ -44,6 +44,7 @@
     <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
 </head>
 <body class="background-theme">
 <section class="container-fluid">

@@ -13,6 +13,10 @@ import by.vlad.library.controller.command.impl.gotopage.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * {@code CommandType} enum represent the relationship between command name and {@link Command}
+ * Hold and provide instance of all classes implements {@link Command}
+ */
 public enum CommandType {
     ACCEPT_ORDER(new AcceptOrderCommand()),
     ADD_BOOK_TO_ORDER(new AddBookToOrderCommand()),
@@ -66,6 +70,12 @@ public enum CommandType {
         return command;
     }
 
+    /**
+     * ${code getCommand} - return {@link}
+     * @param commandStr - name of command, type {@link String}
+     * @return enum element with type {@link CommandType}, that include instance of class, which implements {@link Command},
+     * or default enum element if such command not present
+     */
     public static CommandType getCommandType(String commandStr){
         CommandType commandType;
         try {

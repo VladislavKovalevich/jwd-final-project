@@ -1,5 +1,9 @@
 package by.vlad.library.controller.command;
 
+/**
+ * {@code AttributeAndParamsNames} class represent container for attributes and params names
+ * The class contains only constants
+ */
 public class AttributeAndParamsNames {
     private AttributeAndParamsNames(){
     }
@@ -16,6 +20,7 @@ public class AttributeAndParamsNames {
     public static final String PAGES_COUNT_FORM = "pages_count_form";
     public static final String DESCRIPTION_FORM = "description_form";
 
+    public static final String WRONG_TITLE_EXISTS_FORM = "wrong_title_exists_form";
     public static final String WRONG_TITLE_FORM = "wrong_title_form";
     public static final String WRONG_COPIES_NUMBER_FORM = "wrong_copies_number_form";
     public static final String WRONG_RELEASE_YEAR_FORM = "wrong_release_year_form";
@@ -41,6 +46,7 @@ public class AttributeAndParamsNames {
 
     public static final String WRONG_EMAIL_OR_PASS = "wrong_email_or_pass";
     public static final String NOT_FOUND_USER = "not_found_user";
+    public static final String USER_IS_BANNED = "user_is_banned";
 
     public static final String USER_FORM_DATA = "user_form_data";
 
@@ -89,6 +95,8 @@ public class AttributeAndParamsNames {
     public static final String BOOK_OPERATION_FEEDBACK = "book_operation_feedback";
     public static final String ORDER_OPERATION_FEEDBACK = "order_operation_feedback";
 
+    public static final String BOOK_IS_ALREADY_EXISTS = "book_is_already_exists";
+
     public static final String FILTER_DATA = "filter_data";
 
     public static final String USER_ORDERS = "user_orders";
@@ -97,6 +105,10 @@ public class AttributeAndParamsNames {
 
     public static final String ORDER_STATUS = "order_status";
     public static final String ORDER_TYPES = "order_types";
+
+    public static final String BOOK_ORDER_DATA = "book_order_data";
+    public static final String BOOK_LIMIT_IN_ORDER = "book_limit_in_order";
+    public static final String ORDERS_LIMIT = "orders_limit";
 
     ////request params names
     public static final String PAGE_DIRECTION = "page_direction";

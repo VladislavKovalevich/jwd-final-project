@@ -18,6 +18,11 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code UserServiceImpl} class implements functional of {@link UserService}
+ * @see User
+ * @see UserService
+ */
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger();
     private static UserServiceImpl instance;

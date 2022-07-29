@@ -13,12 +13,18 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@code UserDaoImpl} class implements functional of {@link UserDao}
+ * @see User
+ * @see UserDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
 
     private static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
             "SELECT * FROM users, roles " +
-            "WHERE roles_id = role_id AND user_email = ? AND user_password = ? AND user_is_banned = 0";
+            "WHERE roles_id = role_id AND user_email = ? AND user_password = ?";
 
     private static final String SELECT_USER_COUNT_BY_EMAIL =
             "SELECT COUNT(*) as count_col FROM users " +

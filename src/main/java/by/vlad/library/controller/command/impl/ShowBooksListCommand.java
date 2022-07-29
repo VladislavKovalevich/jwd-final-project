@@ -13,7 +13,6 @@ import by.vlad.library.model.service.impl.AuthorServiceImpl;
 import by.vlad.library.model.service.impl.BookServiceImpl;
 import by.vlad.library.model.service.impl.GenreServiceImpl;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +36,7 @@ public class ShowBooksListCommand implements Command {
         HttpSession session = request.getSession();
         Router router;
 
-        Map<String, String> filterData = (Map<String, String>) session.getAttribute(FILTER_DATA);
+        Map<String, Long[]> filterData = (Map<String, Long[]>) session.getAttribute(FILTER_DATA);
         Map<String, Long> paginationData = (Map<String, Long>) session.getAttribute(PAGINATION_DATA);
         String direction = request.getParameter(PAGE_DIRECTION);
 
@@ -64,7 +63,7 @@ public class ShowBooksListCommand implements Command {
 
             session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
 
-            router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.FORWARD);
+            router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.REDIRECT);
         } catch (ServiceException e) {
             logger.error("ShowBooksListCommand execution failed");
             throw new CommandException("ShowBooksListCommand execution failed", e);
@@ -74,7 +73,7 @@ public class ShowBooksListCommand implements Command {
     }
 
 
-    private void convertArrayToCSVString(HttpServletRequest request, String reqParam, Map<String, String> map){
+    private void convertArrayToCSVString(HttpServletRequest request, String reqParam, Map<String, Long[]> map){
         Enumeration<String> paramEnum = request.getParameterNames();
         List<Long> idList = new ArrayList<>();
 
@@ -86,18 +85,18 @@ public class ShowBooksListCommand implements Command {
         }
 
         if (!idList.isEmpty()) {
-            map.put(reqParam, idList.toString().substring(1, idList.toString().length() - 1));
+            map.put(reqParam, idList.toArray(new Long[0]));
         }
     }
 
-    private void fillFilterMap(HttpServletRequest request, Map<String, String> map){
+    private void fillFilterMap(HttpServletRequest request, Map<String, Long[]> map){
         convertArrayToCSVString(request, GENRE, map);
         convertArrayToCSVString(request, AUTHOR, map);
         convertArrayToCSVString(request, PUBLISHER, map);
         String isExists = request.getParameter(IS_EXISTS);
 
         if (isExists != null){
-            map.put(IS_EXISTS, isExists);
+            map.put(IS_EXISTS, new Long[]{0L});
         }
     }
 }

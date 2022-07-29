@@ -27,6 +27,8 @@
 <fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
 <fmt:message key="button.back_to_main" var="back_btn"/>
 <fmt:message key="message.book_has_been_updated" var="book_has_been_updated"/>
+<fmt:message key="message.book_with_title_is already_exists" var="book_is_already_exists"/>
+
 
 <html>
 <head>
@@ -40,7 +42,7 @@
     <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
-
+    <script src="${path}/js/script.js"></script>
 </head>
 <body class="background-theme">
 <section class="container-fluid">
@@ -64,6 +66,9 @@
                     <div class="red-color">
                         <c:if test="${not empty book_form_data['wrong_title_form']}">
                             ${incorrect_data_format}
+                        </c:if>
+                        <c:if test="${not empty book_form_data['wrong_title_exists_form']}">
+                            ${book_is_already_exists}
                         </c:if>
                     </div>
                 </div>

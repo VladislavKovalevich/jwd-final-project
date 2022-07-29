@@ -14,6 +14,9 @@ import java.util.List;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code OrderMapper} class implements functional of {@link Mapper}
+ */
 public class OrderMapper implements Mapper<Order> {
     private static OrderMapper instance;
 
@@ -52,13 +55,15 @@ public class OrderMapper implements Mapper<Order> {
 
             String returnedDate = resultSet.getString(ORDER_RETURNED_DATE_COL);
             String rejectedDate = resultSet.getString(ORDER_REJECTED_DATE_COL);
-            String orderedDate = resultSet.getString(ORDER_ORDERED_DATE_COL);
+            String acceptedDate = resultSet.getString(ORDER_ACCEPTED_DATE_COL);
             String reservedDate = resultSet.getString(ORDER_RESERVED_DATE_COL);
+            String estimatedReturnDate = resultSet.getString(ORDER_ESTIMATED_RETURN_DATE_COL);
 
             orderBuilder = reservedDate != null ? orderBuilder.withReservedDate(LocalDate.parse(reservedDate)) : orderBuilder;
             orderBuilder = rejectedDate != null ? orderBuilder.withRejectedDate(LocalDate.parse(rejectedDate)) : orderBuilder;
             orderBuilder = returnedDate != null ? orderBuilder.withReturnedDate(LocalDate.parse(returnedDate)) : orderBuilder;
-            orderBuilder = orderedDate != null ? orderBuilder.withOrderedDate(LocalDate.parse(orderedDate)) : orderBuilder;
+            orderBuilder = acceptedDate != null ? orderBuilder.withOrderedDate(LocalDate.parse(acceptedDate)) : orderBuilder;
+            orderBuilder = estimatedReturnDate != null ? orderBuilder.withEstimatedReturnDate(LocalDate.parse(estimatedReturnDate)) : orderBuilder;
 
             Order tempOrder = orderBuilder.buildOrder();
 

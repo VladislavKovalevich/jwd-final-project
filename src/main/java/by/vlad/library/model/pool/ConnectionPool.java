@@ -15,6 +15,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * {@code Connection} class represent thread-safe pool of connection to database
+ */
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger();
 
@@ -60,6 +63,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * Constructor creates queue of free {@link ProxyConnection}
+     */
     private ConnectionPool(){
 
         freeConnection = new LinkedBlockingQueue<>(POOL_SIZE);
@@ -78,6 +84,10 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * {@code getInstance} method represent thread-safe singleton
+     * @return instance of {@link ConnectionPool}
+     */
     public static ConnectionPool getInstance(){
         if (!instanceIsExists.get()) {
             lock.lock();
@@ -92,6 +102,10 @@ public class ConnectionPool {
         return instance;
     }
 
+    /**
+     * {@code getConnection} method get free {@link Connection} from {@link ConnectionPool}
+     * @return free {@link Connection} from {@link ConnectionPool}
+     */
     public Connection getConnection(){
         ProxyConnection proxyConnection = null;
 
@@ -106,6 +120,9 @@ public class ConnectionPool {
         return proxyConnection;
     }
 
+    /**
+     * {@code releaseConnection} method release {@link Connection} into {@link ConnectionPool}
+     */
     public void releaseConnection(Connection connection){
         if (connection instanceof ProxyConnection) {
             try {
@@ -120,6 +137,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * {@code destroyPool} method destroy {@link ConnectionPool}
+     */
     public void destroyPool(){
         for (int i = 0; i < POOL_SIZE; i++) {
             try {
@@ -135,6 +155,9 @@ public class ConnectionPool {
         deregisterDriver();
     }
 
+    /**
+     * {@code deregisterDriver} method deregister all drivers from {@link DriverManager}
+     */
     public void deregisterDriver() {
         DriverManager.getDrivers().asIterator().forEachRemaining(d -> {
             try {

@@ -10,14 +10,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code BookDaoImpl} class implements functional of {@link BookDao}
+ * @see Book
+ * @see BookDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class BookDaoImpl implements BookDao {
     private static final Logger logger = LogManager.getLogger();
 
@@ -84,6 +87,10 @@ public class BookDaoImpl implements BookDao {
                     "JOIN library.books_orders ON books_id = book_id " +
                     "WHERE orders_id = ?";
 
+    private static final String FIND_BOOK_BY_TITLE = "" +
+            "SELECT COUNT(book_title) as count_col FROM library.books " +
+            "WHERE book_title = ?";
+
     private static BookDaoImpl instance;
 
     private BookDaoImpl(){
@@ -121,7 +128,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> getBooks(long pageNumber, Map<String, String> filterMap) throws DaoException {
+    public List<Book> getBooks(long pageNumber, Map<String, Long[]> filterMap) throws DaoException {
         List<Book> books;
         Mapper<Book> mapper = BookMapper.getInstance();
 
@@ -177,7 +184,7 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public int findNumberOfPage(Map<String, String> filterMap) throws DaoException {
+    public int findNumberOfPage(Map<String, Long[]> filterMap) throws DaoException {
         int result;
         int booksNumber = 0;
 
@@ -284,11 +291,11 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Integer> findBooksCopiesNumber(String bookIdsString) throws DaoException {
+    public List<Integer> findBooksCopiesNumber(String bookIdString) throws DaoException {
         List<Integer> copiesList = new ArrayList<>();
 
         String sqlTemp = new StringBuilder(FIND_COPIES_NUMBER_BY_BOOK_ID)
-                .append(SQL_IN_START).append(bookIdsString)
+                .append(SQL_IN_START).append(bookIdString)
                 .append(SQL_IN_END).toString();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
@@ -305,6 +312,28 @@ public class BookDaoImpl implements BookDao {
         }
 
         return copiesList;
+    }
+
+    @Override
+    public boolean findBooksByTitle(String title) throws DaoException {
+        int rows = 0;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_TITLE)){
+
+            statement.setString(1, title);
+
+            try(ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()){
+                    rows = resultSet.getInt(COUNT_COL);
+                }
+            }
+        }catch (SQLException e){
+            logger.error("SQL request findBooksByTitle for table library.books was failed" + e);
+            throw new DaoException("SQL request findBooksByTitle for table library.books was failed", e);
+        }
+
+        return rows > 0;
     }
 
     private void prepareInsertUpdateDbRequest(PreparedStatement statement, Book book, boolean isUpdate) throws SQLException {
@@ -327,33 +356,35 @@ public class BookDaoImpl implements BookDao {
         }
     }
 
-    private String buildSQLFilterString(Map<String, String> filterMap){
+    private String buildSQLFilterString(Map<String, Long[]> filterMap){
         StringBuilder sqlFilter = new StringBuilder(SQL_WHERE);
 
-        for (Map.Entry<String ,String> e: filterMap.entrySet()) {
+        for (Map.Entry<String ,Long[]> e: filterMap.entrySet()) {
+            String s = Arrays.toString(e.getValue());
+
             switch (e.getKey()){
                 case GENRE -> {
                     sqlFilter.append(GENRES_ID_COL)
                             .append(SQL_IN_START)
-                            .append(e.getValue())
+                            .append(s, 1, s.length() - 1)
                             .append(SQL_IN_END);
                 }
 
                 case PUBLISHER -> {
                     sqlFilter.append(PUBLISHERS_ID_COL)
                             .append(SQL_IN_START)
-                            .append(e.getValue())
+                            .append(s, 1, s.length() - 1)
                             .append(SQL_IN_END);
                 }
 
                 case AUTHOR -> {
                     sqlFilter.append(AUTHORS_ID_COL)
                             .append(SQL_IN_START)
-                            .append(e.getValue())
+                            .append(s, 1, s.length() - 1)
                             .append(SQL_IN_END);
                 }
 
-                case "is_exists" -> {
+                case IS_EXISTS -> {
                     sqlFilter.append(BOOK_COPIES_NUMBER_COL)
                             .append("> 0");
                 }

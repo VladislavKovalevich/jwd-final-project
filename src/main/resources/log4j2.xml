@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Configuration status="ERROR">
+<Configuration>
     <Properties>
-        <property name="LOG_FOLDER">log</property>
         <property name="pattern_cmd">%d{HH:mm:ss} %-5level %logger{5} - %m%n</property>
         <property name="pattern_file">%d{yyyy-MM-dd HH:mm:ss} [%t] [%M] [%L] %-5level %logger{5} - %m%n</property>
     </Properties>
@@ -11,8 +10,8 @@
             <PatternLayout pattern="${pattern_cmd}"/>
         </Console>
 
-        <RollingFile name="TxtFile" fileName="${LOG_FOLDER}/log.txt" append="true"
-                     filePattern="${LOG_FOLDER}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.txt">
+        <RollingFile name="FileRolling" fileName="logs/library.txt" append="true"
+                     filePattern="logs/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}.txt">
             <PatternLayout pattern="${pattern_file}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
@@ -25,7 +24,7 @@
     <Loggers>
         <Root level="TRACE">
             <AppenderRef ref="STDOUT" level="debug"/>
-            <AppenderRef ref="TxtFile" level="debug"/>
+            <AppenderRef ref="FileRolling" level="debug"/>
         </Root>
     </Loggers>
 </Configuration>

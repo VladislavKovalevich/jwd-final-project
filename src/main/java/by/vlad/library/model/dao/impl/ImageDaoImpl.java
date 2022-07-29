@@ -10,6 +10,12 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.List;
 
+/**
+ * {@code ImageDaoImpl} class implements functional of {@link ImageDao}
+ * @see Image
+ * @see ImageDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class ImageDaoImpl implements ImageDao {
     private static final Logger logger = LogManager.getLogger();
 
@@ -115,14 +121,14 @@ public class ImageDaoImpl implements ImageDao {
     }
 
     @Override
-    public boolean updateImage(long imageId, byte[] imageContent) throws DaoException {
+    public boolean updateImage(Image image) throws DaoException {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_IMAGE)){
 
-            statement.setBytes(1,imageContent);
-            statement.setLong(2, imageId);
+            statement.setBytes(1,image.getContent());
+            statement.setLong(2, image.getId());
 
             rows = statement.executeUpdate();
 

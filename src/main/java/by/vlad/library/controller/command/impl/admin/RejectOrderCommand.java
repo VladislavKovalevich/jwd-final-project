@@ -3,14 +3,20 @@ package by.vlad.library.controller.command.impl.admin;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.PagePath;
 import by.vlad.library.controller.command.Router;
+import by.vlad.library.entity.Order;
 import by.vlad.library.entity.OrderStatus;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.OrderService;
 import by.vlad.library.model.service.impl.OrderServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
@@ -19,13 +25,26 @@ public class RejectOrderCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
+
         long orderId = Long.parseLong(request.getParameter(ORDER_ID));
         long orderStatusId = OrderStatus.REJECTED.ordinal() + 1;
 
         OrderService orderService = OrderServiceImpl.getInstance();
 
         try {
-            orderService.changeOrderStatus(orderId, orderStatusId);
+
+            if (orderService.changeOrderStatus(orderId, orderStatusId)){
+                List<Order> orders = (List<Order>) session.getAttribute(ORDERS);
+                orders = orders.stream().peek(order -> {
+                    if (order.getId() == orderId){
+                        order.setStatus(OrderStatus.REJECTED);
+                        order.setRejectedDate(LocalDate.now());
+                    }
+                }).collect(Collectors.toList());
+
+                session.setAttribute(ORDERS, orders);
+            }
         }catch (ServiceException e){
             logger.error("RejectOrderCommand execution failed");
             throw new CommandException("RejectOrderCommand execution failed", e);

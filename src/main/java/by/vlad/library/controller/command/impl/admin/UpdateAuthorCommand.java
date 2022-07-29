@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
@@ -44,8 +45,12 @@ public class UpdateAuthorCommand implements Command {
                 List<Author> authors = (List<Author>) session.getAttribute(AUTHORS);
                 Author author = optionalAuthor.get();
 
-                authors.removeIf(a -> a.getId() == author.getId());
-                authors.add(author);
+                authors = authors.stream().peek(a -> {
+                    if (a.getId() == author.getId()){
+                        a.setName(author.getName());
+                        a.setSurname(author.getSurname());
+                    }
+                }).collect(Collectors.toList());
 
                 componentsData.put(AUTHOR_OPERATION_FEEDBACK, AUTHOR_UPDATED_MARKER);
                 session.setAttribute(AUTHORS, authors);

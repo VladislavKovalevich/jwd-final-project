@@ -15,6 +15,10 @@ import java.io.*;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.COMMAND;
 
+/**
+ * {@code Controller} class extends functional of {@link HttpServlet}
+ * Processes all request after filter methods
+ */
 @WebServlet(name = "controllerServlet", value = {"/controller", "*.do"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 5,

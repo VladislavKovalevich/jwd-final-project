@@ -2,14 +2,12 @@ package by.vlad.library.controller.command.impl;
 
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.controller.command.Command;
-import by.vlad.library.entity.Order;
 import by.vlad.library.entity.User;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
-import by.vlad.library.model.service.OrderService;
 import by.vlad.library.model.service.UserService;
-import by.vlad.library.model.service.impl.OrderServiceImpl;
 import by.vlad.library.model.service.impl.UserServiceImpl;
+import by.vlad.library.validator.UserValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -47,14 +45,22 @@ public class LoginCommand implements Command {
             if (optionalUser.isPresent()){
                 User user = optionalUser.get();
 
-                session.setAttribute(USER_EMAIL, user.getEmail());
-                session.setAttribute(USER_ROLE, user.getRole().name().toUpperCase(Locale.ROOT));
-                session.setAttribute(USER_LOGIN, user.getLogin());
-                session.setAttribute(USER_ID, user.getId());
+                if (user.isBanned()){
+                    userFormData.put(USER_IS_BANNED, UserValidator.WRONG_FORMAT_MARKER);
 
-                session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
+                    session.setAttribute(USER_FORM_DATA, userFormData);
+                    session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
 
-                router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.REDIRECT);
+                    router = new Router(LOGIN_PAGE, Router.Type.REDIRECT);
+                }else {
+                    session.setAttribute(USER_EMAIL, user.getEmail());
+                    session.setAttribute(USER_ROLE, user.getRole().name().toUpperCase(Locale.ROOT));
+                    session.setAttribute(USER_LOGIN, user.getLogin());
+                    session.setAttribute(USER_ID, user.getId());
+
+                    session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
+                    router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.REDIRECT);
+                }
             }else{
                 session.setAttribute(USER_FORM_DATA, userFormData);
                 session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
@@ -78,5 +84,6 @@ public class LoginCommand implements Command {
     private void cleanErrorMessages(Map<String, String> userFormData){
         userFormData.remove(WRONG_EMAIL_OR_PASS);
         userFormData.remove(NOT_FOUND_USER);
+        userFormData.remove(USER_IS_BANNED);
     }
 }

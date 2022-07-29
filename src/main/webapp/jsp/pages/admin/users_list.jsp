@@ -13,7 +13,13 @@
 
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="config.pagecontent"/>
-
+<fmt:message key="title.users_list" var="title"/>
+<fmt:message key="label.user_login" var="login"/>
+<fmt:message key="label.user_email" var="email"/>
+<fmt:message key="label.user_mobile_phone" var="phone"/>
+<fmt:message key="button.block_user" var="block_btn"/>
+<fmt:message key="button.unblock_user" var="unblock_btn"/>
+<fmt:message key="message.not_found" var="not_found_msg"/>
 
 <html>
 <head>
@@ -26,9 +32,10 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
-    <title>Title</title>
+    <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>
@@ -36,53 +43,50 @@
 <body class="background-theme">
 <section class="container-fluid">
     <div class="row m-lg-5 m-5">
-        <div class="col-3"></div>
-        <div class="col-9 container-fluid">
-            <div class="row">
-                <div class="col-10 container-fluid">
-                    <c:forEach var="user" items="${users_list}">
-                        <div class="row my-4 mx-2 white-background">
-                            <div class="col-9">
-                                <h5>${user.name} ${user.surname}</h5>
-                                <p>login: ${user.login}</p>
-                                <p>email: ${user.email}</p>
-                                <p>phone:
-                                    <c:choose>
-                                        <c:when test="${not empty user.mobilePhone or user.mobilePhone eq ''}">
-                                            ${user.mobilePhone}
-                                        </c:when>
-                                        <c:otherwise>
-                                            not found
-                                        </c:otherwise>
-                                    </c:choose>
-                                </p>
-                            </div>
-                            <div class="col-3">
-                                <form type="post" action="${path}/controller">
-                                    <input type="hidden" name="command" value="change_user_status">
-                                    <input type="hidden" name="user_id" value="${user.email}">
-                                    <p class="py-3">
-                                        <c:choose>
-                                            <c:when test="${user.banned}">
-                                                <input type="hidden" name="user_status" value="false">
-                                                <input type="submit" class="btn btn-primary" value="Unblock">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <input type="hidden" name="user_status" value="true">
-                                                <input type="submit" class="btn btn-danger" value="Block">
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </p>
-                                </form>
-                                <p class="py-1">
-                                    <a class="btn btn-primary" href="#">Get all orders</a>
-                                </p>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="row my-4 white-background">
+                <c:forEach var="user" items="${users_list}">
+                    <div class="col-1"></div>
+                    <div class="col-10 my-2" style="background-color: #c7b39b">
+                        <h5>${user.name} ${user.surname}</h5>
+                        <p>${login}: ${user.login}</p>
+                        <p>${email}: ${user.email}</p>
+                        <p>${phone}:
+                            <c:choose>
+                                <c:when test="${not empty user.mobilePhone or user.mobilePhone eq ''}">
+                                    ${user.mobilePhone}
+                                </c:when>
+                                <c:otherwise>
+                                    ${not_found_msg}not found
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+
+                        <hr/>
+
+                        <form type="post" action="${path}/controller">
+                            <input type="hidden" name="command" value="change_user_status">
+                            <input type="hidden" name="user_id" value="${user.email}">
+                            <p class="py-1">
+                                <c:choose>
+                                    <c:when test="${user.banned}">
+                                        <input type="hidden" name="user_status" value="false">
+                                        <input type="submit" class="btn btn-primary" value="${unblock_btn}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="hidden" name="user_status" value="true">
+                                        <input type="submit" class="btn btn-danger" value="${block_btn}">
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </form>
+                    </div>
+                    <div class="col-1"></div>
+                </c:forEach>
             </div>
         </div>
+        <div class="col-2"></div>
     </div>
 </section>
 </body>

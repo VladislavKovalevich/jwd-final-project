@@ -6,6 +6,7 @@ import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
 import by.vlad.library.entity.OrderStatus;
+import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
@@ -32,7 +33,8 @@ public class AcceptOrderCommand implements Command {
         Router router;
 
         long orderId = Long.parseLong(request.getParameter(ORDER_ID));
-        long orderStatusId = OrderStatus.ORDERED.ordinal() + 1;
+        OrderType orderType = OrderType.getType(request.getParameter(ORDER_TYPE));
+        long orderStatusId = OrderStatus.ACCEPTED.ordinal() + 1;
 
         List<Book> books = (List<Book>) session.getAttribute(ORDER_BOOKS);
 
@@ -42,14 +44,20 @@ public class AcceptOrderCommand implements Command {
         try {
             if (bookService.isBooksCopiesExists(books)) {
                 LocalDate date = LocalDate.now();
-                orderService.changeBooksOrderStatus(orderId, books, orderStatusId, date);
+                orderService.changeBooksOrderStatus(orderId, orderType, books, orderStatusId, date);
 
                 List<Order> orders = (List<Order>) session.getAttribute(ORDERS);
 
                 orders = orders.stream().peek(order -> {
                     if (order.getId() == orderId){
-                        order.setStatus(OrderStatus.ORDERED);
-                        order.setOrderedDate(date);
+                        order.setStatus(OrderStatus.ACCEPTED);
+                        order.setAcceptedDate(date);
+
+                        if (order.getType() == OrderType.SUBSCRIPTION){
+                            order.setEstimatedReturnDate(order.getAcceptedDate().plusDays(20));
+                        }else{
+                            order.setEstimatedReturnDate(order.getAcceptedDate().plusDays(1));
+                        }
                     }
                 }).collect(Collectors.toList());
 

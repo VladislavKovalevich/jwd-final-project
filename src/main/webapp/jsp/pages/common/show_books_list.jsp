@@ -18,6 +18,12 @@
 <fmt:message key="label.book_publisher" var="book_publisher"/>
 <fmt:message key="reference.next_page" var="next"/>
 <fmt:message key="reference.prev_page" var="prev"/>
+<fmt:message key="label.book_filter_panel" var="book_filter_panel"/>
+<fmt:message key="label.publishers" var="publishers_label"/>
+<fmt:message key="label.genres" var="genres_label"/>
+<fmt:message key="label.authors" var="authors_label"/>
+<fmt:message key="label.are_available" var="are_available_label"/>
+<fmt:message key="button.book_filter" var="filter_btn"/>
 
 <html>
 <head>
@@ -32,6 +38,7 @@
     <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
 
     <style>
         figure {
@@ -66,44 +73,111 @@
                 <form method="get" action="${path}/controller">
                     <input type="hidden" name="command" value="show_books_list"/>
                     <input type="hidden" name="direction" value="null"/>
-                    <h4 class="text-center">Панель фильтров</h4>
+                    <h4 class="text-center">${book_filter_panel}</h4>
                     <div class="mt-3">
-                        <h5>Авторы:</h5>
+                        <h5>${authors_label}:</h5>
                         <div class="custom-scroll-container">
                             <c:forEach var="author" items="${authors}">
                                 <label for="author${author.id}"></label>
-                                <input type="checkbox" id="author${author.id}" name="author${author.id}"/>
-                                ${author.name} ${author.surname}<br/>
+                                <c:choose>
+                                    <c:when test="${empty filter_data['author']}">
+                                        <input type="checkbox" id="author${author.id}" name="author${author.id}"/>
+                                        ${author.name} ${author.surname}<br/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="flag_author" value="0" scope="page"/>
+                                        <c:forEach var="genreId" items="${filter_data['author']}">
+                                            <c:if test="${(genreId eq author.id) and (flag_author eq 0)}">
+                                                <input type="checkbox" id="author${author.id}" name="author${author.id}"
+                                                       checked/>
+                                                ${author.name} ${author.surname}<br/>
+                                                <c:set var="flag_author" value="1" scope="page"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${flag_author eq 0}">
+                                            <input type="checkbox" id="author${author.id}" name="author${author.id}"/>
+                                            ${author.name} ${author.surname}<br/>
+                                        </c:if>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:forEach>
                         </div>
                     </div>
                     <div class="mt-3">
-                        <h5>Жанры:</h5>
+                        <h5>${genres_label}:</h5>
                         <div class="custom-scroll-container">
                             <c:forEach var="genre" items="${genres}">
                                 <label for="genre${genre.id}"></label>
-                                <input type="checkbox" id="genre${genre.id}" name="genre${genre.id}"/>
-                                ${genre.name}<br/>
+                                <c:choose>
+                                    <c:when test="${empty filter_data['genre']}">
+                                        <input type="checkbox" id="genre${genre.id}" name="genre${genre.id}"/>
+                                        ${genre.name} <br/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="flag_genre" value="0" scope="page"/>
+                                        <c:forEach var="genreId" items="${filter_data['genre']}">
+                                            <c:if test="${(genreId eq genre.id) and (flag_genre eq 0)}">
+                                                <input type="checkbox" id="genre${genre.id}" name="genre${genre.id}"
+                                                       checked/>
+                                                ${genre.name} <br/>
+                                                <c:set var="flag_genre" value="1" scope="page"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${flag_genre eq 0}">
+                                            <input type="checkbox" id="genre${genre.id}" name="genre${genre.id}"/>
+                                            ${genre.name} <br/>
+                                        </c:if>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:forEach>
                         </div>
                     </div>
                     <div class="mt-3">
-                        <h5>Издательство:</h5>
+                        <h5>${publishers_label}:</h5>
                         <div class="custom-scroll-container">
                             <c:forEach var="publisher" items="${publishers}">
                                 <label for="publisher${publisher.id}"></label>
-                                <input type="checkbox" id="publisher${publisher.id}" name="publisher${publisher.id}"/>
-                                ${publisher.name}<br/>
+                                <c:choose>
+                                    <c:when test="${empty filter_data['publisher']}">
+                                        <input type="checkbox" id="publisher${publisher.id}"
+                                               name="publisher${publisher.id}"/>
+                                        ${publisher.name} <br/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="flag_publisher" value="0" scope="page"/>
+                                        <c:forEach var="publisherId" items="${filter_data['publisher']}">
+                                            <c:if test="${(publisherId eq publisher.id) and (flag_publisher eq 0)}">
+                                                <input type="checkbox" id="publisher${publisher.id}"
+                                                       name="publisher${publisher.id}"
+                                                       checked/>
+                                                ${publisher.name} <br/>
+                                                <c:set var="flag_publisher" value="1" scope="page"/>
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:if test="${flag_publisher eq 0}">
+                                            <input type="checkbox" id="publisher${publisher.id}"
+                                                   name="publisher${publisher.id}"/>
+                                            ${publisher.name} <br/>
+                                        </c:if>
+                                    </c:otherwise>
+                                </c:choose>
                             </c:forEach>
                         </div>
                     </div>
                     <div class="mt-3">
-                        <label for="is_exists">Имеется в наличии</label>
-                        <input type="checkbox" name="is_exists" id="is_exists"/>
+                        <label for="is_exists">${are_available_label}</label>
+                        <c:choose>
+                            <c:when test="${empty filter_data['is_exists']}">
+                                <input type="checkbox" name="is_exists" id="is_exists"/>
+                            </c:when>
+                            <c:otherwise>
+                                <input type="checkbox" name="is_exists" id="is_exists" checked/>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
 
                     <div class="mt-4">
-                        <button class="btn btn-primary" type="submit">filter</button>
+                        <button class="btn btn-primary" type="submit">${filter_btn}</button>
                     </div>
                 </form>
             </div>
@@ -163,12 +237,12 @@
     </div>
 </section>
 </body>
+<footer>
+    <jsp:include page="../footer/footer.jsp"/>
+</footer>
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
-<footer>
-    <jsp:include page="../footer/footer.jsp"/>
-</footer>
 </html>

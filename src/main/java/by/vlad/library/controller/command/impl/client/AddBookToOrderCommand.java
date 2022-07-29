@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
+
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class AddBookToOrderCommand implements Command {
@@ -24,11 +26,16 @@ public class AddBookToOrderCommand implements Command {
         long bookId = Long.parseLong(request.getParameter(BOOK_ID));
         long orderId = Long.parseLong(request.getParameter(ORDER_ID));
 
+        Map<String, Boolean> bookOrderMap = (Map<String, Boolean>) session.getAttribute(BOOK_ORDER_DATA);
+        bookOrderMap.clear();
+
         try {
-            if (orderService.addBookToOrder(orderId, bookId)){
-                session.setAttribute(BOOK_OPERATION_FEEDBACK, true);
-                session.removeAttribute(ORDER_OPERATION_FEEDBACK);
+            if (orderService.addBookToOrder(orderId, bookId, bookOrderMap)){
+                bookOrderMap.put(BOOK_OPERATION_FEEDBACK, true);
             }
+
+            session.setAttribute(BOOK_ORDER_DATA, bookOrderMap);
+
         } catch (ServiceException e) {
             logger.error("AddBookToOrderCommand execution failed");
             throw new CommandException("AddBookToOrderCommand execution failed", e);

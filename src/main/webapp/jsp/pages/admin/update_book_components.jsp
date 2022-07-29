@@ -48,6 +48,7 @@
     <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
 </head>
 <body class="background-theme">
 <section class="container-fluid">
@@ -68,7 +69,7 @@
                             onchange="updateAuthorFields('author', 'author_name', 'author_surname')">
                         <c:forEach var="a" items="${authors}">
                             <c:choose>
-                                <c:when test="${a eq book_components_form_data['author_form']}">
+                                <c:when test="${a.id eq book_components_form_data['author_form']}">
                                     <option value="${a.id}|${a.name}|${a.surname}"
                                             selected>${a.name} ${a.surname}</option>
                                 </c:when>

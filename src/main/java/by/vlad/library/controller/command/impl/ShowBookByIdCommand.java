@@ -16,7 +16,9 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
@@ -44,6 +46,9 @@ public class ShowBookByIdCommand implements Command {
                     long userId = (long) session.getAttribute(USER_ID);
                     List<Order> orders = orderService.getOrdersByUserId(userId);
                     OrderType[] orderTypes = OrderType.values();
+                    Map<String, Boolean> bookOrderMap = new HashMap<>();
+
+                    session.setAttribute(BOOK_ORDER_DATA, bookOrderMap);
                     session.setAttribute(ORDER_TYPES, orderTypes);
                     session.setAttribute(USER_ORDERS, orders);
                 }

@@ -3,12 +3,20 @@ package by.vlad.library.entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * {@code OrderStatus} enum represent type of order
+ */
 public enum OrderType {
     READING_ROOM,
     SUBSCRIPTION;
 
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Method to get order type by string name
+     * @param type - order name, type {@link String}
+     * @return order type, type {@link OrderType}
+     */
     public static OrderType getType(String type){
         OrderType orderType;
 

@@ -6,6 +6,9 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code BookValidatorImpl} class implements functional of {@link BookValidator}
+ */
 public class BookValidatorImpl implements BookValidator {
     private static final String TITLE_REGEX = "^[А-ЯЁ][а-яё\\d\\s]+[А-ЯЁа-яё\\d\\s]*(:\\s[А-ЯЁа-яё\\d\\s]+)*$";
     private static final String COPIES_NUMBER_REGEX = "^[1-9][\\d]?$";

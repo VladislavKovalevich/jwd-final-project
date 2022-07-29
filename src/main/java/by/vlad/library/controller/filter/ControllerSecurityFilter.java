@@ -16,6 +16,10 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.COMMAND
 import static by.vlad.library.controller.command.AttributeAndParamsNames.USER_ROLE;
 import static by.vlad.library.controller.command.CommandType.*;
 
+/**
+ * {@code ControllerSecurityFilter} class implements functional of {@link Filter}
+ * Restricts access to the commands depending on the user's role.
+ */
 @WebFilter(urlPatterns = {"/controller"}, servletNames = {"controller"})
 public class ControllerSecurityFilter implements Filter {
     private Set<CommandType> guestCommandsSet;
@@ -94,14 +98,6 @@ public class ControllerSecurityFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-
-        /*
-        httpResponse.setHeader("Cache-Control","no-cache no-store, must-revalidate");
-        httpResponse.addHeader("Cache-Control", "post-check=0, pre-check=0");
-        httpResponse.setDateHeader ("Expires", 0);
-        httpResponse.setHeader("Pragma","no-cache");
-        */
-
         HttpSession session = httpRequest.getSession();
 
         String commandName = httpRequest.getParameter(COMMAND);

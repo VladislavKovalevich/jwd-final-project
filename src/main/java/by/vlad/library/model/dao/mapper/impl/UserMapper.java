@@ -10,6 +10,9 @@ import java.util.List;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code UserMapper} class implements functional of {@link Mapper}
+ */
 public class UserMapper implements Mapper<User> {
     private static UserMapper instance;
 

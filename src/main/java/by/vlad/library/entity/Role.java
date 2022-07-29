@@ -3,6 +3,9 @@ package by.vlad.library.entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * {@code Role} enum represent user role
+ */
 public enum Role {
 
     GUEST,
@@ -11,7 +14,11 @@ public enum Role {
 
     private static final Logger logger = LogManager.getLogger();
 
-
+    /**
+     * Method get user role by string name
+     * @param roleStr - role name as String
+     * @return - user role {@link Role}
+     */
     public static Role getRole(String roleStr){
         Role role;
 

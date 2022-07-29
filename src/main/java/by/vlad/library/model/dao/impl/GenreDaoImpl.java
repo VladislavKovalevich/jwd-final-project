@@ -17,6 +17,12 @@ import java.util.Optional;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code GenreDaoImpl} class implements functional of {@link GenreDao}
+ * @see Genre
+ * @see GenreDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class GenreDaoImpl implements GenreDao {
     private static final Logger logger = LogManager.getLogger();
 
@@ -101,13 +107,13 @@ public class GenreDaoImpl implements GenreDao {
     }
 
     @Override
-    public boolean isGenreExists(String name) throws DaoException {
+    public boolean isGenreExists(Genre genre) throws DaoException {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(IS_GENRE_EXISTS)) {
 
-            statement.setString(1, name);
+            statement.setString(1, genre.getName());
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){

@@ -6,19 +6,24 @@ import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.dao.BookDao;
 import by.vlad.library.model.dao.impl.BookDaoImpl;
 import by.vlad.library.model.service.BookService;
+import by.vlad.library.util.ConverterToCSVString;
 import by.vlad.library.validator.BookValidator;
 import by.vlad.library.validator.impl.BookValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.time.Year;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code BookServiceImpl} class implements functional of {@link BookService}
+ * @see Book
+ * @see BookService
+ */
 public class BookServiceImpl implements BookService {
     private static final Logger logger = LogManager.getLogger();
     private static final String BOOK_COMPONENTS_DELIMITER = "\\|";
@@ -38,7 +43,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getAllBooks(String direction, Map<String, Long> paginationData, Map<String, String> filterMap) throws ServiceException {
+    public List<Book> getAllBooks(String direction, Map<String, Long> paginationData, Map<String, Long[]> filterMap) throws ServiceException {
         List<Book> books;
 
         try {
@@ -68,7 +73,7 @@ public class BookServiceImpl implements BookService {
         return books;
     }
 
-    private void initPaginationDataMap(Map<String, Long> paginationMap, Map<String, String> filterMap) throws DaoException {
+    private void initPaginationDataMap(Map<String, Long> paginationMap, Map<String, Long[]> filterMap) throws DaoException {
         long pagesNumber = BookDaoImpl.getInstance().findNumberOfPage(filterMap);
         paginationMap.put(PAGES_NUMBER, pagesNumber);
         paginationMap.put(CURRENT_PAGE_NUM, 0L);
@@ -112,19 +117,23 @@ public class BookServiceImpl implements BookService {
 
         try {
 
-            Book book = Book.getBuilder()
-                    .withTitle(title)
-                    .withGenre(new Genre(genre_id))
-                    .withAuthor(new Author(author_id))
-                    .withPublisher(new Publisher(publisher_id))
-                    .withCopiesNumber(copies_number)
-                    .withDescription(description)
-                    .withNumberOfPages(pages_count)
-                    .withReleaseYear(Year.of(year))
-                    .withImage(new Image())
-                    .buildBook();
+            if (!bookDao.findBooksByTitle(title)) {
+                Book book = Book.getBuilder()
+                        .withTitle(title)
+                        .withGenre(new Genre(genre_id))
+                        .withAuthor(new Author(author_id))
+                        .withPublisher(new Publisher(publisher_id))
+                        .withCopiesNumber(copies_number)
+                        .withDescription(description)
+                        .withNumberOfPages(pages_count)
+                        .withReleaseYear(Year.of(year))
+                        .withImage(new Image())
+                        .buildBook();
 
-            optionalBook = bookDao.addNewBook(book);
+                optionalBook = bookDao.addNewBook(book);
+            }else {
+                bookData.put(WRONG_TITLE_EXISTS_FORM, BookValidator.WRONG_FORMAT_MARKER);
+            }
 
         } catch (DaoException e) {
             logger.error("Method addBook from book service was failed" + e);
@@ -159,21 +168,24 @@ public class BookServiceImpl implements BookService {
         BookDao bookDao = BookDaoImpl.getInstance();
 
         try {
+            if (!bookDao.findBooksByTitle(title)) {
+                Book book = Book.getBuilder()
+                        .withId(bookId)
+                        .withTitle(title)
+                        .withGenre(new Genre(Long.parseLong(genreParams[0]), genreParams[1]))
+                        .withAuthor(new Author(Long.parseLong(authorParams[0]), authorParams[1], authorParams[2]))
+                        .withPublisher(new Publisher(Long.parseLong(publisherParams[0]), publisherParams[1]))
+                        .withCopiesNumber(copies_number)
+                        .withDescription(description)
+                        .withNumberOfPages(pages_count)
+                        .withReleaseYear(Year.of(year))
+                        .withImage(new Image(imageId))
+                        .buildBook();
 
-            Book book = Book.getBuilder()
-                    .withId(bookId)
-                    .withTitle(title)
-                    .withGenre(new Genre(Long.parseLong(genreParams[0]), genreParams[1]))
-                    .withAuthor(new Author(Long.parseLong(authorParams[0]), authorParams[1], authorParams[2]))
-                    .withPublisher(new Publisher(Long.parseLong(publisherParams[0]), publisherParams[1]))
-                    .withCopiesNumber(copies_number)
-                    .withDescription(description)
-                    .withNumberOfPages(pages_count)
-                    .withReleaseYear(Year.of(year))
-                    .withImage(new Image(imageId))
-                    .buildBook();
-
-            optionalBook = bookDao.updateBook(book);
+                optionalBook = bookDao.updateBook(book);
+            }else{
+                bookData.put(WRONG_TITLE_EXISTS_FORM, BookValidator.WRONG_FORMAT_MARKER);
+            }
         } catch (DaoException e) {
             logger.error("Method updateBook from book service was failed" + e);
             throw new ServiceException("Method updateBook from book service was failed", e);
@@ -201,17 +213,12 @@ public class BookServiceImpl implements BookService {
     public boolean isBooksCopiesExists(List<Book> books) throws ServiceException {
         boolean isExists;
         BookDao bookDao = BookDaoImpl.getInstance();
-        StringBuilder stringBuilder = new StringBuilder();
+        ConverterToCSVString converter = ConverterToCSVString.getInstance();
 
-
-        for (Book book : books) {
-            stringBuilder.append(book.getId()).append(',');
-        }
-
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        String CSVBookIds = converter.convertEntityList(books);
 
         try {
-            List<Integer> copiesList = bookDao.findBooksCopiesNumber(stringBuilder.toString());
+            List<Integer> copiesList = bookDao.findBooksCopiesNumber(CSVBookIds);
 
             isExists = !copiesList.contains(0);
         } catch (DaoException e) {

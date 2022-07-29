@@ -2,17 +2,10 @@ package by.vlad.library.controller.command.impl.gotopage;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
-import by.vlad.library.entity.Book;
 import by.vlad.library.exception.CommandException;
 
-import by.vlad.library.exception.ServiceException;
-import by.vlad.library.model.service.BookService;
-import by.vlad.library.model.service.impl.BookServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-import java.util.List;
-import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
@@ -33,8 +26,7 @@ public class GoToMainPageCommand implements Command {
         }
 
         if(session.getAttribute(CURRENT_PAGE).equals(SHOW_BOOK_INFO_PAGE)){
-            session.removeAttribute(BOOK_OPERATION_FEEDBACK);
-            session.removeAttribute(ORDER_OPERATION_FEEDBACK);
+            session.removeAttribute(BOOK_ORDER_DATA);
             session.removeAttribute(BOOK);
         }
 

@@ -14,6 +14,9 @@
 <fmt:message key="message.wrong_email_or_password" var="wrong_data"/>
 <fmt:message key="button.sign_in" var="sign_in_btn"/>
 <fmt:message key="reference.create_new_account" var="create_new_account"/>
+<fmt:message key="label.sign_in" var="sign_in_label"/>
+<fmt:message key="message.new_account" var="new_account_message"/>
+<fmt:message key="message.user_is_banned" var="user_is_banned_message"/>
 
 <html>
 <head>
@@ -36,7 +39,7 @@
         <div class="col-4"></div>
         <div class="col-4 mb-3 white-background">
             <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
-                <h3 class="mb-5">Sign in</h3>
+                <h3 class="mb-5">${sign_in_label}</h3>
                 <input type="hidden" name="command" value="login"/>
 
                 <div class="form-outline mb-4">
@@ -62,13 +65,16 @@
                     <c:if test="${not empty user_form_data['not_found_user']}">
                         ${not_found}
                     </c:if>
+                    <c:if test="${not empty user_form_data['user_is_banned']}">
+                        ${user_is_banned_message}
+                    </c:if>
                 </div>
 
                 <input class="btn btn-primary btn-lg btn-block mb-3" type="submit" value="${sign_in_btn}" name="sub">
 
                 <div class="green-color">
                     <c:if test="${not empty create_account_feedback}">
-                        new account was created
+                        ${new_account_message}
                     </c:if>
                 </div>
 

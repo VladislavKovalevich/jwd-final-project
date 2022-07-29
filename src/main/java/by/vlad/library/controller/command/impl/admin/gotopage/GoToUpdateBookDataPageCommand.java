@@ -3,27 +3,17 @@ package by.vlad.library.controller.command.impl.admin.gotopage;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.controller.util.CurrentPageExtractor;
-import by.vlad.library.entity.Author;
 import by.vlad.library.entity.Book;
-import by.vlad.library.entity.Genre;
-import by.vlad.library.entity.Publisher;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
-import by.vlad.library.model.service.AuthorService;
 import by.vlad.library.model.service.BookService;
-import by.vlad.library.model.service.GenreService;
-import by.vlad.library.model.service.PublisherService;
-import by.vlad.library.model.service.impl.AuthorServiceImpl;
 import by.vlad.library.model.service.impl.BookServiceImpl;
-import by.vlad.library.model.service.impl.GenreServiceImpl;
-import by.vlad.library.model.service.impl.PublisherServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -40,22 +30,13 @@ public class GoToUpdateBookDataPageCommand implements Command {
 
         Map<String, String> booksData = new HashMap<>();
 
-        PublisherService publisherService = PublisherServiceImpl.getInstance();
-        AuthorService authorService = AuthorServiceImpl.getInstance();
-        GenreService genreService = GenreServiceImpl.getInstance();
         BookService bookService = BookServiceImpl.getInstance();
 
-        List<Author> authors;
-        List<Publisher> publishers;
-        List<Genre> genres;
         Book book;
 
         try {
             Optional<Book> optionalBook;
 
-            authors = authorService.findAllAuthors();
-            publishers = publisherService.findAllPublishers();
-            genres = genreService.findAllGenres();
             optionalBook = bookService.getBookById(bookId);
 
             if (optionalBook.isPresent()){
@@ -76,10 +57,6 @@ public class GoToUpdateBookDataPageCommand implements Command {
             logger.error("GoToUpdateBookDataPageCommand execution failed");
             throw new CommandException("GoToUpdateBookDataPageCommand execution failed", e);
         }
-
-        session.setAttribute(PUBLISHERS, publishers);
-        session.setAttribute(AUTHORS, authors);
-        session.setAttribute(GENRES, genres);
 
         session.setAttribute(BOOK_FORM_DATA, booksData);
         session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));

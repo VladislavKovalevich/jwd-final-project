@@ -1,6 +1,7 @@
 package by.vlad.library.model.dao.impl;
 
 import by.vlad.library.entity.Order;
+import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.DaoException;
 import by.vlad.library.model.dao.OrderDao;
 import by.vlad.library.model.dao.mapper.Mapper;
@@ -16,11 +17,17 @@ import java.util.Optional;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code OrderDaoImpl} class implements functional of {@link OrderDao}
+ * @see Order
+ * @see OrderDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class OrderDaoImpl implements OrderDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String FIND_ORDERS_BY_USER_ID = "SELECT order_id, order_create_date, order_reserved_date, order_ordered_date, " +
-            "order_rejected_date, order_returned_date, order_status_name, order_type_name, user_id, user_login, " +
+    private static final String FIND_ORDERS_BY_USER_ID = "SELECT order_id, order_create_date, order_reserved_date, order_accepted_date, " +
+            "order_rejected_date, order_returned_date, order_estimated_return_date, order_status_name, order_type_name, user_id, user_login, " +
             "user_email, user_name, user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
             "FROM orders " +
             "JOIN order_status ON orders_status_id = order_status_id " +
@@ -37,16 +44,16 @@ public class OrderDaoImpl implements OrderDao {
 
     private static final String DELETE_ORDER = "DELETE FROM orders WHERE order_id = ?";
 
-    private static final String FIND_ALL_ORDERS = "SELECT order_id, order_create_date, order_reserved_date, order_ordered_date, " +
-            "order_rejected_date, order_returned_date, order_status_name, order_type_name, user_id, user_login, " +
+    private static final String FIND_ALL_ORDERS = "SELECT order_id, order_create_date, order_reserved_date, order_accepted_date, " +
+            "order_rejected_date, order_returned_date, order_estimated_return_date, order_status_name, order_type_name, user_id, user_login, " +
             "user_email, user_name, user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
             "FROM orders " +
             "JOIN order_status ON orders_status_id = order_status_id " +
             "JOIN order_types ON orders_types_id = order_type_id " +
             "JOIN users ON users_id = user_id ";
 
-    private static final String FIND_ORDER_BY_ID = "SELECT order_id, order_create_date, order_reserved_date, order_ordered_date, " +
-            "order_rejected_date, order_returned_date, order_status_name, order_type_name, user_id, user_login, " +
+    private static final String FIND_ORDER_BY_ID = "SELECT order_id, order_create_date, order_reserved_date, order_accepted_date, " +
+            "order_rejected_date, order_returned_date, order_estimated_return_date, order_status_name, order_type_name, user_id, user_login, " +
             "user_email, user_name, user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
             "FROM orders " +
             "JOIN order_status ON orders_status_id = order_status_id " +
@@ -71,6 +78,22 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_IN_START = " IN(";
     private static final String SQL_IN_END = ") ";
     private static final String SQL_AND = " AND ";
+
+    private static final String FIND_BOOK_IN_ORDER_BY_ID = "" +
+            "SELECT COUNT(books_id) as `count_col` FROM library.books_orders " +
+            "WHERE orders_id = ? AND books_id = ?";
+
+
+    private static final String SELECT_ORDER_COUNT_BY_USER_ID = "" +
+            "SELECT COUNT(*) as `count_col` FROM library.orders " +
+            "WHERE users_id = ? AND orders_status_id NOT IN (4,5);";
+
+    private static final String SELECT_BOOKS_COUNT_BY_ORDER_ID = "" +
+            "SELECT COUNT(*) as `count_col` FROM library.books_orders " +
+            "WHERE orders_id = ?";
+
+    private static final int ORDER_LIMIT = 5;
+    private static final int BOOK_IN_ORDER_LIMIT = 5;
 
     private static OrderDaoImpl instance;
 
@@ -289,7 +312,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public boolean updateStatusAndCopiesNumber(long orderId, StringBuilder booksIdStrBuilder, int booksCount, LocalDate date, long statusId) throws DaoException {
+    public boolean updateStatusAndCopiesNumber(long orderId, OrderType orderType, String booksIdString, int booksCount, LocalDate date, long statusId) throws DaoException {
         int rows = 0;
 
         ConnectionPool pool = ConnectionPool.getInstance();
@@ -306,20 +329,29 @@ public class OrderDaoImpl implements OrderDao {
 
             statement.setLong(1, statusId);
             statement.setDate(2, Date.valueOf(date));
-            statement.setLong(3, orderId);
+
+            if (statusId == 3){
+                LocalDate estimatedReturnDate = orderType == OrderType.READING_ROOM ? date.plusDays(1)
+                        : date.plusDays(20);
+
+                statement.setDate(3, Date.valueOf(estimatedReturnDate));
+                statement.setLong(4, orderId);
+            }else {
+                statement.setLong(3, orderId);
+            }
 
             statement.executeUpdate();
 
             StringBuilder sqlBuilder = new StringBuilder(REMOVE_COPIES);
 
-            if (statusId == 5){
+            if (statusId == 5 || statusId == 6){
                 sqlBuilder.append(INC);
             }else{
                 sqlBuilder.append(DEC);
             }
 
             sqlBuilder.append(SQL_WHERE).append(BOOK_ID_COL)
-                    .append(SQL_IN_START).append(booksIdStrBuilder)
+                    .append(SQL_IN_START).append(booksIdString)
                     .append(SQL_IN_END);
 
             statement = connection.prepareStatement(sqlBuilder.toString());
@@ -356,17 +388,91 @@ public class OrderDaoImpl implements OrderDao {
         return rows == booksCount;
     }
 
+    @Override
+    public boolean bookIsAlreadyInOrder(long orderId, long bookId) throws DaoException {
+        int rows = 0;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(FIND_BOOK_IN_ORDER_BY_ID)){
+
+            statement.setLong(1, orderId);
+            statement.setLong(2, bookId);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()){
+                    rows = resultSet.getInt(COUNT_COL);
+                }
+            }
+        }catch (SQLException e){
+            logger.error("SQL request bookIsAlreadyInOrder for table library.orders was failed" + e);
+            throw new DaoException("SQL request bookIsAlreadyInOrder for table library.orders was failed", e);
+        }
+
+        return rows > 0;
+    }
+
+    @Override
+    public boolean isLimitOfBooks(long orderId) throws DaoException {
+        int rows = 0;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_BOOKS_COUNT_BY_ORDER_ID)){
+
+            statement.setLong(1, orderId);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()) {
+                    rows = resultSet.getInt(COUNT_COL);
+                }
+            }
+        }catch (SQLException e){
+            logger.error("SQL request isLimitOfBooks for table library.orders was failed" + e);
+            throw new DaoException("SQL request isLimitOfBooks for table library.orders was failed", e);
+        }
+
+        return rows >= BOOK_IN_ORDER_LIMIT;
+    }
+
+    @Override
+    public boolean isOrderCountLimit(long userId) throws DaoException {
+        int rows = 0;
+
+        try(Connection connection = ConnectionPool.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(SELECT_ORDER_COUNT_BY_USER_ID)) {
+
+            statement.setLong(1, userId);
+
+            try(ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()) {
+                    rows = resultSet.getInt(COUNT_COL);
+                }
+            }
+
+        }catch (SQLException e){
+            logger.error("SQL request isOrderCountLimit for table library.orders was failed" + e);
+            throw new DaoException("SQL request isOrderCountLimit for table library.orders was failed", e);
+        }
+
+        return rows >= ORDER_LIMIT;
+    }
+
     private String buildChangeOrderStatusString(long statusId){
         StringBuilder sqlChangeOrderStatus = new StringBuilder(CHANGE_ORDER_STATUS);
 
         switch ((int) statusId) {
             case 2 -> sqlChangeOrderStatus.append(ORDER_RESERVED_DATE_COL);
-            case 3 -> sqlChangeOrderStatus.append(ORDER_ORDERED_DATE_COL);
+            case 3 -> sqlChangeOrderStatus.append(ORDER_ACCEPTED_DATE_COL);
             case 4 -> sqlChangeOrderStatus.append(ORDER_REJECTED_DATE_COL);
-            case 5 -> sqlChangeOrderStatus.append(ORDER_RETURNED_DATE_COL);
+            case 5,6 -> sqlChangeOrderStatus.append(ORDER_RETURNED_DATE_COL);
         }
 
-        sqlChangeOrderStatus.append("= ? ").append(WHERE_ORDER_ID);
+        sqlChangeOrderStatus.append("= ? ");
+
+        if (statusId == 3){
+            sqlChangeOrderStatus.append(", ").append(ORDER_ESTIMATED_RETURN_DATE_COL).append("= ? ");
+        }
+
+        sqlChangeOrderStatus.append(WHERE_ORDER_ID);
 
         return sqlChangeOrderStatus.toString();
     }

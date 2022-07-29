@@ -11,6 +11,14 @@
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="config.pagecontent"/>
+
+<fmt:message key="label.order" var="order_label"/>
+<fmt:message key="label.order_type" var="order_type"/>
+<fmt:message key="label.order_status" var="order_status"/>
+<fmt:message key="label.created_date" var="create_date"/>
+
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -23,6 +31,7 @@
             crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
 
     <title>Title</title>
 </head>
@@ -38,26 +47,37 @@
                 <c:forEach var="order" items="${orders}">
                     <div class="col-1 my-1"></div>
                     <div class="col-10 my-1" style="background-color: #c7b39b; border-color: #333333">
-                        <div class="row">
-                            <div class="col-9">
-                                <p>Order #${order.id}</p>
-                                <p>Create date: ${order.createdDate}</p>
-                                <p>Order type: ${order.type}</p>
-                                <p>Order status: ${order.status}</p>
+                        <a class="link-secondary text-decoration-none"
+                           href="${path}/controller?command=get_books_by_order_id&order_id=${order.id}"
+                           data-toggle="tooltip">
+                            <div class="row link" style="background-color:
+                            <c:choose>
+                            <c:when test="${order.status eq 'CREATED'}">
+                                    #ede8a6
+                            </c:when>
+                            <c:when test="${order.status eq 'RESERVED'}">
+                                    #84d194
+                            </c:when>
+                            <c:when test="${order.status eq 'REJECTED'}">
+                                    #f09792
+                            </c:when>
+                            <c:when test="${order.status eq 'ACCEPTED'}">
+                                    #a1aaed
+                            </c:when>
+                            <c:when test="${order.status eq 'OVERDUE'}">
+                                    #eeeeee
+                            </c:when>
+                                    </c:choose>">
+                                <div class="col-12">
+                                    <h4>${order_label} #${order.id}</h4>
+                                    <div class="my-2 border-top border-bottom">
+                                        <p>${create_date}: ${order.createdDate}</p>
+                                        <p>${order_type}: ${order.type}</p>
+                                        <p>${order_status}: ${order.status}</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-3">
-                                <p class="mt-3">
-                                    <a href="${path}/controller?command=get_books_by_order_id&order_id=${order.id}"
-                                       class="btn btn-primary my-2">Get books list</a>
-                                </p>
-                                <p class="mb-2">
-                                    <c:if test="${order.status eq 'CREATED'}">
-                                        <a href="${path}/controller?command=delete_order&order_id=${order.id}"
-                                           class=" btn btn-primary my-2">Delete</a>
-                                    </c:if>
-                                </p>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-1 my-1"></div>
                 </c:forEach>
@@ -67,6 +87,11 @@
     </div>
 </section>
 </body>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
 <footer>
     <jsp:include page="../footer/footer.jsp"/>
 </footer>

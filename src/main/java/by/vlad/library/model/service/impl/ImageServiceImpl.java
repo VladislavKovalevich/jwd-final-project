@@ -11,6 +11,11 @@ import by.vlad.library.util.ImageEncoder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * {@code ImageServiceImpl} class implements functional of {@link ImageService}
+ * @see Image
+ * @see ImageService
+ */
 public class ImageServiceImpl implements ImageService {
     private static final Logger logger = LogManager.getLogger();
     private static ImageServiceImpl instance;
@@ -44,10 +49,10 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void updateImage(long imageId, byte[] imageContent, Book book) throws ServiceException {
         ImageDao imageDao = ImageDaoImpl.getInstance();
+        Image image = new Image(imageId, imageContent);
 
         try {
-            if (imageDao.updateImage(imageId, imageContent)){
-                Image image = new Image(imageId, imageContent);
+            if (imageDao.updateImage(image)){
                 image.setEncodeImage(ImageEncoder.getInstance().encodeImage(imageContent));
                 book.setImage(image);
             }

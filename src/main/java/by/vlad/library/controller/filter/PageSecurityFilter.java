@@ -13,6 +13,10 @@ import java.util.Set;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
 
+/**
+ * {@code PageSecurityFilter} class implements functional of {@link Filter}
+ * Restricts access to the page depending on the user's role.
+ */
 @WebFilter(urlPatterns = {"/jsp/*"})
 public class PageSecurityFilter implements Filter {
     private Set<String> guestPages;

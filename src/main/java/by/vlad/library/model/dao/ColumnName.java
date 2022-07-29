@@ -1,7 +1,11 @@
 package by.vlad.library.model.dao;
 
+/**
+ * {@code ColumnName} class represent container for column name in database
+ * The class contain only constants.
+ */
 public class ColumnName {
-    //BOOK TABLE
+    //table library.books
     public static final String BOOK_ID_COL = "book_id";
     public static final String BOOK_TITLE_COL = "book_title";
     public static final String BOOK_COPIES_NUMBER_COL = "book_copies_number";
@@ -13,20 +17,20 @@ public class ColumnName {
     public static final String PUBLISHERS_ID_COL = "publishers_id";
     public static final String AUTHORS_ID_COL = "authors_id";
 
-    //GENRE TABLE
+    //table library.genres
     public static final String GENRE_ID_COL = "genre_id";
     public static final String GENRE_NAME_COL = "genre_name";
 
-    //PUBLISHER TABLE
+    //table library.publishers
     public static final String PUBLISHER_ID_COL = "publisher_id";
     public static final String PUBLISHER_NAME_COL = "publisher_name";
 
-    //AUTHOR TABLE
+    //table library.authors
     public static final String AUTHOR_ID_COL = "author_id";
     public static final String AUTHOR_NAME_COL = "author_name";
     public static final String AUTHOR_SURNAME_COL = "author_surname";
 
-    //USER TABLE
+    //table library.users
     public static final String USER_ID_COL = "user_id";
     public static final String USER_LOGIN_COL = "user_login";
     public static final String USER_EMAIL_COL = "user_email";
@@ -37,30 +41,32 @@ public class ColumnName {
     public static final String USER_MOBILE_PHONE_COL = "user_mobile_phone";
     public static final String USER_IS_BANNED_COL = "user_is_banned";
 
-    //ROLE TABLE
+    //table library.roles
     public static final String ROLE_ID_COL = "role_id";
     public static final String ROLE_NAME_COL = "role_name";
 
-    //ORDER TABLE
+    //table library.orders
     public static final String ORDER_ID_COL = "order_id";
     public static final String ORDER_CREATE_DATE_COL = "order_create_date";
     public static final String ORDER_RESERVED_DATE_COL = "order_reserved_date";
-    public static final String ORDER_ORDERED_DATE_COL = "order_ordered_date";
+    public static final String ORDER_ACCEPTED_DATE_COL = "order_accepted_date";
     public static final String ORDER_REJECTED_DATE_COL = "order_rejected_date";
     public static final String ORDER_RETURNED_DATE_COL = "order_returned_date";
+    public static final String ORDER_ESTIMATED_RETURN_DATE_COL = "order_estimated_return_date";
 
-    //ORDER STATUS TABLE
+    //table library.order_status
     public static final String ORDER_STATUS_ID_COL = "order_status_id";
     public static final String ORDER_STATUS_NAME_COL = "order_status_name";
 
-    //ORDER TYPE TABLE
+    //table library.order_types
     public static final String ORDER_TYPE_ID_COL = "order_type_id";
     public static final String ORDER_TYPE_NAME_COL = "order_type_name";
 
-    //IMAGE TABLE
+    //table library.images
     public static final String IMAGE_ID_COL = "image_id";
     public static final String IMAGE_CONTENT_COL = "image_content";
 
+    //current count column
     public static final String COUNT_COL = "count_col";
 
     private ColumnName(){}

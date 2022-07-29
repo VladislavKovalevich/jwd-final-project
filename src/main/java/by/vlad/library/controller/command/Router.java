@@ -1,9 +1,16 @@
 package by.vlad.library.controller.command;
 
+/**
+ * {@code Router} class represent complex from response of {@link Command}
+ * It includes the page to which the transition should be made and sending type
+ */
 public class Router {
     private String page;
     private Type type = Type.FORWARD;
 
+    /**
+     * {@code Type} enum represent a sending type
+     */
     public enum Type{
         FORWARD, REDIRECT;
     }

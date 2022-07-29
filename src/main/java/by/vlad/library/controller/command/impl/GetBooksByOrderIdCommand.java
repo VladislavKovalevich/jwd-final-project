@@ -5,6 +5,7 @@ import by.vlad.library.controller.command.PagePath;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
+import by.vlad.library.entity.OrderStatus;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
@@ -23,7 +24,7 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class GetBooksByOrderIdCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    //private static final String DELIMITER = ",";
+    private static final String DELIMITER = ",";
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {

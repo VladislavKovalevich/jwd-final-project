@@ -6,6 +6,9 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code UserValidatorImpl} class implements functional of {@link UserValidator}
+ */
 public class UserValidatorImpl implements UserValidator {
     private static final String EMAIL_REGEX = "^[\\d\\p{Lower}]([\\d\\p{Lower}_\\-\\.]*)[\\d\\p{Lower}_\\-]@[\\d\\p{Lower}_\\-]{2,}\\.\\p{Lower}{2,6}$";
     private static final String PASSWORD_REGEX = "^([\\p{Graph}&&[^\\<\\>]]){7,16}$";
@@ -43,8 +46,8 @@ public class UserValidatorImpl implements UserValidator {
     }
 
     @Override
-    public boolean validatePassportSerialNumber(String serialNumber) {
-        return serialNumber.matches(SERIAL_NUMBER_REGEX);
+    public boolean validatePassportSerialNumber(String passportSerialNumber) {
+        return passportSerialNumber.matches(SERIAL_NUMBER_REGEX);
     }
 
     @Override

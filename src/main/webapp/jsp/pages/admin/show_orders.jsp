@@ -11,6 +11,17 @@
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="config.pagecontent"/>
+
+<fmt:message key="title.show_orders" var="title"/>
+<fmt:message key="message.empty_list" var="empty_msg"/>
+<fmt:message key="label.order_id" var="order_id"/>
+<fmt:message key="label.user_name" var="name"/>
+<fmt:message key="label.order_type" var="type"/>
+<fmt:message key="label.order_status" var="status"/>
+<fmt:message key="button.more_button" var="more_btn"/>
+
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -21,9 +32,10 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
-    <title>title</title>
+    <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
+    <script src="${path}/js/script.js"></script>
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>
@@ -34,21 +46,16 @@
         <div class="col-12 white-background">
             <c:choose>
                 <c:when test="${empty orders}">
-                    <h5 class="text-center">Пусто</h5>
+                    <h5 class="text-center">${empty_msg}</h5>
                 </c:when>
                 <c:otherwise>
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">Order id</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Created</th>
-                            <th scope="col">Reserved</th>
-                            <th scope="col">Ordered</th>
-                            <th scope="col">Rejected</th>
-                            <th scope="col">Returned</th>
+                            <th scope="col">${order_id}</th>
+                            <th scope="col">${name}</th>
+                            <th scope="col">${type}</th>
+                            <th scope="col">${status}</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -60,50 +67,12 @@
                                 <td>${order.user.name} ${order.user.surname}</td>
                                 <td>${order.type}</td>
                                 <td>${order.status}</td>
-                                <td>${order.createdDate}</td>
-
-                                <c:choose>
-                                    <c:when test="${not empty order.reservedDate}">
-                                        <td>${order.reservedDate}</td>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td>none</td>
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <c:choose>
-                                    <c:when test="${not empty order.orderedDate}">
-                                        <td>${order.orderedDate}</td>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td>none</td>
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <c:choose>
-                                    <c:when test="${not empty order.rejectedDate}">
-                                        <td>${order.rejectedDate}</td>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td>none</td>
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <c:choose>
-                                    <c:when test="${not empty order.returnedDate}">
-                                        <td>${order.returnedDate}</td>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td>none</td>
-                                    </c:otherwise>
-                                </c:choose>
-
 
                                 <td>
                                     <form method="get" action="${path}/controller">
                                         <input type="hidden" name="order_id" value="${order.id}">
                                         <input type="hidden" name="command" value="get_books_by_order_id">
-                                        <input type="submit" class="btn btn-primary" value="More">
+                                        <input type="submit" class="btn btn-primary" value="${more_btn}">
                                     </form>
                                 </td>
                             </tr>

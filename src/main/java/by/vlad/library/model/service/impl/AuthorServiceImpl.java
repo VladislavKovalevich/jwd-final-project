@@ -17,6 +17,11 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code AuthorServiceImpl} class implements functional of {@link AuthorService}
+ * @see Author
+ * @see AuthorService
+ */
 public class AuthorServiceImpl implements AuthorService {
     private static final Logger logger = LogManager.getLogger();
     private static final String DELIMITER = "\\|";
@@ -61,11 +66,11 @@ public class AuthorServiceImpl implements AuthorService {
         String name = mapData.get(AUTHOR_NAME_FORM);
         String surname = mapData.get(AUTHOR_SURNAME_FORM);
 
+        Author author = new Author(authorId, name, surname);
         AuthorDao authorDao = AuthorDaoImpl.getInstance();
 
         try {
-            if(!authorDao.isAuthorExists(name, surname)){
-                Author author = new Author(authorId, name, surname);
+            if(!authorDao.isAuthorExists(author)){
                 optionalAuthor = authorDao.updateAuthor(author);
             }else{
                 mapData.put(WRONG_AUTHOR_EXISTS_FORM, AUTHOR_EXISTS_MARKER);
@@ -90,15 +95,11 @@ public class AuthorServiceImpl implements AuthorService {
             return optionalAuthor;
         }
 
-        AuthorDaoImpl authorDaoImpl = AuthorDaoImpl.getInstance();
+        Author author = new Author(authorName, authorSurname);
+        AuthorDao authorDaoImpl = AuthorDaoImpl.getInstance();
 
         try {
-            if (!authorDaoImpl.isAuthorExists(authorName, authorSurname)) {
-
-                Author author = new Author();
-                author.setName(authorName);
-                author.setSurname(authorSurname);
-
+            if (!authorDaoImpl.isAuthorExists(author)) {
                 optionalAuthor = authorDaoImpl.addAuthor(author);
             }else{
                 mapData.put(WRONG_AUTHOR_EXISTS_FORM, AuthorService.AUTHOR_EXISTS_MARKER);

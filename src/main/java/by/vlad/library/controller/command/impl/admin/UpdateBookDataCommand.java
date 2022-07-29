@@ -31,7 +31,7 @@ public class UpdateBookDataCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        Map<String,String> bookMap = (Map<String, String>) session.getAttribute(BOOK_FORM_DATA);
+        Map<String, String> bookMap = (Map<String, String>) session.getAttribute(BOOK_FORM_DATA);
         Router router;
 
         clearSessionMap(bookMap);
@@ -44,17 +44,20 @@ public class UpdateBookDataCommand implements Command {
             Part part = request.getPart(IMAGE);
 
             List<Book> books = (List<Book>) session.getAttribute(BOOKS_LIST);
-            Book book = (Book) session.getAttribute(BOOK);
+            Book temp = (Book) session.getAttribute(BOOK);
 
-            int index = books.indexOf(book);
+            int index = books.indexOf(temp);
 
             Optional<Book> optionalBook = bookService.updateBook(bookMap);
-            if (optionalBook.isPresent()){
-                book = optionalBook.get();
+            if (optionalBook.isPresent()) {
+                Book book = optionalBook.get();
+                book.setImage(temp.getImage());
 
-                if (part != null){
-                    try (InputStream in = part.getInputStream()) {
-                        byte[] imageContent = in.readAllBytes();
+                try (InputStream in = part.getInputStream()) {
+                    byte[] imageContent = in.readAllBytes();
+
+                    if(imageContent.length > 0) {
+
                         long imageId = book.getImage().getId();
 
                         if (imageId > 0) {
@@ -74,7 +77,7 @@ public class UpdateBookDataCommand implements Command {
                 session.setAttribute(CURRENT_PAGE, SHOW_BOOK_INFO_PAGE);
 
                 router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
-            }else{
+            } else {
                 session.setAttribute(BOOK_FORM_DATA, bookMap);
                 session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
 
@@ -100,6 +103,7 @@ public class UpdateBookDataCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> booksMap) {
+        booksMap.remove(WRONG_TITLE_EXISTS_FORM);
         booksMap.remove(WRONG_TITLE_FORM);
         booksMap.remove(WRONG_COPIES_NUMBER_FORM);
         booksMap.remove(WRONG_RELEASE_YEAR_FORM);

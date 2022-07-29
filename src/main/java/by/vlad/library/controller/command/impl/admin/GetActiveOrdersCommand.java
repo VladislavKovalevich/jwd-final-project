@@ -26,7 +26,7 @@ public class GetActiveOrdersCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         OrderService orderService = OrderServiceImpl.getInstance();
-        OrderStatus[] orderStatuses = {OrderStatus.ORDERED, OrderStatus.RESERVED};
+        OrderStatus[] orderStatuses = {OrderStatus.ACCEPTED, OrderStatus.RESERVED};
 
         try {
             List<Order> orders =  orderService.getOrdersByStatus(orderStatuses);

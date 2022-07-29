@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
+
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
 public class CreateOrderCommand implements Command {
@@ -28,13 +30,19 @@ public class CreateOrderCommand implements Command {
 
         OrderService orderService = OrderServiceImpl.getInstance();
 
+        Map<String, Boolean> bookOrderMap = (Map<String, Boolean>) session.getAttribute(BOOK_ORDER_DATA);
+        bookOrderMap.clear();
+
         try{
-            if(orderService.createOrder(userId, bookId, orderTypeId)) {
-                session.setAttribute(ORDER_OPERATION_FEEDBACK, true);
-                session.removeAttribute(BOOK_OPERATION_FEEDBACK);
+            if(orderService.createOrder(userId, bookId, orderTypeId, bookOrderMap)) {
+                session.setAttribute(USER_ORDERS, orderService.getOrdersByUserId(userId));
+                bookOrderMap.put(ORDER_OPERATION_FEEDBACK, true);
             }
+
+            session.setAttribute(BOOK_ORDER_DATA, bookOrderMap);
+
         }catch (ServiceException e){
-            logger.error("CreateOrderCommand execution failed");
+            logger.info("CreateOrderCommand execution failed");
             throw new CommandException("CreateOrderCommand execution failed", e);
         }
 

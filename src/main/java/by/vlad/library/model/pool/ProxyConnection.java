@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * {@code ProxyConnection} class implements functional of {@link Connection}
+ * Delegate all methods, changed method close() and added method reallyClose()
+ */
 public class ProxyConnection implements Connection {
     private Connection connection;
 
@@ -52,11 +56,18 @@ public class ProxyConnection implements Connection {
         connection.rollback();
     }
 
+    /**
+     * {@code close} method return connection into connection pool
+     */
     @Override
     public void close() throws SQLException {
         ConnectionPool.getInstance().releaseConnection(this);
     }
 
+    /**
+     * {@code reallyClose} method close connection
+     * @throws SQLException
+     */
     void reallyClose() throws SQLException {
         connection.close();
     }

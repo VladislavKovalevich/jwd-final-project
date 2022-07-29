@@ -17,6 +17,11 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code PublisherServiceImpl} class implements functional of {@link PublisherService}
+ * @see Publisher
+ * @see PublisherService
+ */
 public class PublisherServiceImpl implements PublisherService {
     private static final Logger logger = LogManager.getLogger();
     private static final String DELIMITER = "\\|";
@@ -57,12 +62,12 @@ public class PublisherServiceImpl implements PublisherService {
             return optionalPublisher;
         }
 
+        Publisher publisher = new Publisher();
+        publisher.setName(newPublisherName);
         PublisherDao publisherDao = PublisherDaoImpl.getInstance();
 
         try {
-            if (!publisherDao.isPublisherExists(newPublisherName)) {
-                Publisher publisher = new Publisher();
-                publisher.setName(newPublisherName);
+            if (!publisherDao.isPublisherExists(publisher)) {
 
                 optionalPublisher = publisherDao.addPublisher(publisher);
             }else{
@@ -90,11 +95,11 @@ public class PublisherServiceImpl implements PublisherService {
             return optionalPublisher;
         }
 
+        Publisher publisher = new Publisher(publisherId, publisherName);
         PublisherDao publisherDao = PublisherDaoImpl.getInstance();
 
         try {
-            if(!publisherDao.isPublisherExists(publisherName)){
-                Publisher publisher = new Publisher(publisherId, publisherName);
+            if(!publisherDao.isPublisherExists(publisher)){
                 optionalPublisher = publisherDao.updatePublisher(publisher);
 
             }else{

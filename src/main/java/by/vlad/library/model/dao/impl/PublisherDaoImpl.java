@@ -17,6 +17,12 @@ import java.util.Optional;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code PublisherDaoImpl} class implements functional of {@link PublisherDao}
+ * @see Publisher
+ * @see PublisherDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class PublisherDaoImpl implements PublisherDao {
     private static final Logger logger = LogManager.getLogger();
 
@@ -102,13 +108,13 @@ public class PublisherDaoImpl implements PublisherDao {
     }
 
     @Override
-    public boolean isPublisherExists(String publisherName) throws DaoException{
+    public boolean isPublisherExists(Publisher publisher) throws DaoException{
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(IS_PUBLISHER_EXISTS)){
 
-            statement.setString(1, publisherName);
+            statement.setString(1, publisher.getName());
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){

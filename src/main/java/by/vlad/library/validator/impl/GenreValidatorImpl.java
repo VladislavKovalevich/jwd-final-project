@@ -2,6 +2,9 @@ package by.vlad.library.validator.impl;
 
 import by.vlad.library.validator.GenreValidator;
 
+/**
+ * {@code GenreValidatorImpl} class implements functional of {@link GenreValidator}
+ */
 public class GenreValidatorImpl implements GenreValidator {
     private static final String GENRE_NAME_REGEX = "([А-ЯЁ])(([а-яё]+)(\\-[а-яё]*)?(\\s[a-яё]*)?){3,50}";
     private static GenreValidatorImpl instance;

@@ -17,6 +17,12 @@ import java.util.Optional;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code AuthorDaoImpl} class implements functional of {@link AuthorDao}
+ * @see Author
+ * @see AuthorDao
+ * @see by.vlad.library.model.dao.BasicDao
+ */
 public class AuthorDaoImpl implements AuthorDao {
     private static final Logger logger = LogManager.getLogger();
 
@@ -107,14 +113,14 @@ public class AuthorDaoImpl implements AuthorDao {
     }
 
     @Override
-    public boolean isAuthorExists(String name, String surname) throws DaoException {
+    public boolean isAuthorExists(Author author) throws DaoException {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(IS_AUTHOR_EXISTS)){
 
-            statement.setString(1, name);
-            statement.setString(2, surname);
+            statement.setString(1, author.getName());
+            statement.setString(2, author.getSurname());
 
             try(ResultSet resultSet = statement.executeQuery()){
                 if (resultSet.next()){

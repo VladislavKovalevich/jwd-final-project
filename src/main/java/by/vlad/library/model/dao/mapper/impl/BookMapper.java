@@ -13,6 +13,9 @@ import java.util.List;
 
 import static by.vlad.library.model.dao.ColumnName.*;
 
+/**
+ * {@code BookMapper} class implements functional of {@link Mapper}
+ */
 public class BookMapper implements Mapper<Book> {
     private static BookMapper instance;
 

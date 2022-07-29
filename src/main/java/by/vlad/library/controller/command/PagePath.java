@@ -1,5 +1,9 @@
 package by.vlad.library.controller.command;
 
+/**
+ * {@code PagePath} class represent container for .jsp pages paths.
+ * The class contains only constants with pages path
+ */
 public class PagePath {
     public static final String INDEX_PAGE = "index.jsp";
     public static final String LOGIN_PAGE = "jsp/pages/common/login.jsp";

@@ -6,6 +6,9 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
+/**
+ * {@code AuthorValidatorImpl} class implements functional of {@link AuthorValidator}
+ */
 public class AuthorValidatorImpl implements AuthorValidator {
     private static final String NAME_REGEX = "^[А-ЯЁ][а-яё]{2,30}$";
 

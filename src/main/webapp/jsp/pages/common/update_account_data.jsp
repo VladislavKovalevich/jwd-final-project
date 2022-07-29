@@ -39,7 +39,7 @@
     <title>${title}</title>
 
     <link rel="stylesheet" href="${path}/css/styles.css">
-
+    <script src="${path}/js/script.js"></script>
 </head>
 <body class="background-theme">
 <section class="container-fluid">
@@ -154,8 +154,5 @@
     <div class="col mb-3"></div>
 </div>
 </section>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
 </body>
 </html>

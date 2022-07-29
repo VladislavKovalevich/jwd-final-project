@@ -5,6 +5,9 @@ import jakarta.servlet.annotation.WebFilter;
 
 import java.io.IOException;
 
+/**
+ * {@code CharacterEncodingFilter} class implements functional of {@link Filter}
+ */
 @WebFilter(filterName = "CharacterEncodingFilter", urlPatterns = "/*")
 public class CharacterEncodingFilter implements Filter {
     private static final String CHARACTER_ENCODING = "UTF-8";
