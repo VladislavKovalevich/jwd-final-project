@@ -1,6 +1,8 @@
 # Online-Library
 ***
 
+The project represents an electronic library. The functionality depends on the user's role.
+
 ## Functional roles
 
 ### Guest:
@@ -10,6 +12,7 @@
 4. Search books by filters
 5. View book info
 6. Switch language
+7. Recover password
 
 ### Client:
 1. Log out
@@ -18,18 +21,22 @@
 4. View book catalog list
 5. Search books by filters
 6. Switch language
-7. Order book for reading and return it after usage.
-8. View own order list
-9. Cancel order
+7. Create, delete order (add/remove books)
+8. Reserve order
+9. Return order
+10. View own order list
+11. Search order by filters
 
 ### Admin:
 1. Add the book to the library
 2. Update book
-3. Approve or reject user's orders
-4. Lock or unlock users
-5. View users list
-6. +all client function.
+3. Add/update book element (authors/genres/publishers)
+4. Approve user orders
+5. Reject user orders
+6. Lock or unlock users
+7. View users list
+8. Switch language
 
 ***
 ## Database Schema
-![image](https://user-images.githubusercontent.com/48410663/166869056-e414d3b3-6ef7-4099-a883-ac00b6fed003.png)
+![image](https://user-images.githubusercontent.com/48410663/183028179-4d357fd6-5f1e-4a7a-a604-bd04f80e5fc3.png)
