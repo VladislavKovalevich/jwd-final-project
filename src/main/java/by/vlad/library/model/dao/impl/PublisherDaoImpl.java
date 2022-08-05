@@ -26,16 +26,20 @@ import static by.vlad.library.model.dao.ColumnName.*;
 public class PublisherDaoImpl implements PublisherDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SELECT_ALL_PUBLISHER = "SELECT publisher_id, publisher_name FROM publishers";
+    private static final String SQL_SELECT_ALL_PUBLISHER =
+            "SELECT publisher_id, publisher_name " +
+                    "FROM publishers";
 
-    private static final String INSERT_PUBLISHER =
-            "INSERT INTO publishers (`publisher_name`) VALUES (?)";
+    private static final String SQL_INSERT_PUBLISHER =
+            "INSERT INTO publishers (`publisher_name`) " +
+                    "VALUES (?)";
 
-    private static final String IS_PUBLISHER_EXISTS =
-            "SELECT COUNT(*) as count_col FROM publishers " +
+    private static final String SQL_SELECT_COUNT_PUBLISHER_BY_NAME =
+            "SELECT COUNT(*) as count_col " +
+                    "FROM publishers " +
                     "WHERE publisher_name = ?";
 
-    private static final String UPDATE_PUBLISHER =
+    private static final String SQL_UPDATE_PUBLISHER =
             "UPDATE publishers " +
                     "SET publisher_name = ? " +
                     "WHERE publisher_id = ?";
@@ -56,7 +60,7 @@ public class PublisherDaoImpl implements PublisherDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_PUBLISHER)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_PUBLISHER)){
 
             statement.setString(1, publisher.getName());
             rows = statement.executeUpdate();
@@ -86,7 +90,7 @@ public class PublisherDaoImpl implements PublisherDao {
         List<Publisher> publishers = new ArrayList<>();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_PUBLISHER)){
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_PUBLISHER)){
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()){
@@ -112,7 +116,7 @@ public class PublisherDaoImpl implements PublisherDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(IS_PUBLISHER_EXISTS)){
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_COUNT_PUBLISHER_BY_NAME)){
 
             statement.setString(1, publisher.getName());
 
@@ -137,7 +141,7 @@ public class PublisherDaoImpl implements PublisherDao {
         Optional<Publisher> optionalPublisher;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_PUBLISHER)){
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PUBLISHER)){
 
             statement.setString(1, publisher.getName());
             statement.setLong(2, publisher.getId());
@@ -162,7 +166,7 @@ public class PublisherDaoImpl implements PublisherDao {
         Optional<Publisher> optionalPublisher;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_PUBLISHER)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_PUBLISHER)){
 
             statement.setString(1, publisher.getName());
             int rows = statement.executeUpdate();

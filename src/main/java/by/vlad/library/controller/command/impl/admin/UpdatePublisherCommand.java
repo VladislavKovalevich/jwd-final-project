@@ -7,7 +7,6 @@ import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.PublisherService;
 import by.vlad.library.model.service.impl.PublisherServiceImpl;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +21,6 @@ import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS
 
 public class UpdatePublisherCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final String PUBLISHER_UPDATED_MARKER = "genre has been updated";
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -45,7 +43,6 @@ public class UpdatePublisherCommand implements Command {
                 publishers.removeIf(p -> p.getId() == publisher.getId());
                 publishers.add(publisher);
 
-                componentsData.put(PUBLISHER_OPERATION_FEEDBACK, PUBLISHER_UPDATED_MARKER);
                 session.setAttribute(PUBLISHERS, publishers);
 
                 componentsData.remove(PUBLISHER_FORM);
@@ -63,9 +60,6 @@ public class UpdatePublisherCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(GENRE_OPERATION_FEEDBACK);
-        map.remove(PUBLISHER_OPERATION_FEEDBACK);
-        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_PUBLISHER_EXISTS_FORM);
         map.remove(WRONG_PUBLISHER_NAME_FORM);
     }

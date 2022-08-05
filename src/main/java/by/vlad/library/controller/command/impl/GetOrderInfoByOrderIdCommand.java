@@ -1,11 +1,9 @@
 package by.vlad.library.controller.command.impl;
 
 import by.vlad.library.controller.command.Command;
-import by.vlad.library.controller.command.PagePath;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
-import by.vlad.library.entity.OrderStatus;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
@@ -21,10 +19,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.library.controller.command.PagePath.ORDER_INFO_PAGE;
 
-public class GetBooksByOrderIdCommand implements Command {
+public class GetOrderInfoByOrderIdCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final String DELIMITER = ",";
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -32,9 +30,6 @@ public class GetBooksByOrderIdCommand implements Command {
         long orderId = Long.parseLong(request.getParameter(ORDER_ID));
         OrderService orderService = OrderServiceImpl.getInstance();
         BookService bookService = BookServiceImpl.getInstance();
-
-        //long orderId = Long.parseLong(orderParams[0]);
-        //OrderStatus orderStatus = OrderStatus.getStatus(orderParams[1]);
 
         try{
             List<Book> books = bookService.getBooksByOrderId(orderId);
@@ -45,12 +40,12 @@ public class GetBooksByOrderIdCommand implements Command {
                 session.setAttribute(ORDER_BOOKS, books);
             }
 
-            optionalOrder.ifPresent(order -> session.setAttribute(ORDER, order));
+            session.setAttribute(CURRENT_PAGE, ORDER_INFO_PAGE);
         }catch (ServiceException e){
             logger.error("GetBooksByOrderIdCommand execution failed");
             throw new CommandException("GetBooksByOrderIdCommand execution failed", e);
         }
 
-        return new Router(PagePath.BOOKS_BY_ORDER_ID_PAGE, Router.Type.FORWARD);
+        return new Router(ORDER_INFO_PAGE, Router.Type.FORWARD);
     }
 }

@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "NoCacheFilter")
+@WebFilter(filterName = "NoCacheFilter", urlPatterns = {"/*", "/controller"})
 public class NoCacheFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -21,7 +21,7 @@ public class NoCacheFilter implements Filter {
         httpServletResponse.setHeader("Pragma","no-cache");
         httpServletResponse.setDateHeader ("Expires", 0);
 
-        filterChain.doFilter(servletRequest, httpServletResponse);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

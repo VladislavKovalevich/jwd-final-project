@@ -54,6 +54,9 @@ public class ColumnName {
     public static final String ORDER_RETURNED_DATE_COL = "order_returned_date";
     public static final String ORDER_ESTIMATED_RETURN_DATE_COL = "order_estimated_return_date";
 
+    public static final String ORDER_STATUSES_ID_COL = "orders_status_id";
+    public static final String ORDER_TYPES_ID_COL = "orders_types_id";
+
     //table library.order_status
     public static final String ORDER_STATUS_ID_COL = "order_status_id";
     public static final String ORDER_STATUS_NAME_COL = "order_status_name";

@@ -22,20 +22,20 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SELECT_USER_BY_EMAIL_AND_PASSWORD =
+    private static final String SQL_SELECT_USER_BY_EMAIL_AND_PASSWORD =
             "SELECT * FROM users, roles " +
             "WHERE roles_id = role_id AND user_email = ? AND user_password = ?";
 
-    private static final String SELECT_USER_COUNT_BY_EMAIL =
+    private static final String SQL_SELECT_USER_COUNT_BY_EMAIL =
             "SELECT COUNT(*) as count_col FROM users " +
             "WHERE user_email = ?";
 
-    private static final String INSERT_NEW_USER =
+    private static final String SQL_INSERT_USER =
             "INSERT INTO users(`user_name`, `user_login`, `user_surname`, `user_email`, " +
                     "`user_password`, `user_passport_serial_number`, `user_mobile_phone`) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_USER_DATA =
+    private static final String SQL_UPDATE_USER =
             "UPDATE users " +
             "SET user_name = ?," +
             "    user_surname = ?, " +
@@ -45,19 +45,24 @@ public class UserDaoImpl implements UserDao {
             "    user_mobile_phone = ? " +
             "WHERE user_email = ?;  ";
 
-    private static final String UPDATE_USER_PASSWORD_DATA =
+    private static final String SQL_UPDATE_USER_PASSWORD_BY_EMAIL_AND_PASSWORD =
             "UPDATE users " +
             "SET user_password = ? " +
             "WHERE user_email = ? AND user_password = ?";
 
-    private static final String GET_USER_BY_ID =
+    private static final String SQL_UPDATE_USER_PASSWORD_BY_EMAIL =
+            "UPDATE users " +
+            "SET user_password = ? " +
+            "WHERE user_email = ? ";
+
+    private static final String SQL_SELECT_USER_BY_ID =
             "SELECT * " +
             "FROM users, roles WHERE user_id = ? AND roles_id = role_id";
 
-    private static final String FIND_ALL_USERS =
+    private static final String SQL_SELECT_ALL_USERS =
             "SELECT * FROM users, roles WHERE roles_id = 1 AND roles_id = role_id;";
 
-    private static final String UPDATE_USER_STATUS =
+    private static final String SQL_UPDATE_USER_STATUS =
             "UPDATE users" +
                     " SET user_is_banned = ? " +
                     " WHERE user_email = ? ";
@@ -104,7 +109,7 @@ public class UserDaoImpl implements UserDao {
         Mapper<User> userMapper = UserMapper.getInstance();
 
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_EMAIL_AND_PASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_BY_EMAIL_AND_PASSWORD)) {
 
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
@@ -128,7 +133,7 @@ public class UserDaoImpl implements UserDao {
         int rows;
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER)){
+             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_USER)){
 
             statement.setString(1, userData.getName());
             statement.setString(2, userData.getLogin());
@@ -155,7 +160,7 @@ public class UserDaoImpl implements UserDao {
         boolean isExists = false;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_COUNT_BY_EMAIL)){
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_USER_COUNT_BY_EMAIL)){
 
             preparedStatement.setString(1, email);
 
@@ -178,7 +183,7 @@ public class UserDaoImpl implements UserDao {
         int rows;
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_DATA)){
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER)){
 
             statement.setString(1, user.getName());
             statement.setString(2, user.getSurname());
@@ -203,7 +208,7 @@ public class UserDaoImpl implements UserDao {
         int rows;
 
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_USER_PASSWORD_DATA)){
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_PASSWORD_BY_EMAIL_AND_PASSWORD)){
 
             statement.setString(1, newPassword);
             statement.setString(2, email);
@@ -224,7 +229,7 @@ public class UserDaoImpl implements UserDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_USER_STATUS)){
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_STATUS)){
 
             statement.setBoolean(1, status);
             statement.setString(2, userEmail);
@@ -245,7 +250,7 @@ public class UserDaoImpl implements UserDao {
         Mapper<User> userMapper = UserMapper.getInstance();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)){
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)){
 
             statement.setLong(1, id);
 
@@ -272,7 +277,7 @@ public class UserDaoImpl implements UserDao {
         try(Connection connection = ConnectionPool.getInstance().getConnection();
             Statement statement = connection.createStatement()){
 
-            try(ResultSet resultSet = statement.executeQuery(FIND_ALL_USERS)) {
+            try(ResultSet resultSet = statement.executeQuery(SQL_SELECT_ALL_USERS)) {
                 users = userMapper.map(resultSet);
             }
 
@@ -282,5 +287,25 @@ public class UserDaoImpl implements UserDao {
         }
 
         return users;
+    }
+
+    @Override
+    public boolean changeAccountPasswordByCode(String email, String encodedNewPass) throws DaoException {
+        int rows = 0;
+
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_PASSWORD_BY_EMAIL)){
+
+            statement.setString(1, encodedNewPass);
+            statement.setString(2, email);
+
+            rows = statement.executeUpdate();
+
+        }catch (SQLException e){
+            logger.error("SQL request changeAccountPassword for table library.users was failed" + e);
+            throw new DaoException("SQL request changeAccountPassword for table library.users was failed", e);
+        }
+
+        return rows == 1;
     }
 }

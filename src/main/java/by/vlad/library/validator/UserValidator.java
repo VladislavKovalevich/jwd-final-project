@@ -74,4 +74,6 @@ public interface UserValidator {
      * @return true if data is valid, false - if not
      */
     boolean validateNewPasswordData(Map<String, String> passwordData);
+
+    boolean validatePasswordData(Map<String, String> passwordData);
 }

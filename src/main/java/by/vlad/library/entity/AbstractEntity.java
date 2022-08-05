@@ -7,33 +7,17 @@ public abstract class AbstractEntity {
     /** Entity identifier */
     private long id;
 
-    /**
-     * Constructor - creating new object
-     * @see AbstractEntity#AbstractEntity()
-     */
     public AbstractEntity() {
     }
 
-    /**
-     * Constructor - creating new object
-     * @see AbstractEntity#AbstractEntity(long) with param
-     */
     public AbstractEntity(long id) {
         this.id = id;
     }
 
-    /**
-     * method-getter for name field {@link AbstractEntity#id}
-     * @return author name
-     */
     public long getId() {
         return id;
     }
 
-    /**
-     * Method-setter for name filed {@link AbstractEntity#id}
-     * @param id - entity identifier
-     */
     public void setId(long id) {
         this.id = id;
     }

@@ -19,33 +19,37 @@ import static by.vlad.library.model.dao.ColumnName.*;
 public class BookMapper implements Mapper<Book> {
     private static BookMapper instance;
 
-    public static BookMapper getInstance(){
-        if (instance == null){
+    public static BookMapper getInstance() {
+        if (instance == null) {
             instance = new BookMapper();
         }
 
         return instance;
     }
 
-    private BookMapper(){}
+    private BookMapper() {
+    }
 
     @Override
     public List<Book> map(ResultSet resultSet) throws SQLException {
         List<Book> books = new ArrayList<>();
 
         while (resultSet.next()) {
-
-            Image image = new Image();
+            Book.BookBuilder bookBuilder = Book.getBuilder();
             long imageId = resultSet.getLong(IMAGE_ID_COL);
 
             if (imageId > 0) {
+                Image image = new Image();
                 Blob blob = resultSet.getBlob(IMAGE_CONTENT_COL);
+
                 if (blob != null) {
                     byte[] imageData = blob.getBytes(1, (int) blob.length());
                     image.setId(imageId);
                     image.setContent(imageData);
                     ImageEncoder imageEncoder = ImageEncoder.getInstance();
                     image.setEncodeImage(imageEncoder.encodeImage(imageData));
+
+                    bookBuilder.withImage(image);
                 }
             }
 
@@ -65,8 +69,7 @@ public class BookMapper implements Mapper<Book> {
                     resultSet.getString(GENRE_NAME_COL)
             );
 
-            Book.BookBuilder bookBuilder = Book.getBuilder()
-                    .withId(resultSet.getLong(BOOK_ID_COL))
+            bookBuilder.withId(resultSet.getLong(BOOK_ID_COL))
                     .withTitle(resultSet.getString(BOOK_TITLE_COL))
                     .withReleaseYear(Year.of(resultSet.getInt(BOOK_PUBLISH_YEAR_COL)))
                     .withNumberOfPages(resultSet.getInt(BOOK_NUMBER_OF_PAGES_COL))
@@ -74,7 +77,6 @@ public class BookMapper implements Mapper<Book> {
                     .withCopiesNumber(resultSet.getInt(BOOK_COPIES_NUMBER_COL))
                     .withAuthor(author)
                     .withPublisher(publisher)
-                    .withImage(image)
                     .withGenre(genre);
 
             books.add(bookBuilder.buildBook());

@@ -22,7 +22,6 @@ import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PA
 
 public class AddNewPublisherCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private static final String PUBLISHER_ADDED_MARKER = "publisher has been added";
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
@@ -45,8 +44,8 @@ public class AddNewPublisherCommand implements Command {
 
                 session.setAttribute(PUBLISHERS, publishers);
 
+                componentsData.remove(PUBLISHER_FORM);
                 componentsData.remove(PUBLISHER_NAME_FORM);
-                componentsData.put(PUBLISHER_OPERATION_FEEDBACK, PUBLISHER_ADDED_MARKER);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
@@ -60,9 +59,6 @@ public class AddNewPublisherCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(PUBLISHER_OPERATION_FEEDBACK);
-        map.remove(GENRE_OPERATION_FEEDBACK);
-        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_PUBLISHER_NAME_FORM);
         map.remove(WRONG_PUBLISHER_EXISTS_FORM);
     }

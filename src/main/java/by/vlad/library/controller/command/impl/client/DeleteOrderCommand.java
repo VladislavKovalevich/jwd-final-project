@@ -38,6 +38,6 @@ public class DeleteOrderCommand implements Command {
             throw new CommandException("DeleteOrderCommand execution failed", e);
         }
 
-        return new Router(PagePath.ORDERS_LIST_BY_USER_ID_PAGE, Router.Type.FORWARD);
+        return new Router(PagePath.ORDERS_BY_USER_ID_PAGE, Router.Type.FORWARD);
     }
 }

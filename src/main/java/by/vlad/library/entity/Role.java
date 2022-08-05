@@ -23,8 +23,8 @@ public enum Role {
         Role role;
 
         try {
-            role = valueOf(roleStr.toUpperCase());
-        }catch (IllegalArgumentException | NullPointerException e){
+            role = roleStr != null ? valueOf(roleStr.toUpperCase()) : GUEST;
+        }catch (IllegalArgumentException e){
             logger.warn("Role" + roleStr + " does not exist");
             role = GUEST;
         }

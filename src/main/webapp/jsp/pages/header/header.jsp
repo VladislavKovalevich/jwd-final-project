@@ -11,17 +11,12 @@
 <fmt:message key="label.library" var="library"/>
 <fmt:message key="dropdown_menu_title.guest" var="guest_title"/>
 <fmt:message key="reference.sign_in" var="sign_in"/>
-<fmt:message key="reference.sign_out" var="sign_out"/>
-<fmt:message key="reference.change_account_password" var="change_password"/>
-<fmt:message key="reference.update_account_data" var="update_account_data"/>
 <fmt:message key="reference.get_books_list" var="get_books"/>
 <fmt:message key="reference.add_new_book_to_library" var="add_new_book"/>
 <fmt:message key="reference.add_book_components" var="add_book_components"/>
 <fmt:message key="reference.update_book_components" var="update_book_components"/>
 <fmt:message key="dropdown_menu_title.locale" var="change_local"/>
 <fmt:message key="dropdown_menu_title.book_menu" var="book_menu"/>
-<fmt:message key="reference.orders_list" var="orders_list_ref"/>
-<fmt:message key="reference.users_list" var="users_list_ref"/>
 
 <fmt:message key="local.en" var="en"/>
 <fmt:message key="local.ru" var="ru"/>
@@ -46,11 +41,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${path}/controller?command=show_books_list">${get_books}</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="${path}/controller?command=get_orders_by_user_id&user_id=${user_id}">
-                                ${orders_list_ref}
-                            </a>
-                        </li>
                     </ul>
                     <ul class="navbar-nav my-2 my-lg-0 justify-content-end">
                         <li class="nav-item dropdown">
@@ -65,21 +55,10 @@
                                        href="${path}/controller?command=change_local&language=EN">${en}</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${path}/controller?command=go_to_account_page">
                                     ${user_login}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="${path}/controller?command=logout">${sign_out}</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=go_to_change_password_page">${change_password}</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=go_to_update_account_data_page">${update_account_data}</a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 </c:when>
@@ -104,12 +83,6 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="${path}/controller?command=get_orders_list">${orders_list_ref}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="${path}/controller?command=show_users_list">${users_list_ref}</a>
-                        </li>
                     </ul>
                     <ul class="navbar-nav my-2 my-lg-0 justify-content-end">
                         <li class="nav-item dropdown">
@@ -124,21 +97,10 @@
                                        href="${path}/controller?command=change_local&language=EN">${en}</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
+                        <li class="nav-item">
+                            <a class="nav-link" href="${path}/controller?command=go_to_account_page">
                                     ${user_login}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="${path}/controller?command=logout">${sign_out}</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=go_to_change_password_page">${change_password}</a>
-                                </li>
-                                <li><a class="dropdown-item"
-                                       href="${path}/controller?command=go_to_update_account_data_page">${update_account_data}</a>
-                                </li>
-                            </ul>
                         </li>
                     </ul>
                 </c:when>

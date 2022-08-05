@@ -4,6 +4,7 @@ import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
+import by.vlad.library.entity.OrderStatus;
 import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
@@ -22,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
-import static by.vlad.library.controller.command.PagePath.SHOW_BOOK_INFO_PAGE;
+import static by.vlad.library.controller.command.PagePath.BOOK_INFO_PAGE;
 
 public class ShowBookByIdCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -44,19 +45,22 @@ public class ShowBookByIdCommand implements Command {
 
                 if (session.getAttribute(USER_ID) != null) {
                     long userId = (long) session.getAttribute(USER_ID);
+
                     List<Order> orders = orderService.getOrdersByUserId(userId);
+                    orders.removeIf(order -> order.getStatus() != OrderStatus.CREATED);
+
                     OrderType[] orderTypes = OrderType.values();
                     Map<String, Boolean> bookOrderMap = new HashMap<>();
 
-                    session.setAttribute(BOOK_ORDER_DATA, bookOrderMap);
+                    session.setAttribute(OPERATION_FEEDBACK_MAP_SES, bookOrderMap);
                     session.setAttribute(ORDER_TYPES, orderTypes);
                     session.setAttribute(USER_ORDERS, orders);
                 }
             }
 
-            session.setAttribute(CURRENT_PAGE, SHOW_BOOK_INFO_PAGE);
+            session.setAttribute(CURRENT_PAGE, BOOK_INFO_PAGE);
 
-            router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
+            router = new Router(BOOK_INFO_PAGE, Router.Type.FORWARD);
 
         } catch (ServiceException e) {
             logger.error("ShowBookByIdCommand execution failed");

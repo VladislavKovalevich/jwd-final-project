@@ -1,11 +1,11 @@
 package by.vlad.library.model.dao;
 
 import by.vlad.library.entity.Order;
-import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.DaoException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -77,26 +77,21 @@ public interface OrderDao extends BasicDao<Order> {
 
     /**
      * Update order status in database
-     * @param orderId order identifier
-     * @param reserveDate date when order was reserved
-     * @param statusId order status identifier
+     * @param order order entity
      * @return true if status was changed, false - if was not
      * @throws DaoException if request from database was failed
      */
-    boolean updateOrderStatus(long orderId, LocalDate reserveDate, long statusId) throws DaoException;
+    Optional<Order> updateOrderStatus(Order order) throws DaoException;
 
     /**
      * Update order status and book copies number
-     * @param orderId order identifier
      * @param orderType type of order
      * @param booksIdString books id list as CSV string
      * @param booksCount number of books in order
-     * @param date operation date
-     * @param statusId order status identifier
      * @return true if order status and book copies number were changed, false - if were not
      * @throws DaoException if request from database was failed
      */
-    boolean updateStatusAndCopiesNumber(long orderId, OrderType orderType, String booksIdString, int booksCount, LocalDate date, long statusId) throws DaoException;
+    Optional<Order> updateStatusAndCopiesNumber(Order orderType, String booksIdString, int booksCount) throws DaoException;
 
     /**
      * Find book in some order
@@ -108,18 +103,47 @@ public interface OrderDao extends BasicDao<Order> {
     boolean bookIsAlreadyInOrder(long orderId, long bookId) throws DaoException;
 
     /**
-     *
-     * @param orderId
-     * @return
-     * @throws DaoException
+     * Check book limit in one order
+     * @param orderId order identifier
+     * @return true if it's limit, false - if isn't
+     * @throws DaoException if request from database was failed
      */
     boolean isLimitOfBooks(long orderId) throws DaoException;
 
     /**
-     *
-     * @param userId
-     * @return
-     * @throws DaoException
+     * Check order count limit
+     * @param userId user identifier
+     * @return true if it's a limit, false - if isn't
+     * @throws DaoException if request from database was failed
      */
     boolean isOrderCountLimit(long userId) throws DaoException;
+
+    /**
+     * Find number of overdue orders by date (counting by last month)
+     * @param userId user identifier
+     * @param startDate begin date
+     * @param endDate end date
+     * @return count of overdue orders
+     * @throws DaoException if request from database was failed
+     */
+    int findOverdueOrders(long userId, LocalDate startDate, LocalDate endDate) throws DaoException;
+
+    /**
+     * Return list of user orders by filter and pagination maps
+     * @param userId user identifier
+     * @param tempPage current page
+     * @param filterData filter map (type, status)
+     * @return order list
+     * @throws DaoException
+     */
+    List<Order> getUserOrders(long userId, long tempPage, Map<String, Long[]> filterData) throws DaoException;
+
+    /**
+     * Find number of pages
+     * @param userId user identifier
+     * @param filterMap map with filter parameters
+     * @return count of pages
+     * @throws DaoException if request from database was failed
+     */
+    long findNumberOfUserOrdersPage(long userId, Map<String, Long[]> filterMap) throws DaoException;
 }

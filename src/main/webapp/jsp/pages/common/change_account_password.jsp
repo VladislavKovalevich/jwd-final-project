@@ -15,17 +15,18 @@
 <fmt:setBundle basename="config.pagecontent"/>
 
 <fmt:message key="title.change_account_password" var="title"/>
-<fmt:message key="label.user_email" var="email"/>
-<fmt:message key="label.user_login" var="login"/>
-<fmt:message key="label.user_new_password" var="new_password"/>
-<fmt:message key="label.user_old_password" var="old_password"/>
-<fmt:message key="label.user_repeated_new_password" var="repeated_new_password"/>
-<fmt:message key="message.invalid_password" var="invalid_password"/>
-<fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
-<fmt:message key="message.mismatch_password" var="mismatch_password"/>
+<fmt:message key="label.user_email" var="email_label"/>
+<fmt:message key="label.user_login" var="login_label"/>
+<fmt:message key="label.user_new_password" var="new_password_label"/>
+<fmt:message key="label.user_repeated_new_password" var="repeated_new_password_label"/>
+<fmt:message key="label.user_old_password" var="old_password_label"/>
+<fmt:message key="message.invalid_password" var="invalid_password_msg"/>
+<fmt:message key="message.incorrect_data_format" var="incorrect_data_format_msg"/>
+<fmt:message key="message.mismatch_password" var="mismatch_password_msg"/>
 <fmt:message key="button.create_new_account" var="create_new_account_btn"/>
 <fmt:message key="button.change_password" var="change_pass_btn"/>
 <fmt:message key="button.back_to_main" var="back_btn"/>
+<fmt:message key="message.password_has_been_changed" var="password_has_been_chaged_msg"/>
 
 <html>
 <head>
@@ -57,28 +58,28 @@
 
                 <div class="col-md-10">
                     <div>
-                        ${email}: ${user_email}
+                        ${email_label}: ${user_email}
                     </div>
                 </div>
 
                 <div class="col-md-10">
                     <div>
-                        ${login}: ${user_login}
+                        ${login_label}: ${user_login}
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <label for="pass" class="form-label">${old_password}</label>
+                    <label for="pass" class="form-label">${old_password_label}</label>
                     <input type="password" class="form-control" name="pass"
                            value="${user_form_data['pass_form']}" id="pass"
                            pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
                            required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_pass_form']}">
-                            ${incorrect_data_format}
+                            ${incorrect_data_format_msg}
                         </c:if>
                         <c:if test="${not empty user_form_data['wrong_pass_value']}">
-                            ${invalid_password}
+                            ${invalid_password_msg}
                         </c:if>
                     </div>
                 </div>
@@ -86,14 +87,14 @@
                 <div class="col-md-8"></div>
 
                 <div class="col-md-4">
-                    <label for="new_pass" class="form-label">${new_password}</label>
+                    <label for="new_pass" class="form-label">${new_password_label}</label>
                     <input type="password" class="form-control" name="new_pass"
                            value="${user_form_data['new_pass_form']}" id="new_pass"
                            pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
                            required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_new_pass_form']}">
-                            ${incorrect_data_format}
+                            ${incorrect_data_format_msg}
                         </c:if>
                     </div>
                 </div>
@@ -101,19 +102,25 @@
                 <div class="col-md-8"></div>
 
                 <div class="col-md-4">
-                    <label for="new_repeat_pass" class="form-label">${repeated_new_password}</label>
+                    <label for="new_repeat_pass" class="form-label">${repeated_new_password_label}</label>
                     <input type="password" class="form-control" name="new_repeat_pass"
                            value="${user_form_data['new_repeat_pass_form']}" id="new_repeat_pass"
                            pattern="[\da-zA-Z\-!«»#\$%&'\(\)\*\+,\./:;=\?@_`\{\|\}~]{8,16}"
                            required oninvalid="this.setCustomValidity('password rules')">
                     <div class="red-color">
                         <c:if test="${not empty user_form_data['wrong_new_repeat_pass_form']}">
-                            ${mismatch_password}
+                            ${mismatch_password_msg}
                         </c:if>
                     </div>
                 </div>
 
                 <div class="col-md-8"></div>
+
+                <c:if test="${user_form_data == null}">
+                    <div class="col-12 green-color">
+                        ${password_has_been_chaged_msg}
+                    </div>
+                </c:if>
 
                 <div class="col-12">
                     <button class="btn btn-primary" type="submit">${change_pass_btn}</button>
@@ -123,7 +130,7 @@
             <hr/>
 
             <form method="get" action="${path}/controller">
-                <input type="hidden" name="command" value="go_to_main_page">
+                <input type="hidden" name="command" value="go_to_account_page">
                 <div class="col-12">
                     <button class="btn btn-primary" type="submit">${back_btn}</button>
                 </div>

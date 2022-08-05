@@ -14,7 +14,7 @@ public interface PublisherService {
     /**
      * {@code PUBLISHER_EXISTS_MARKER} constant represent string marker to mark, that publisher with some params is already exists
      */
-    String PUBLISHER_EXISTS_MARKER = "publisher with this params is already exists";
+    String PUBLISHER_MAP_MARKER = "publisher marker";
 
     /**
      * Find all publishers

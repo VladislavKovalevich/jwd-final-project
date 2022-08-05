@@ -20,7 +20,6 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
 
 public class AddNewAuthorCommand implements Command {
-    private static final String AUTHOR_ADDED_MARKER = "author has been added";
     private static final Logger logger = LogManager.getLogger();
 
     @Override
@@ -45,8 +44,8 @@ public class AddNewAuthorCommand implements Command {
 
                 session.setAttribute(AUTHORS, authors);
 
-                componentsData.clear();
-                componentsData.put(AUTHOR_OPERATION_FEEDBACK, AUTHOR_ADDED_MARKER);
+                componentsData.remove(AUTHOR_NAME_FORM);
+                componentsData.remove(AUTHOR_SURNAME_FORM);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
@@ -66,9 +65,6 @@ public class AddNewAuthorCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> componentsData) {
-        componentsData.remove(PUBLISHER_OPERATION_FEEDBACK);
-        componentsData.remove(GENRE_OPERATION_FEEDBACK);
-        componentsData.remove(AUTHOR_OPERATION_FEEDBACK);
         componentsData.remove(WRONG_AUTHOR_NAME_FORM);
         componentsData.remove(WRONG_AUTHOR_SURNAME_FORM);
         componentsData.remove(WRONG_AUTHOR_EXISTS_FORM);

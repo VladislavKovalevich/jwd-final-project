@@ -2,6 +2,7 @@ package by.vlad.library.controller.filter;
 
 import by.vlad.library.controller.command.CommandType;
 import by.vlad.library.controller.command.PagePath;
+import by.vlad.library.entity.OrderStatus;
 import by.vlad.library.entity.Role;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -12,8 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Set;
 
-import static by.vlad.library.controller.command.AttributeAndParamsNames.COMMAND;
-import static by.vlad.library.controller.command.AttributeAndParamsNames.USER_ROLE;
+import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.CommandType.*;
 
 /**
@@ -29,15 +29,19 @@ public class ControllerSecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         guestCommandsSet = Set.of(
-                LOGIN,
+                CommandType.LOGIN,
                 LOGOUT,
                 CREATE_NEW_ACCOUNT,
                 SHOW_BOOKS_LIST,
                 SHOW_BOOK_INFO,
                 CHANGE_LOCAL,
+                VERIFY_PASSWORD_CODE,
+                SEND_PASSWORD_CODE,
+                RECOVERY_PASSWORD_BY_CODE,
                 GO_TO_LOGIN_PAGE,
                 GO_TO_MAIN_PAGE,
-                GO_TO_CREATE_NEW_ACCOUNT_PAGE
+                GO_TO_CREATE_NEW_ACCOUNT_PAGE,
+                GO_TO_RECOVERY_PASSWORD_BY_CODE_PAGE
         );
 
         clientCommandsSet = Set.of(
@@ -50,11 +54,12 @@ public class ControllerSecurityFilter implements Filter {
                 GET_ORDERS_BY_USER_ID,
                 GET_BOOKS_BY_ORDER_ID,
                 CREATE_ORDER,
-                RESERVE_ORDER,
+                CHANGE_ORDER_STATUS,
                 RETURN_ORDER,
                 DELETE_ORDER,
                 ADD_BOOK_TO_ORDER,
                 REMOVE_BOOK_FROM_ORDER,
+                GO_TO_ACCOUNT_PAGE,
                 GO_TO_CHANGE_PASSWORD_PAGE,
                 GO_TO_ORDER_LIST_PAGE,
                 GO_TO_UPDATE_ACCOUNT_DATA_PAGE,
@@ -79,10 +84,11 @@ public class ControllerSecurityFilter implements Filter {
                 UPDATE_PUBLISHER,
                 UPDATE_BOOK_DATA,
                 ACCEPT_ORDER,
-                REJECT_ORDER,
+                CHANGE_ORDER_STATUS,
                 GET_ORDERS_LIST,
                 GET_ORDERS_BY_USER_ID,
                 GET_BOOKS_BY_ORDER_ID,
+                GO_TO_ACCOUNT_PAGE,
                 GO_TO_ADD_BOOK_COMPONENTS_PAGE,
                 GO_TO_ADD_NEW_BOOK_PAGE,
                 GO_TO_UPDATE_BOOK_COMPONENTS_PAGE,
@@ -101,7 +107,7 @@ public class ControllerSecurityFilter implements Filter {
         HttpSession session = httpRequest.getSession();
 
         String commandName = httpRequest.getParameter(COMMAND);
-        if (commandName == null){
+        if (commandName == null) {
             httpResponse.sendRedirect(PagePath.INDEX_PAGE);
         }
 
@@ -109,22 +115,30 @@ public class ControllerSecurityFilter implements Filter {
         Role userRole = session.getAttribute(USER_ROLE) == null ? Role.GUEST
                 : Role.getRole(session.getAttribute(USER_ROLE).toString());
 
-        boolean isAccept =
-        switch (userRole){
-            case GUEST -> guestCommandsSet.stream().anyMatch(commandType -> commandType == command);
-            case CLIENT -> clientCommandsSet.stream().anyMatch(commandType -> commandType == command);
-            case ADMIN -> adminCommandSet.stream().anyMatch(commandType -> commandType == command);
-        };
+        boolean isAccept;
 
-        if (isAccept){
+        String status = httpRequest.getParameter(ORDER_STATUS);
+
+        if (command == CHANGE_ORDER_STATUS && userRole != Role.GUEST){
+            isAccept = (status.equals(OrderStatus.REJECTED.toString()) && userRole == Role.ADMIN)
+                    || (status.equals(OrderStatus.RESERVED.toString()) && userRole == Role.CLIENT);
+        }else {
+            isAccept =
+                    switch (userRole) {
+                        case GUEST -> guestCommandsSet.stream().anyMatch(commandType -> commandType == command);
+                        case CLIENT -> clientCommandsSet.stream().anyMatch(commandType -> commandType == command);
+                        case ADMIN -> adminCommandSet.stream().anyMatch(commandType -> commandType == command);
+                    };
+        }
+
+        if (isAccept) {
             filterChain.doFilter(servletRequest, servletResponse);
-        }else{
+        } else {
             httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
     }
 
     @Override
     public void destroy() {
-
     }
 }

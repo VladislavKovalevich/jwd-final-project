@@ -26,16 +26,20 @@ import static by.vlad.library.model.dao.ColumnName.*;
 public class GenreDaoImpl implements GenreDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SELECT_ALL_GENRES = "SELECT genre_id, genre_name FROM genres";
+    private static final String SQL_SELECT_ALL_GENRES =
+            "SELECT genre_id, genre_name " +
+                    "FROM genres";
 
-    private static final String IS_GENRE_EXISTS =
-            "SELECT COUNT(*) as count_col FROM genres " +
+    private static final String SQL_SELECT_GENRE_COUNT_BY_NAME =
+            "SELECT COUNT(*) as count_col " +
+                    "FROM genres " +
                     "WHERE genre_name = ?";
 
-    private static final String INSERT_GENRE =
-            "INSERT INTO genres (`genre_name`) VALUES (?)";
+    private static final String SQL_INSERT_GENRE =
+            "INSERT INTO genres (`genre_name`) " +
+                    "VALUES (?)";
 
-    private static final String UPDATE_GENRE =
+    private static final String SQL_UPDATE_GENRE =
             "UPDATE genres " +
                     "SET genre_name = ? " +
                     "WHERE genre_id = ?";
@@ -57,7 +61,7 @@ public class GenreDaoImpl implements GenreDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_GENRE)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_GENRE)){
 
             statement.setString(1, genre.getName());
 
@@ -86,7 +90,7 @@ public class GenreDaoImpl implements GenreDao {
         List<Genre> genres = new ArrayList<>();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_GENRES)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_GENRES)) {
 
             try(ResultSet resultSet = statement.executeQuery()){
                 while (resultSet.next()){
@@ -111,7 +115,7 @@ public class GenreDaoImpl implements GenreDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(IS_GENRE_EXISTS)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_GENRE_COUNT_BY_NAME)) {
 
             statement.setString(1, genre.getName());
 
@@ -135,7 +139,7 @@ public class GenreDaoImpl implements GenreDao {
         Optional<Genre> optionalGenre;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_GENRE)){
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_GENRE)){
 
             statement.setString(1, genre.getName());
             statement.setLong(2, genre.getId());
@@ -161,7 +165,7 @@ public class GenreDaoImpl implements GenreDao {
         Optional<Genre> optionalGenre;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_GENRE)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_GENRE)){
 
             statement.setString(1, genre.getName());
 

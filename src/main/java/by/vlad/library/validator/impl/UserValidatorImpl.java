@@ -185,4 +185,24 @@ public class UserValidatorImpl implements UserValidator {
 
         return isValid;
     }
+
+    @Override
+    public boolean validatePasswordData(Map<String, String> passwordData) {
+        boolean isValid = true;
+
+        String newPassword = passwordData.get(NEW_PASSWORD_FORM);
+        String repeatNewPass = passwordData.get(NEW_REPEAT_PASSWORD_FORM);
+
+        if (!validatePassword(newPassword)){
+            passwordData.put(WRONG_NEW_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
+            isValid = false;
+        }
+
+        if (!newPassword.equals(repeatNewPass)){
+            passwordData.put(WRONG_NEW_REPEAT_PASSWORD_FORM, UserValidator.WRONG_FORMAT_MARKER);
+            isValid = false;
+        }
+
+        return isValid;
+    }
 }

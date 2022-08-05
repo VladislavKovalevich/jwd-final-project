@@ -30,6 +30,9 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger();
     private static OrderServiceImpl instance;
 
+    private static final String PREV_PAGE = "prev";
+    private static final String NEXT_PAGE = "next";
+
     public static OrderServiceImpl getInstance(){
         if (instance == null){
             instance = new OrderServiceImpl();
@@ -117,23 +120,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean changeBooksOrderStatus(long orderId, OrderType orderType, List<Book> books, long statusId, LocalDate date) throws ServiceException {
-        boolean isAccepted;
+    public Optional<Order> changeBooksOrderStatus(Order order, List<Book> books, OrderStatus status, LocalDate date) throws ServiceException {
+        Optional<Order> optionalOrder;
         OrderDao orderDao = OrderDaoImpl.getInstance();
-        LocalDate operationDate = LocalDate.now();
-        ConverterToCSVString converter = ConverterToCSVString.getInstance();
 
+        ConverterToCSVString converter = ConverterToCSVString.getInstance();
         String booksIdStrBuilder = converter.convertEntityList(books);
         int listSize = books.size();
 
+        if (status == OrderStatus.ACCEPTED){
+            OrderType type = order.getType();
+            order.setAcceptedDate(date);
+            order.setEstimatedReturnDate(date.plusDays(type.getDays()));
+        }else{
+            order.setReturnedDate(date);
+        }
+
+        order.setStatus(status);
+
         try {
-            isAccepted = orderDao.updateStatusAndCopiesNumber(orderId, orderType, booksIdStrBuilder, listSize, operationDate, statusId);
+            optionalOrder = orderDao.updateStatusAndCopiesNumber(order, booksIdStrBuilder, listSize);
         } catch (DaoException e) {
             logger.error("Method changeBooksOrderStatus from order service was failed" + e);
             throw new ServiceException("Method changeBooksOrderStatus from order service was failed", e);
         }
 
-        return isAccepted;
+        return optionalOrder;
     }
 
     @Override
@@ -192,19 +204,84 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean changeOrderStatus(long orderId, long statusId) throws ServiceException {
-        boolean isUpdated;
+    public boolean checkOverdueOrders(long userId) throws ServiceException {
+        boolean isOverflow;
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate = endDate.minusDays(OrderService.daysCount);
+
         OrderDao orderDao = OrderDaoImpl.getInstance();
-        LocalDate operationDate = LocalDate.now();
 
         try {
-            isUpdated = orderDao.updateOrderStatus(orderId, operationDate, statusId);
+            int ordersCount = orderDao.findOverdueOrders(userId, startDate, endDate);
+            isOverflow = (ordersCount % OrderService.overdueOrdersCount == 0) && (ordersCount > 0);
+        } catch (DaoException e) {
+            logger.error("Method checkOverdueOrders from order service was failed" + e);
+            throw new ServiceException("Method checkOverdueOrders from order service was failed", e);
+        }
+
+        return isOverflow;
+    }
+
+    @Override
+    public List<Order> getUserOrdersByFilters(long userId, String direction, Map<String, Long[]> filterData, Map<String, Long> paginationData) throws ServiceException {
+        List<Order> orders;
+
+        try {
+
+            if (direction == null || paginationData.isEmpty()) {
+                direction = NEXT_PAGE;
+                initOrderPaginationDataMap(userId, paginationData, filterData);
+            }
+
+            OrderDao orderDAO = OrderDaoImpl.getInstance();
+            long tempPage = paginationData.get(ORDER_CURRENT_PAGE_NUM);
+
+            if (direction.equals(NEXT_PAGE)){
+                tempPage++;
+            }else{
+                tempPage--;
+            }
+
+            orders = orderDAO.getUserOrders(userId, tempPage, filterData);
+
+            paginationData.put(ORDER_CURRENT_PAGE_NUM, tempPage);
+        } catch (DaoException e) {
+            logger.error("Method getAllBooks from book service was failed" + e);
+            throw new ServiceException("Method getAllBooks from book service was failed", e);
+        }
+
+        return orders;
+    }
+
+    private void initOrderPaginationDataMap(long userId, Map<String, Long> paginationMap, Map<String, Long[]> filterMap) throws DaoException {
+        long pagesNumber = OrderDaoImpl.getInstance().findNumberOfUserOrdersPage(userId, filterMap);
+        paginationMap.put(ORDER_PAGES_NUMBER, pagesNumber);
+        paginationMap.put(ORDER_CURRENT_PAGE_NUM, 0L);
+    }
+
+    @Override
+    public Optional<Order> changeOrderStatus(Order order, OrderStatus status) throws ServiceException {
+        Optional<Order> optionalOrder;
+        OrderDao orderDao = OrderDaoImpl.getInstance();
+
+        LocalDate operationDate = LocalDate.now();
+
+        if (status == OrderStatus.REJECTED){
+            order.setRejectedDate(operationDate);
+        }else{
+            order.setReservedDate(operationDate);
+        }
+
+        order.setStatus(status);
+
+        try {
+            optionalOrder = orderDao.updateOrderStatus(order);
         } catch (DaoException e) {
             logger.error("Method changeOrderStatus from order service was failed" + e);
             throw new ServiceException("Method changeOrderStatus from order service was failed", e);
         }
 
-        return isUpdated;
+        return optionalOrder;
     }
 
     private String getStatusString(OrderStatus[] orderStatuses) {

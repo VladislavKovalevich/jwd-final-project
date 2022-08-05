@@ -71,7 +71,7 @@ public class PublisherServiceImpl implements PublisherService {
 
                 optionalPublisher = publisherDao.addPublisher(publisher);
             }else{
-                mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_EXISTS_MARKER);
+                mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_MAP_MARKER);
             }
         } catch (DaoException e) {
             logger.error("Method addNewPublisher from publisher service was failed" + e);
@@ -103,7 +103,7 @@ public class PublisherServiceImpl implements PublisherService {
                 optionalPublisher = publisherDao.updatePublisher(publisher);
 
             }else{
-                mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_EXISTS_MARKER);
+                mapData.put(WRONG_PUBLISHER_EXISTS_FORM, PublisherService.PUBLISHER_MAP_MARKER);
             }
         } catch (DaoException e) {
             logger.error("Method updatePublisher from publisher service was failed" + e);

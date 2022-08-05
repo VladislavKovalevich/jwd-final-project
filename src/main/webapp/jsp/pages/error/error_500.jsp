@@ -43,6 +43,8 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+            <a class="link-secondary text-decoration-none"
+               href="${path}/controller?command=go_to_main_page">Back to main</a>
         </div>
         <div class="col-2"></div>
     </div>

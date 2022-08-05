@@ -3,7 +3,6 @@ package by.vlad.library.controller.command.impl.gotopage;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
-import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -11,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.CURRENT_PAGE;
-import static by.vlad.library.controller.command.AttributeAndParamsNames.USER_FORM_DATA;
-import static by.vlad.library.controller.command.PagePath.CREATE_NEW_ACCOUNT_PAGE;
+import static by.vlad.library.controller.command.AttributeAndParamsNames.USER_DATA;
+import static by.vlad.library.controller.command.PagePath.NEW_ACCOUNT_PAGE;
 
 public class GoToCreateNewAccountPageCommand implements Command {
     @Override
@@ -20,9 +19,9 @@ public class GoToCreateNewAccountPageCommand implements Command {
         HttpSession session = request.getSession();
         Map<String,String> userFormData = new HashMap<>();
 
-        session.setAttribute(USER_FORM_DATA, userFormData);
-        session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));
+        session.setAttribute(USER_DATA, userFormData);
+        session.setAttribute(CURRENT_PAGE, NEW_ACCOUNT_PAGE);
 
-        return new Router(CREATE_NEW_ACCOUNT_PAGE, Router.Type.FORWARD);
+        return new Router(NEW_ACCOUNT_PAGE, Router.Type.FORWARD);
     }
 }

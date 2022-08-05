@@ -26,7 +26,7 @@ public class AddBookToOrderCommand implements Command {
         long bookId = Long.parseLong(request.getParameter(BOOK_ID));
         long orderId = Long.parseLong(request.getParameter(ORDER_ID));
 
-        Map<String, Boolean> bookOrderMap = (Map<String, Boolean>) session.getAttribute(BOOK_ORDER_DATA);
+        Map<String, Boolean> bookOrderMap = (Map<String, Boolean>) session.getAttribute(OPERATION_FEEDBACK_MAP_SES);
         bookOrderMap.clear();
 
         try {
@@ -34,13 +34,13 @@ public class AddBookToOrderCommand implements Command {
                 bookOrderMap.put(BOOK_OPERATION_FEEDBACK, true);
             }
 
-            session.setAttribute(BOOK_ORDER_DATA, bookOrderMap);
+            session.setAttribute(OPERATION_FEEDBACK_MAP_SES, bookOrderMap);
 
         } catch (ServiceException e) {
             logger.error("AddBookToOrderCommand execution failed");
             throw new CommandException("AddBookToOrderCommand execution failed", e);
         }
 
-        return new Router(PagePath.SHOW_BOOK_INFO_PAGE, Router.Type.REDIRECT);
+        return new Router(PagePath.BOOK_INFO_PAGE, Router.Type.REDIRECT);
     }
 }

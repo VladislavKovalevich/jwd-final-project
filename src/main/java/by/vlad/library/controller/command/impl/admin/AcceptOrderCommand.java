@@ -6,7 +6,6 @@ import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
 import by.vlad.library.entity.OrderStatus;
-import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
@@ -20,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
@@ -32,9 +31,8 @@ public class AcceptOrderCommand implements Command {
         HttpSession session = request.getSession();
         Router router;
 
-        long orderId = Long.parseLong(request.getParameter(ORDER_ID));
-        OrderType orderType = OrderType.getType(request.getParameter(ORDER_TYPE));
-        long orderStatusId = OrderStatus.ACCEPTED.ordinal() + 1;
+        Order currentOrder = (Order) session.getAttribute(ORDER);
+        OrderStatus orderStatus = OrderStatus.ACCEPTED;
 
         List<Book> books = (List<Book>) session.getAttribute(ORDER_BOOKS);
 
@@ -44,28 +42,26 @@ public class AcceptOrderCommand implements Command {
         try {
             if (bookService.isBooksCopiesExists(books)) {
                 LocalDate date = LocalDate.now();
-                orderService.changeBooksOrderStatus(orderId, orderType, books, orderStatusId, date);
 
-                List<Order> orders = (List<Order>) session.getAttribute(ORDERS);
+                Optional<Order> optionalOrder = orderService.changeBooksOrderStatus(currentOrder, books, orderStatus, date);
 
-                orders = orders.stream().peek(order -> {
-                    if (order.getId() == orderId){
-                        order.setStatus(OrderStatus.ACCEPTED);
-                        order.setAcceptedDate(date);
+                if (optionalOrder.isPresent()){
+                    Order acceptedOrder = optionalOrder.get();
+                    List<Order> orders = (List<Order>) session.getAttribute(ORDERS);
+                    orders.removeIf(order -> order.getId() == acceptedOrder.getId());
+                    orders.add(acceptedOrder);
 
-                        if (order.getType() == OrderType.SUBSCRIPTION){
-                            order.setEstimatedReturnDate(order.getAcceptedDate().plusDays(20));
-                        }else{
-                            order.setEstimatedReturnDate(order.getAcceptedDate().plusDays(1));
-                        }
-                    }
-                }).collect(Collectors.toList());
+                    session.setAttribute(ORDERS, orders);
+                }
 
-                session.setAttribute(ORDER, orders);
+                router = new Router(PagePath.ORDERS_PAGE, Router.Type.REDIRECT);
 
-                router = new Router(PagePath.ORDERS_LIST_PAGE, Router.Type.REDIRECT);
+                session.removeAttribute(WRONG_BOOK_COPIES_COUNT);
+                session.removeAttribute(ORDER);
+                session.removeAttribute(ORDER_BOOKS);
             }else{
-                router = new Router(PagePath.BOOKS_BY_ORDER_ID_PAGE, Router.Type.REDIRECT);
+                session.setAttribute(WRONG_BOOK_COPIES_COUNT, true);
+                router = new Router(PagePath.ORDER_INFO_PAGE, Router.Type.REDIRECT);
             }
         } catch (ServiceException e) {
             logger.error("AcceptOrderCommand execution failed");

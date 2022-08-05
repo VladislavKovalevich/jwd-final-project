@@ -7,6 +7,9 @@ import by.vlad.library.exception.DaoException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.UserService;
 import by.vlad.library.util.PasswordEncoder;
+import by.vlad.library.util.mail.MailSender;
+import by.vlad.library.util.secrectkeygenerator.PasswordCodeGenerator;
+import by.vlad.library.util.secrectkeygenerator.impl.PasswordCodeGeneratorImpl;
 import by.vlad.library.validator.UserValidator;
 import by.vlad.library.validator.impl.UserValidatorImpl;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
@@ -24,6 +28,9 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
  * @see UserService
  */
 public class UserServiceImpl implements UserService {
+    private static final String MAIL_SUBJECT = "Восстановление пароля";
+    private static final String MAIL_TEXT = "Ваш секретный код ";
+
     private static final Logger logger = LogManager.getLogger();
     private static UserServiceImpl instance;
 
@@ -123,9 +130,9 @@ public class UserServiceImpl implements UserService {
             return isUpdated;
         }
 
+        String email = userData.get(EMAIL_FORM);
         String updateName = userData.get(NAME_FORM);
         String updateSurname = userData.get(SURNAME_FORM);
-        String updateEmail = userData.get(EMAIL_FORM);
         String updateSerialNumber = userData.get(SERIAL_NUMBER_FORM);
         String updateLogin = userData.get(LOGIN_FORM);
         String updatePhoneNumber = userData.get(PHONE_NUMBER_FORM);
@@ -134,17 +141,10 @@ public class UserServiceImpl implements UserService {
 
         try {
 
-            if (!updateEmail.equals(userData.get(USER_EMAIL))) {
-                if (userDao.isEmailExists(updateEmail)) {
-                    userData.put(WRONG_EMAIL_EXISTS_FORM, UserValidator.WRONG_FORMAT_MARKER);
-                    return isUpdated;
-                }
-            }
-
             User user = User.getBuilder()
                     .withName(updateName)
                     .withSurname(updateSurname)
-                    .withEmail(updateEmail)
+                    .withEmail(email)
                     .withPassportSerialNumber(updateSerialNumber)
                     .withMobilePhone(updatePhoneNumber)
                     .withLogin(updateLogin)
@@ -235,5 +235,82 @@ public class UserServiceImpl implements UserService {
         }
 
         return isUpdated;
+    }
+
+    @Override
+    public boolean sendPasswordCode(Map<String, String> userFormData) {
+        boolean isSent = false;
+
+        UserValidator userValidator = UserValidatorImpl.getInstance();
+        PasswordCodeGenerator generator = PasswordCodeGeneratorImpl.getInstance();
+        PasswordEncoder encoder = PasswordEncoder.getInstance();
+
+        String email = userFormData.get(EMAIL_FORM);
+
+        if (!userValidator.validateEmail(email)){
+            userFormData.put(WRONG_EMAIL_FORM, UserValidator.WRONG_FORMAT_MARKER);
+            return isSent;
+        }
+
+        String code = String.valueOf(generator.generate());
+        String encodedCode = encoder.encode(code);
+
+        MailSender mailSender = MailSender.getInstance();
+
+        isSent = mailSender.sendMail(email, MAIL_SUBJECT, MAIL_TEXT + code);
+
+        if (!isSent){
+            userFormData.put(WRONG_EMAIL_EXISTS_FORM, UserValidator.WRONG_FORMAT_MARKER);
+        }
+
+        userFormData.put(ENCODED_SECRET_CODE, encodedCode);
+
+        return isSent;
+    }
+
+    @Override
+    public boolean verifyPasswordCode(Map<String, String> userFormData) {
+        boolean isCorrect = false;
+        PasswordEncoder encoder = PasswordEncoder.getInstance();
+
+        String encodedCode = userFormData.get(ENCODED_SECRET_CODE);
+        String inputCode = encoder.encode(userFormData.get(SECRET_CODE_FORM));
+
+        if (encodedCode.equals(inputCode)){
+            isCorrect = true;
+            userFormData.remove(WRONG_SECRET_CODE);
+            userFormData.remove(SECRET_CODE_FORM);
+            userFormData.remove(ENCODED_SECRET_CODE);
+        }else{
+            userFormData.put(WRONG_SECRET_CODE, UserService.USER_MAP_MARKER);
+        }
+
+        return isCorrect;
+    }
+
+    @Override
+    public boolean changePasswordByCode(Map<String, String> userData) throws ServiceException {
+        boolean isChanged = false;
+
+        UserValidator userValidator = UserValidatorImpl.getInstance();
+
+        if (!userValidator.validatePasswordData(userData)){
+            return isChanged;
+        }
+
+        String email = userData.get(EMAIL_FORM);
+        String newPassword = userData.get(NEW_PASSWORD_FORM);
+
+        UserDao userDao = UserDaoImpl.getInstance();
+
+        String encodedNewPass = PasswordEncoder.getInstance().encode(newPassword);
+
+        try {
+            isChanged = userDao.changeAccountPasswordByCode(email, encodedNewPass);
+        } catch (DaoException e) {
+            logger.error("Method changePasswordByCode from user service was failed" + e);
+            throw new ServiceException("Method changePasswordByCode from user service was failed", e);
+        }
+        return isChanged;
     }
 }

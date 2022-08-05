@@ -74,9 +74,9 @@ public class UpdateBookDataCommand implements Command {
 
                 session.setAttribute(BOOKS_LIST, books);
                 session.setAttribute(BOOK, book);
-                session.setAttribute(CURRENT_PAGE, SHOW_BOOK_INFO_PAGE);
+                session.setAttribute(CURRENT_PAGE, BOOK_INFO_PAGE);
 
-                router = new Router(SHOW_BOOK_INFO_PAGE, Router.Type.FORWARD);
+                router = new Router(BOOK_INFO_PAGE, Router.Type.FORWARD);
             } else {
                 session.setAttribute(BOOK_FORM_DATA, bookMap);
                 session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);

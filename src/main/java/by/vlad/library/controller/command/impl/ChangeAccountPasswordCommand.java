@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
@@ -21,11 +22,14 @@ public class ChangeAccountPasswordCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Map<String, String> passwordData;
         HttpSession session = request.getSession();
-        Router router;
+        Map<String, String> passwordData = (Map<String, String>) session.getAttribute(USER_DATA);
+        String page;
+        Router.Type routerType = Router.Type.REDIRECT;
 
-        passwordData = (Map<String, String>) session.getAttribute(USER_FORM_DATA);
+        if (passwordData == null){
+            passwordData = new HashMap<>();
+        }
 
         clearWrongMessages(passwordData);
         initPasswordData(request, passwordData);
@@ -34,20 +38,20 @@ public class ChangeAccountPasswordCommand implements Command {
 
         try {
             if(userService.changePassword(passwordData)){
-                session.removeAttribute(USER_FORM_DATA);
-                session.setAttribute(CURRENT_PAGE, CHANGE_PASSWORD_PAGE);
-                router = new Router(CHANGE_PASSWORD_PAGE, Router.Type.REDIRECT);
+                session.removeAttribute(USER_DATA);
             }else{
-                session.setAttribute(USER_FORM_DATA, passwordData);
-                session.setAttribute(CURRENT_PAGE, CHANGE_PASSWORD_PAGE);
-                router = new Router(CHANGE_PASSWORD_PAGE, Router.Type.REDIRECT);
+                session.setAttribute(USER_DATA, passwordData);
             }
+
+            page = CHANGE_PASSWORD_PAGE;
+            session.setAttribute(CURRENT_PAGE, page);
+
         } catch (ServiceException e) {
             logger.error("ChangeAccountPasswordCommand execution failed");
             throw new CommandException("ChangeAccountPasswordCommand execution failed", e);
         }
 
-        return router;
+        return new Router(page, routerType);
     }
 
     private void initPasswordData(HttpServletRequest request, Map<String, String> passwordData) {
@@ -58,6 +62,7 @@ public class ChangeAccountPasswordCommand implements Command {
     }
 
     private void clearWrongMessages(Map<String, String> passwordData){
+        passwordData.remove(SUCCESSFULLY_PASSWORD_CHANGE);
         passwordData.remove(WRONG_PASSWORD_FORM);
         passwordData.remove(WRONG_NEW_PASSWORD_FORM);
         passwordData.remove(WRONG_NEW_REPEAT_PASSWORD_FORM);

@@ -33,10 +33,11 @@ public class ImageServiceImpl implements ImageService {
     public void createNewImage(byte[] imageContent, Book book) throws ServiceException {
         ImageDao imageDao = ImageDaoImpl.getInstance();
         Image image = new Image(imageContent);
+        ImageEncoder imageEncoder = ImageEncoder.getInstance();
 
         try {
             if (imageDao.insertImage(image, book.getId())){
-                image.setEncodeImage(ImageEncoder.getInstance().encodeImage(imageContent));
+                image.setEncodeImage(imageEncoder.encodeImage(imageContent));
                 book.setImage(image);
             }
         } catch (DaoException e) {
@@ -50,10 +51,11 @@ public class ImageServiceImpl implements ImageService {
     public void updateImage(long imageId, byte[] imageContent, Book book) throws ServiceException {
         ImageDao imageDao = ImageDaoImpl.getInstance();
         Image image = new Image(imageId, imageContent);
+        ImageEncoder imageEncoder = ImageEncoder.getInstance();
 
         try {
             if (imageDao.updateImage(image)){
-                image.setEncodeImage(ImageEncoder.getInstance().encodeImage(imageContent));
+                image.setEncodeImage(imageEncoder.encodeImage(imageContent));
                 book.setImage(image);
             }
         }catch (DaoException e){

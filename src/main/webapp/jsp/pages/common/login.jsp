@@ -17,6 +17,8 @@
 <fmt:message key="label.sign_in" var="sign_in_label"/>
 <fmt:message key="message.new_account" var="new_account_message"/>
 <fmt:message key="message.user_is_banned" var="user_is_banned_message"/>
+<fmt:message key="reference.forget_password" var="forget_password_ref"/>
+<fmt:message key="message.password_has_been_changed" var="password_has_been_chaged_msg"/>
 
 <html>
 <head>
@@ -39,7 +41,7 @@
         <div class="col-4"></div>
         <div class="col-4 mb-3 white-background">
             <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
-                <h3 class="mb-5">${sign_in_label}</h3>
+                <h3 class="mt-4 mb-1">${sign_in_label}</h3>
                 <input type="hidden" name="command" value="login"/>
 
                 <div class="form-outline mb-4">
@@ -58,17 +60,27 @@
                            value="${user_form_data['pass_form']}"/>
                 </div>
 
-                <div class="mb-3 red-color">
-                    <c:if test="${not empty user_form_data['wrong_email_or_pass']}">
-                        ${wrong_data}
-                    </c:if>
-                    <c:if test="${not empty user_form_data['not_found_user']}">
-                        ${not_found}
-                    </c:if>
-                    <c:if test="${not empty user_form_data['user_is_banned']}">
-                        ${user_is_banned_message}
-                    </c:if>
-                </div>
+                <c:if test="${not empty user_form_data['successfully_password_change']}">
+                    <div class="mb-2 green-color">
+                            ${password_has_been_chaged_msg}
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty user_form_data['wrong_email_or_pass']}">
+                    <div class="mb-2 red-color">
+                            ${wrong_data}
+                    </div>
+                </c:if>
+                <c:if test="${not empty user_form_data['not_found_user']}">
+                    <div class="mb-2 red-color">
+                            ${not_found}
+                    </div>
+                </c:if>
+                <c:if test="${not empty user_form_data['user_is_banned']}">
+                    <div class="mb-2 red-color">
+                            ${user_is_banned_message}
+                    </div>
+                </c:if>
 
                 <input class="btn btn-primary btn-lg btn-block mb-3" type="submit" value="${sign_in_btn}" name="sub">
 
@@ -78,7 +90,11 @@
                     </c:if>
                 </div>
 
-                <div class="mx-3 my-4">
+                <div class="mx-3 mt-2">
+                    <a href="${path}/controller?command=go_to_recovery_password_by_code_page">${forget_password_ref}</a>
+                </div>
+
+                <div class="mx-3 mt-2">
                     <a href="${path}/controller?command=go_to_create_new_account_page">${create_new_account}</a>
                 </div>
             </form>

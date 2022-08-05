@@ -19,13 +19,19 @@ import java.util.List;
 public class ImageDaoImpl implements ImageDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String INSERT_IMAGE = "INSERT INTO images(`image_content`) VALUES (?)";
+    private static final String SQL_INSERT_IMAGE =
+            "INSERT INTO images(`image_content`) " +
+                    "VALUES (?)";
 
-    private static final String ADD_IMAGE_TO_BOOK = "UPDATE books SET " +
-            "images_id = ? " +
-            "WHERE book_id = ?";
+    private static final String SQL_ADD_IMAGE_TO_BOOK =
+            "UPDATE books SET " +
+                "images_id = ? " +
+                "WHERE book_id = ?";
 
-    private static final String UPDATE_IMAGE = "UPDATE images SET image_content = ? WHERE image_id = ?";
+    private static final String SQL_UPDATE_IMAGE =
+            "UPDATE images " +
+                    "SET image_content = ? " +
+                    "WHERE image_id = ?";
 
     private static ImageDaoImpl instance;
 
@@ -74,7 +80,7 @@ public class ImageDaoImpl implements ImageDao {
             connection = pool.getConnection();
             connection.setAutoCommit(false);
 
-            statement = connection.prepareStatement(INSERT_IMAGE, Statement.RETURN_GENERATED_KEYS);
+            statement = connection.prepareStatement(SQL_INSERT_IMAGE, Statement.RETURN_GENERATED_KEYS);
             statement.setBytes(1, image.getContent());
 
             statement.executeUpdate();
@@ -86,7 +92,7 @@ public class ImageDaoImpl implements ImageDao {
                 }
             }
 
-            statement = connection.prepareStatement(ADD_IMAGE_TO_BOOK);
+            statement = connection.prepareStatement(SQL_ADD_IMAGE_TO_BOOK);
 
             statement.setLong(1, imageId);
             statement.setLong(2, bookId);
@@ -125,7 +131,7 @@ public class ImageDaoImpl implements ImageDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_IMAGE)){
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_IMAGE)){
 
             statement.setBytes(1,image.getContent());
             statement.setLong(2, image.getId());

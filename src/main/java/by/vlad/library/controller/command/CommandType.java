@@ -24,16 +24,21 @@ public enum CommandType {
     ADD_NEW_BOOK(new AddNewBookCommand()),
     ADD_NEW_GENRE(new AddNewGenreCommand()),
     ADD_NEW_PUBLISHER(new AddNewPublisherCommand()),
+    CHANGE_ORDER_STATUS(new ChangeOrderStatusCommand()),
     CHANGE_USER_STATUS(new ChangeUserStatusCommand()),
     CHANGE_ACCOUNT_PASSWORD(new ChangeAccountPasswordCommand()),
     CHANGE_LOCAL(new ChangeLocalCommand()),
+    RECOVERY_PASSWORD_BY_CODE(new RecoveryPasswordByCodeCommand()),
+    VERIFY_PASSWORD_CODE(new VerifyPasswordCodeCommand()),
     CREATE_NEW_ACCOUNT(new CreateNewAccountCommand()),
     CREATE_ORDER(new CreateOrderCommand()),
     DEFAULT(new DefaultCommand()),
     DELETE_ORDER(new DeleteOrderCommand()),
-    GET_BOOKS_BY_ORDER_ID(new GetBooksByOrderIdCommand()),
+    GET_BOOKS_BY_ORDER_ID(new GetOrderInfoByOrderIdCommand()),
     GET_ORDERS_BY_USER_ID(new GetOrdersByUserIdCommand()),
     GET_ORDERS_LIST(new GetActiveOrdersCommand()),
+    GO_TO_RECOVERY_PASSWORD_BY_CODE_PAGE(new GoToRecoveryPasswordByCodePageCommand()),
+    GO_TO_ACCOUNT_PAGE(new GoToAccountPageCommand()),
     GO_TO_ADD_BOOK_COMPONENTS_PAGE(new GoToAddBookComponentsPageCommand()),
     GO_TO_ADD_NEW_BOOK_PAGE(new GoToAddNewBookPageCommand()),
     GO_TO_CHANGE_PASSWORD_PAGE(new GoToChangeAccountPasswordPageCommand()),
@@ -46,10 +51,9 @@ public enum CommandType {
     GO_TO_UPDATE_BOOK_DATA_PAGE(new GoToUpdateBookDataPageCommand()),
     LOGIN(new LoginCommand()),
     LOGOUT(new LogoutCommand()),
-    REJECT_ORDER(new RejectOrderCommand()),
     REMOVE_BOOK_FROM_ORDER(new RemoveBookFromOrderCommand()),
-    RESERVE_ORDER(new ReserveOrderCommand()),
     RETURN_ORDER(new ReturnOrderCommand()),
+    SEND_PASSWORD_CODE(new SendPasswordCodeCommand()),
     SHOW_BOOKS_LIST(new ShowBooksListCommand()),
     SHOW_BOOK_INFO(new ShowBookByIdCommand()),
     SHOW_USERS_LIST(new ShowUsersListCommand()),
@@ -79,8 +83,8 @@ public enum CommandType {
     public static CommandType getCommandType(String commandStr){
         CommandType commandType;
         try {
-            commandType = CommandType.valueOf(commandStr.toUpperCase());
-        }catch (IllegalArgumentException | NullPointerException e){
+            commandType = commandStr != null ? CommandType.valueOf(commandStr.toUpperCase()) : DEFAULT;
+        }catch (IllegalArgumentException e){
             logger.warn("Command " + commandStr + " does not exist");
             commandType = DEFAULT;
         }

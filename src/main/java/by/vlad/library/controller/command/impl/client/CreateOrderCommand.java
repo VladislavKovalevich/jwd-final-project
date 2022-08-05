@@ -30,7 +30,7 @@ public class CreateOrderCommand implements Command {
 
         OrderService orderService = OrderServiceImpl.getInstance();
 
-        Map<String, Boolean> bookOrderMap = (Map<String, Boolean>) session.getAttribute(BOOK_ORDER_DATA);
+        Map<String, Boolean> bookOrderMap = (Map<String, Boolean>) session.getAttribute(OPERATION_FEEDBACK_MAP_SES);
         bookOrderMap.clear();
 
         try{
@@ -39,13 +39,13 @@ public class CreateOrderCommand implements Command {
                 bookOrderMap.put(ORDER_OPERATION_FEEDBACK, true);
             }
 
-            session.setAttribute(BOOK_ORDER_DATA, bookOrderMap);
+            session.setAttribute(OPERATION_FEEDBACK_MAP_SES, bookOrderMap);
 
         }catch (ServiceException e){
             logger.info("CreateOrderCommand execution failed");
             throw new CommandException("CreateOrderCommand execution failed", e);
         }
 
-        return new Router(PagePath.SHOW_BOOK_INFO_PAGE, Router.Type.REDIRECT);
+        return new Router(PagePath.BOOK_INFO_PAGE, Router.Type.REDIRECT);
     }
 }

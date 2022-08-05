@@ -25,7 +25,7 @@
 }
 
 .link a {
-    display: block; /* Ссылка как блочный элемент */
-    text-align: center; /* Выравнивание по центру */
-    height: 100%; /* Высота на весь слой */
+    display: block;
+    text-align: center;
+    height: 100%;
 }

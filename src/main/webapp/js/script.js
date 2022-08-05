@@ -3,6 +3,7 @@ function preventBack() {
 }
 
 setTimeout("preventBack()", 0);
+
 window.onunload = function () {
     null
 };

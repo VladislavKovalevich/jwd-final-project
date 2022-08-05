@@ -7,10 +7,16 @@ import org.apache.logging.log4j.Logger;
  * {@code OrderStatus} enum represent type of order
  */
 public enum OrderType {
-    READING_ROOM,
-    SUBSCRIPTION;
+    READING_ROOM( 1),
+    SUBSCRIPTION(20);
 
     private static final Logger logger = LogManager.getLogger();
+
+    private final int days;
+
+    OrderType(int days) {
+        this.days = days;
+    }
 
     /**
      * Method to get order type by string name
@@ -29,4 +35,9 @@ public enum OrderType {
 
         return orderType;
     }
+
+    public int getDays() {
+        return days;
+    }
+
 }

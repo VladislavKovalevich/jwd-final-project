@@ -21,7 +21,6 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
 
 public class AddNewGenreCommand implements Command {
-    private static final String GENRE_ADDED_MARKER = "genre has been added";
     private static final Logger logger = LogManager.getLogger();
 
     @Override
@@ -45,8 +44,8 @@ public class AddNewGenreCommand implements Command {
 
                 session.setAttribute(GENRES, genres);
 
+                componentsData.remove(GENRE_FORM);
                 componentsData.remove(GENRE_NAME_FORM);
-                componentsData.put(GENRE_OPERATION_FEEDBACK, GENRE_ADDED_MARKER);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
@@ -60,9 +59,6 @@ public class AddNewGenreCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> map){
-        map.remove(PUBLISHER_OPERATION_FEEDBACK);
-        map.remove(GENRE_OPERATION_FEEDBACK);
-        map.remove(AUTHOR_OPERATION_FEEDBACK);
         map.remove(WRONG_GENRE_NAME_FORM);
         map.remove(WRONG_GENRE_EXISTS_FORM);
     }

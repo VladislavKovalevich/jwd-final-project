@@ -3,7 +3,6 @@ package by.vlad.library.controller.command.impl.admin.gotopage;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.exception.CommandException;
-import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -20,7 +19,7 @@ public class GoToAddNewBookPageCommand implements Command {
         Map<String, String> booksData = new HashMap<>();
 
         session.setAttribute(BOOK_FORM_DATA, booksData);
-        session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));
+        session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
 
         return new Router(ADD_NEW_BOOK_PAGE, Router.Type.FORWARD);
     }

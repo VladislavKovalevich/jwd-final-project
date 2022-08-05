@@ -23,8 +23,9 @@ public class CreateNewAccountCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        Map<String, String> userData = (Map<String, String>) session.getAttribute(USER_FORM_DATA);
-        Router router;
+        Map<String, String> userData = (Map<String, String>) session.getAttribute(USER_DATA);
+        Router.Type routerType = Router.Type.REDIRECT;
+        String page;
 
         clearSessionMap(userData);
         fillSessionMap(request, userData);
@@ -33,20 +34,21 @@ public class CreateNewAccountCommand implements Command {
 
         try {
             if(userService.createNewAccount(userData)){
-                session.removeAttribute(USER_FORM_DATA);
+                session.removeAttribute(USER_DATA);
                 session.setAttribute(CREATE_ACCOUNT_FEEDBACK, true);
-                session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
-                router = new Router(LOGIN_PAGE, Router.Type.REDIRECT);
+                page = LOGIN_PAGE;
             }else{
-                session.setAttribute(USER_FORM_DATA, userData);
-                router = new Router(CREATE_NEW_ACCOUNT_PAGE, Router.Type.REDIRECT);
+                session.setAttribute(USER_DATA, userData);
+                page = NEW_ACCOUNT_PAGE;
             }
+
+            session.setAttribute(CURRENT_PAGE, page);
         } catch (ServiceException e) {
             logger.error("CreateNewAccountCommand execution failed");
             throw new CommandException("CreateNewAccountCommand execution failed", e);
         }
 
-        return router;
+        return new Router(page, routerType);
     }
 
     private void fillSessionMap(HttpServletRequest request, Map<String, String> userFormData){

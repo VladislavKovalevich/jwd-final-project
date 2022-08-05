@@ -17,7 +17,7 @@ import java.util.List;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.CURRENT_PAGE;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.ORDERS;
-import static by.vlad.library.controller.command.PagePath.ORDERS_LIST_PAGE;
+import static by.vlad.library.controller.command.PagePath.ORDERS_PAGE;
 
 public class GetActiveOrdersCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -32,12 +32,12 @@ public class GetActiveOrdersCommand implements Command {
             List<Order> orders =  orderService.getOrdersByStatus(orderStatuses);
 
             session.setAttribute(ORDERS, orders);
-            session.setAttribute(CURRENT_PAGE, ORDERS_LIST_PAGE);
+            session.setAttribute(CURRENT_PAGE, ORDERS_PAGE);
         } catch (ServiceException e) {
             logger.error("GetActiveOrdersCommand execution failed");
             throw new CommandException("GetActiveOrdersCommand execution failed", e);
         }
 
-        return new Router(ORDERS_LIST_PAGE, Router.Type.FORWARD);
+        return new Router(ORDERS_PAGE, Router.Type.FORWARD);
     }
 }

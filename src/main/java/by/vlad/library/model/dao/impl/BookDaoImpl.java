@@ -24,9 +24,11 @@ import static by.vlad.library.model.dao.ColumnName.*;
 public class BookDaoImpl implements BookDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SELECT_BOOK_BY_ID =
-            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
-                    "author_id, author_name, author_surname, genre_id, genre_name, publisher_id, publisher_name, image_id, image_content " +
+    private static final String SQL_SELECT_BOOK_BY_ID =
+            "SELECT book_id, book_title, book_copies_number, book_publish_year, " +
+                    "book_number_of_pages, book_description, author_id, author_name, " +
+                    "author_surname, genre_id, genre_name, publisher_id, publisher_name, " +
+                    "image_id, image_content " +
             "FROM books " +
             "JOIN authors ON books.authors_id = author_id " +
             "JOIN publishers ON publishers_id = publisher_id " +
@@ -34,15 +36,17 @@ public class BookDaoImpl implements BookDao {
             "LEFT JOIN images ON images_id = image_id " +
             "WHERE book_id = ?";
 
-    private static final String SELECT_NUMBER_OF_BOOKS =
-            "SELECT COUNT(*) as count_col FROM books";
+    private static final String SQL_SELECT_NUMBER_OF_BOOKS =
+            "SELECT COUNT(*) as count_col " +
+                    "FROM books";
 
-    private static final String INSERT_NEW_BOOK =
-            "INSERT INTO books (`book_title`, `book_copies_number`, `book_publish_year`, `book_number_of_pages`, " +
-                    "`book_description`, `authors_id`, `publishers_id`, `genres_id`) " +
+    private static final String SQL_INSERT_NEW_BOOK =
+            "INSERT INTO books (`book_title`, `book_copies_number`, `book_publish_year`, " +
+                    "`book_number_of_pages`,`book_description`, `authors_id`, `publishers_id`, " +
+                    "`genres_id`) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String UPDATE_BOOK =
+    private static final String SQL_UPDATE_BOOK =
             "UPDATE books " +
                     "SET book_title = ?," +
                     "    book_copies_number = ?, " +
@@ -54,31 +58,25 @@ public class BookDaoImpl implements BookDao {
                     "    genres_id = ? " +
                     "WHERE book_id = ?;  ";
 
-    private static final String SELECT_BOOKS_PAGE =
-            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
-                    "author_id, author_name, author_surname, genre_id, genre_name, publisher_id, publisher_name, image_id, image_content " +
+    private static final String SQL_SELECT_BOOKS_PAGE =
+            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, " +
+                    "book_description, author_id, author_name, author_surname, genre_id, genre_name, " +
+                    "publisher_id, publisher_name, image_id, image_content " +
                     "FROM books " +
                     "JOIN authors ON authors_id = author_id " +
                     "JOIN publishers ON publishers_id = publisher_id " +
                     "JOIN genres ON genres_id = genre_id " +
                     "LEFT JOIN images ON images_id = image_id ";
 
-    private static final String SQL_LIMIT = "LIMIT ?, ?";
-
-    private static final String SQL_WHERE = " WHERE ";
-    private static final String SQL_IN_START = " IN(";
-    private static final String SQL_IN_END = ") ";
-    private static final String SQL_AND = " AND ";
-
-    private static final long DEFAULT_ITEM_COUNT_PER_PAGE = 4;
-
-    private static final String FIND_COPIES_NUMBER_BY_BOOK_ID = "" +
+    private static final String SQL_SELECT_COPIES_NUMBER_BY_BOOKS_ID = "" +
             "SELECT book_copies_number " +
-            "   FROM library.books WHERE book_id ";
+                "FROM library.books " +
+                "WHERE book_id ";
 
-    private static final String FIND_BOOKS_BY_ORDER_ID =
-            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, book_description, " +
-                    "author_id, author_name, author_surname, genre_id, genre_name, publisher_id, publisher_name, image_id, image_content " +
+    private static final String SQL_SELECT_BOOKS_BY_ORDER_ID =
+            "SELECT book_id, book_title, book_copies_number, book_publish_year, book_number_of_pages, " +
+                    "book_description, author_id, author_name, author_surname, genre_id, genre_name, " +
+                    "publisher_id, publisher_name, image_id, image_content " +
                     "FROM books " +
                     "JOIN authors ON books.authors_id = author_id " +
                     "JOIN publishers ON publishers_id = publisher_id " +
@@ -87,9 +85,18 @@ public class BookDaoImpl implements BookDao {
                     "JOIN library.books_orders ON books_id = book_id " +
                     "WHERE orders_id = ?";
 
-    private static final String FIND_BOOK_BY_TITLE = "" +
-            "SELECT COUNT(book_title) as count_col FROM library.books " +
-            "WHERE book_title = ?";
+    private static final String SELECT_NUMBER_OF_BOOKS_BY_TITLE = "" +
+            "SELECT COUNT(book_title) as count_col " +
+                "FROM library.books " +
+                "WHERE book_title = ?";
+
+    private static final String SQL_LIMIT = "LIMIT ?, ?";
+    private static final String SQL_WHERE = " WHERE ";
+    private static final String SQL_IN_START = " IN(";
+    private static final String SQL_IN_END = ") ";
+    private static final String SQL_AND = " AND ";
+
+    private static final long DEFAULT_ITEM_COUNT_PER_PAGE = 4;
 
     private static BookDaoImpl instance;
 
@@ -132,7 +139,7 @@ public class BookDaoImpl implements BookDao {
         List<Book> books;
         Mapper<Book> mapper = BookMapper.getInstance();
 
-        StringBuilder resultSQL = new StringBuilder(SELECT_BOOKS_PAGE);
+        StringBuilder resultSQL = new StringBuilder(SQL_SELECT_BOOKS_PAGE);
 
         if (!filterMap.isEmpty()){
             resultSQL.append(buildSQLFilterString(filterMap));
@@ -164,7 +171,7 @@ public class BookDaoImpl implements BookDao {
         Mapper<Book> bookMapper = BookMapper.getInstance();
 
         try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BOOK_BY_ID)){
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_BOOK_BY_ID)){
 
             preparedStatement.setLong(1, id);
 
@@ -188,7 +195,7 @@ public class BookDaoImpl implements BookDao {
         int result;
         int booksNumber = 0;
 
-        StringBuilder resultSQL = new StringBuilder(SELECT_NUMBER_OF_BOOKS);
+        StringBuilder resultSQL = new StringBuilder(SQL_SELECT_NUMBER_OF_BOOKS);
 
         if (!filterMap.isEmpty()){
             resultSQL.append(buildSQLFilterString(filterMap));
@@ -222,7 +229,7 @@ public class BookDaoImpl implements BookDao {
         Optional<Book> optionalBook = Optional.empty();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_NEW_BOOK, Statement.RETURN_GENERATED_KEYS)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_NEW_BOOK, Statement.RETURN_GENERATED_KEYS)){
 
             prepareInsertUpdateDbRequest(statement, book, false);
 
@@ -250,7 +257,7 @@ public class BookDaoImpl implements BookDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_BOOK)) {
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_BOOK)) {
 
             prepareInsertUpdateDbRequest(statement, book, true);
 
@@ -275,7 +282,7 @@ public class BookDaoImpl implements BookDao {
         Mapper<Book> bookMapper = BookMapper.getInstance();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_BOOKS_BY_ORDER_ID)){
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_BOOKS_BY_ORDER_ID)){
 
             statement.setLong(1, orderId);
 
@@ -294,7 +301,7 @@ public class BookDaoImpl implements BookDao {
     public List<Integer> findBooksCopiesNumber(String bookIdString) throws DaoException {
         List<Integer> copiesList = new ArrayList<>();
 
-        String sqlTemp = new StringBuilder(FIND_COPIES_NUMBER_BY_BOOK_ID)
+        String sqlTemp = new StringBuilder(SQL_SELECT_COPIES_NUMBER_BY_BOOKS_ID)
                 .append(SQL_IN_START).append(bookIdString)
                 .append(SQL_IN_END).toString();
 
@@ -319,7 +326,7 @@ public class BookDaoImpl implements BookDao {
         int rows = 0;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(FIND_BOOK_BY_TITLE)){
+            PreparedStatement statement = connection.prepareStatement(SELECT_NUMBER_OF_BOOKS_BY_TITLE)){
 
             statement.setString(1, title);
 
@@ -333,7 +340,7 @@ public class BookDaoImpl implements BookDao {
             throw new DaoException("SQL request findBooksByTitle for table library.books was failed", e);
         }
 
-        return rows > 0;
+        return rows > 1;
     }
 
     private void prepareInsertUpdateDbRequest(PreparedStatement statement, Book book, boolean isUpdate) throws SQLException {
@@ -350,6 +357,7 @@ public class BookDaoImpl implements BookDao {
             statement.setLong(6, book.getAuthor().getId());
             statement.setLong(7, book.getPublisher().getId());
             statement.setLong(8, book.getGenre().getId());
+
         } catch (SQLException e) {
             logger.error("Try to prepare SQL request was failed" + e);
             throw new SQLException("Try to prepare SQL request was failed", e);

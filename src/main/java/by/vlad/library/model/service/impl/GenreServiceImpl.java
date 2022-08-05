@@ -71,7 +71,7 @@ public class GenreServiceImpl implements GenreService {
             if(!genreDao.isGenreExists(genre)){
                 optionalGenre = genreDao.addGenre(genre);
             }else{
-                mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
+                mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_MAP_MARKER);
             }
         } catch (DaoException e) {
             logger.error("Method createNewGenre from genre service was failed" + e);
@@ -102,7 +102,7 @@ public class GenreServiceImpl implements GenreService {
             if(!genreDao.isGenreExists(genre)){
                 optionalGenre = genreDao.updateGenre(genre);
             }else{
-                mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_EXISTS_MARKER);
+                mapData.put(WRONG_GENRE_EXISTS_FORM, GenreService.GENRE_MAP_MARKER);
             }
         } catch (DaoException e) {
             logger.error("Method updateGenre from genre service was failed" + e);

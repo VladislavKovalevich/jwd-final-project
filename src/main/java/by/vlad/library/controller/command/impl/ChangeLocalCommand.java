@@ -32,15 +32,10 @@ public class ChangeLocalCommand implements Command {
 
         Language newLocal = Language.valueOf(request.getParameter(LANGUAGE));
 
-        switch (newLocal){
-
-            case EN -> {
-                session.setAttribute(LOCALE, Language.EN.getLocal());
-            }
-
-            default -> {
-                session.setAttribute(LOCALE, Language.RU.getLocal());
-            }
+        if (newLocal == Language.EN) {
+            session.setAttribute(LOCALE, Language.EN.getLocal());
+        } else {
+            session.setAttribute(LOCALE, Language.RU.getLocal());
         }
 
         router = new Router(currentPage, Router.Type.FORWARD);

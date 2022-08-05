@@ -80,4 +80,6 @@ public interface UserDao extends BasicDao<User> {
      * @throws DaoException if request from database was failed
      */
     List<User> findAllUsers() throws DaoException;
+
+    boolean changeAccountPasswordByCode(String email, String encodedNewPass) throws DaoException;
 }

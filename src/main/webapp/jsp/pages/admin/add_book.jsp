@@ -26,7 +26,7 @@
 <fmt:message key="button.add_book" var="add_book_btn"/>
 <fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
 <fmt:message key="message.book_has_been_added" var="book_has_been_added"/>
-<fmt:message key="message.book_with_title_is already_exists" var="book_is_already_exists"/>
+<fmt:message key="message.book_with_title_is_already_exists" var="book_is_already_exists"/>
 <fmt:message key="button.back_to_main" var="back_btn"/>
 
 <html>
@@ -185,7 +185,7 @@
                 </div>
 
                 <div class="col-12 green-color">
-                    <c:if test="${not empty book_form_data['add_book_msg']}">
+                    <c:if test="${book_form_data == null}">
                         ${book_has_been_added}
                     </c:if>
                 </div>

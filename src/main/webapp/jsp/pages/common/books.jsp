@@ -24,6 +24,10 @@
 <fmt:message key="label.authors" var="authors_label"/>
 <fmt:message key="label.are_available" var="are_available_label"/>
 <fmt:message key="button.book_filter" var="filter_btn"/>
+<fmt:message key="message.empty_list" var="empty_list_header"/>
+<fmt:message key="message.banned_modal_title" var="banned_modal_title"/>
+<fmt:message key="message.banned_modal_text" var="banned_modal_message"/>
+<fmt:message key="reference.exit" var="exit_ref"/>
 
 <html>
 <head>
@@ -42,24 +46,28 @@
 
     <style>
         figure {
-            width: 100%; /* Ширина области */
-            height: 400px; /* Высота области */
-            margin: 0; /* Обнуляем отступы */
+            width: 100%;
+            height: 400px;
+            margin: 0;
         }
 
         figure img {
-            width: 100%; /* Ширина изображений */
-            height: 100%; /* Высота изображении */
-            object-fit: cover; /* Вписываем фотографию в область */
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-
-        .clip {
-            white-space: nowrap; /* Запрещаем перенос строк */
-            overflow: hidden; /* Обрезаем все, что не помещается в область */
-            text-overflow: ellipsis; /* Добавляем многоточие */
+        .truncate {
+            padding: 0;
         }
 
+        .truncate p {
+            margin: 0;
+            -webkit-line-clamp: 3;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
 </head>
 <header>
@@ -72,7 +80,7 @@
             <div class="m-3">
                 <form method="get" action="${path}/controller">
                     <input type="hidden" name="command" value="show_books_list"/>
-                    <input type="hidden" name="direction" value="null"/>
+                    <input type="hidden" name="book_direction" value="null"/>
                     <h4 class="text-center">${book_filter_panel}</h4>
                     <div class="mt-3">
                         <h5>${authors_label}:</h5>
@@ -86,8 +94,8 @@
                                     </c:when>
                                     <c:otherwise>
                                         <c:set var="flag_author" value="0" scope="page"/>
-                                        <c:forEach var="genreId" items="${filter_data['author']}">
-                                            <c:if test="${(genreId eq author.id) and (flag_author eq 0)}">
+                                        <c:forEach var="authorId" items="${filter_data['author']}">
+                                            <c:if test="${(authorId eq author.id) and (flag_author eq 0)}">
                                                 <input type="checkbox" id="author${author.id}" name="author${author.id}"
                                                        checked/>
                                                 ${author.name} ${author.surname}<br/>
@@ -185,31 +193,31 @@
         <div class="col-9 mx-4 white-background">
             <c:choose>
                 <c:when test="${empty books_list}">
-                    <h5 class="text-center">Пусто</h5>
+                    <h5 class="text-center mt-2">${empty_list_header}</h5>
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="book" items="${books_list}">
-                        <a class="card-title link-secondary text-decoration-none"
+                        <a class="link-secondary text-decoration-none"
                            href="${path}/controller?command=show_book_info&book_id=${book.id}" data-toggle="tooltip">
-                            <div class="row g-0 white-background link">
-                                <figure class="col-md-3" style="width: 200px; height: 300px;">
+                            <div class="row white-background link my-1">
+                                <figure class="col-3" style="width: 200px; height: 300px" ;>
                                     <c:choose>
-                                        <c:when test="${not empty book.image.encodeImage}">
-                                            <img src="${book.image.encodeImage}" class="img-thumbnail">
+                                        <c:when test="${book.image == null}">
+                                            <img src="${path}/img/not_found_image.jpg">
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="${path}/img/not_found_image.jpg" class="img-thumbnail">
+                                            <img src="${book.image.encodeImage}">
                                         </c:otherwise>
                                     </c:choose>
                                 </figure>
-                                <div class="col-md-6">
+                                <div class="col-6 ">
                                     <div class="card-body">
 
                                         <h4>${book.title}</h4>
                                         <p class="card-text">${book_author}: ${book.author.name} ${book.author.surname}</p>
                                         <p class="card-text">${book_genre}: ${book.genre.name}</p>
                                         <p class="card-text">${book_publisher}: ${book.publisher.name}</p>
-                                        <div class="clip">${book_description}: ${book.description}</div>
+                                        <div class="truncate"><p>${book_description}: ${book.description}</p></div>
                                     </div>
                                 </div>
                             </div>
@@ -217,16 +225,16 @@
                     </c:forEach>
                     <div class="row">
                         <div class="col-md-3 text-center me-auto">
-                            <c:if test="${pagination_data['current_page_num'] > 1}">
-                                <a href="${path}/controller?command=show_books_list&page_direction=prev">${prev}</a>
+                            <c:if test="${pagination_data['book_current_page_num'] > 1}">
+                                <a href="${path}/controller?command=show_books_list&book_page_direction=prev">${prev}</a>
                             </c:if>
                         </div>
                         <div class="col-md-2 text-center me-auto">
-                                ${pagination_data['current_page_num']}
+                                ${pagination_data['book_current_page_num']}
                         </div>
                         <div class="col-md-3 text-center me-auto">
-                            <c:if test="${(pagination_data['current_page_num'] < pagination_data['pages_number'])}">
-                                <a href="${path}/controller?command=show_books_list&page_direction=next">${next}</a>
+                            <c:if test="${(pagination_data['book_current_page_num'] < pagination_data['book_pages_number'])}">
+                                <a href="${path}/controller?command=show_books_list&book_page_direction=next">${next}</a>
                             </c:if>
                         </div>
                     </div>

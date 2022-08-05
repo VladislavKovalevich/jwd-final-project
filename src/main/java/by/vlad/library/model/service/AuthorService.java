@@ -14,7 +14,7 @@ public interface AuthorService {
     /**
      * {@code AUTHOR_EXISTS_MARKER} constant represent string marker to mark, that author with some params is already exists
      */
-    String AUTHOR_EXISTS_MARKER = "author with this params is already exists";
+    String AUTHOR_MAP_MARKER = "author marker";
 
     /**
      * Find all authors

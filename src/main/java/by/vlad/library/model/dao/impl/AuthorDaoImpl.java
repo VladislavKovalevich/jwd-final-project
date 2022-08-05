@@ -26,20 +26,22 @@ import static by.vlad.library.model.dao.ColumnName.*;
 public class AuthorDaoImpl implements AuthorDao {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String SELECT_ALL_AUTHORS =
+    private static final String SQL_SELECT_ALL_AUTHORS =
             "SELECT * FROM authors";
 
-    private static final String INSERT_AUTHOR =
-            "INSERT INTO authors (`author_name`, `author_surname`) VALUES (?, ?)";
+    private static final String SQL_INSERT_AUTHOR =
+            "INSERT INTO authors (`author_name`, `author_surname`) " +
+                    "VALUES (?, ?)";
 
-    private static final String UPDATE_AUTHOR =
+    private static final String SQL_UPDATE_AUTHOR =
             "UPDATE authors " +
                     "SET author_name = ?," +
                     "    author_surname = ? " +
                     "WHERE author_id = ?";
 
-    private static final String IS_AUTHOR_EXISTS =
-            "SELECT COUNT(*) as count_col FROM authors " +
+    private static final String SQL_SELECT_AUTHORS_COUNT_BY_PARAMS =
+            "SELECT COUNT(*) as count_col " +
+                    "FROM authors " +
                     "WHERE author_name = ? AND author_surname = ?";
 
     private static AuthorDaoImpl instance;
@@ -59,7 +61,7 @@ public class AuthorDaoImpl implements AuthorDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_AUTHOR)){
 
             statement.setString(1, author.getName());
             statement.setString(2, author.getSurname());
@@ -91,7 +93,7 @@ public class AuthorDaoImpl implements AuthorDao {
         List<Author> authors = new ArrayList<>();
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_AUTHORS)){
+            PreparedStatement preparedStatement = connection.prepareStatement(SQL_SELECT_ALL_AUTHORS)){
 
             try(ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()){
@@ -117,7 +119,7 @@ public class AuthorDaoImpl implements AuthorDao {
         int rows;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(IS_AUTHOR_EXISTS)){
+            PreparedStatement statement = connection.prepareStatement(SQL_SELECT_AUTHORS_COUNT_BY_PARAMS)){
 
             statement.setString(1, author.getName());
             statement.setString(2, author.getSurname());
@@ -142,7 +144,7 @@ public class AuthorDaoImpl implements AuthorDao {
         Optional<Author> optionalAuthor;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_AUTHOR)){
+            PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_AUTHOR)){
 
             statement.setString(1, author.getName());
             statement.setString(2, author.getSurname());
@@ -168,7 +170,7 @@ public class AuthorDaoImpl implements AuthorDao {
         Optional<Author> optionalAuthor;
 
         try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(INSERT_AUTHOR)){
+            PreparedStatement statement = connection.prepareStatement(SQL_INSERT_AUTHOR)){
 
             statement.setString(1, author.getName());
             statement.setString(2, author.getSurname());

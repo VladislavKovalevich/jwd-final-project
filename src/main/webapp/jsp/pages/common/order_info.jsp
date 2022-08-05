@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="by.vlad.library.entity.OrderStatus" %>
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
@@ -33,7 +34,7 @@
 <fmt:message key="button.back_to_main" var="back_btn"/>
 <fmt:message key="button.reserve_order" var="reserve_order"/>
 <fmt:message key="button.reject_order" var="reject_order"/>
-<fmt:message key="button.order_order" var="order_order"/>
+<fmt:message key="button.accept_order" var="accept_order"/>
 <fmt:message key="button.return_order" var="return_order"/>
 <fmt:message key="button.delete_order" var="delete_order"/>
 <fmt:message key="button.remove_book" var="remove_book"/>
@@ -44,6 +45,10 @@
 <fmt:message key="label.book_genre" var="book_genre"/>
 <fmt:message key="message.wait_order" var="wait_order"/>
 <fmt:message key="message.reject_order_by_admin" var="reject_order_by_admin"/>
+<fmt:message key="message.wrong_book_copies_number" var="wrong_book_copies_message"/>
+<fmt:message key="message.banned_modal_title" var="banned_modal_title"/>
+<fmt:message key="message.banned_modal_text" var="banned_modal_message"/>
+<fmt:message key="reference.exit" var="exit_ref"/>
 
 
 <html>
@@ -61,257 +66,312 @@
     <script src="${path}/js/script.js"></script>
 
     <title>${title}</title><!--  -->
+    <style>
+        .modal__custom {
+            position: absolute;
+            visibility: hidden;
+            opacity: 0;
+            transition: .3s;
+            top: -1000px;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow-y: scroll;
+            padding: 60px 15px;
+        }
+
+        .modal__active {
+            position: fixed;
+            top: 0;
+            visibility: visible;
+            opacity: 1;
+            transition: .3s;
+        }
+
+        .modal__content {
+            width: 100%;
+            max-width: 500px;
+            padding: 50px;
+            background: #f9f9f9;
+            border-radius: 3px;
+            position: relative;
+            box-shadow: 0 5px 15px black;
+        }
+
+        .modal__title {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            margin: 0 0 15px;
+        }
+
+        .modal__description {
+            font-size: 1.125rem;
+        }
+    </style>
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>
 </header>
 <body class="background-theme">
 <section class="container-fluid">
+    <c:if test="${return_book_banned_flag == true}">
+        <div class="modal__custom modal__active">
+            <div class="modal__content">
+                <h3 class="modal__title">${banned_modal_title}</h3>
+                <p class="modal__description">${banned_modal_message}</p>
+                <a href="${path}/controller?command=logout">${exit_ref}</a>
+            </div>
+        </div>
+    </c:if>
     <div class="row m-lg-5 m-5">
         <div class="col-2"></div>
         <div class="col-8">
             <div class="row" style="background-color: aliceblue">
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-10 m-2">
-                        <h2>${order_label} #${order.id}</h2><!--  -->
-                        <div class="my-2 border-bottom border-top">
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <div class="card mt-2">
+                        <h2 class="card-header">${order_label} #${order.id}</h2><!--  -->
+                        <div class="my-2 card-text px-2">
                             <c:if test="${user_role eq 'CLIENT'}">
-                                ${ordered_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.acceptedDate}">
-                                        ${order.acceptedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${ordered_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.acceptedDate}">
+                                            ${order.acceptedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
 
-                                <br/>${rejected_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.rejectedDate}">
-                                        ${order.rejectedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${rejected_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.rejectedDate}">
+                                            ${order.rejectedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
 
-                                <br/>${estimated_return_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.estimatedReturnDate}">
-                                        ${order.estimatedReturnDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${estimated_return_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.estimatedReturnDate}">
+                                            ${order.estimatedReturnDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
 
-                                <br/>${returned_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.returnedDate}">
-                                        ${order.returnedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${returned_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.returnedDate}">
+                                            ${order.returnedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
                             </c:if>
 
                             <c:if test="${user_role eq 'ADMIN'}">
-                                ${create_date}: ${order.createdDate}
+                                <p>${create_date}: ${order.createdDate}</p>
 
-                                <br/>${reserved_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.reservedDate}">
-                                        ${order.reservedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${reserved_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.reservedDate}">
+                                            ${order.reservedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
 
-                                <br/>${ordered_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.acceptedDate}">
-                                        ${order.acceptedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${ordered_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.acceptedDate}">
+                                            ${order.acceptedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
+                                <p>${rejected_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.rejectedDate}">
+                                            ${order.rejectedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
 
-                                <br/>${rejected_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.rejectedDate}">
-                                        ${order.rejectedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${estimated_return_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.estimatedReturnDate}">
+                                            ${order.estimatedReturnDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
 
-                                <br/>${estimated_return_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.estimatedReturnDate}">
-                                        ${order.estimatedReturnDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <br/>${returned_date}:
-                                <c:choose>
-                                    <c:when test="${not empty order.returnedDate}">
-                                        ${order.returnedDate}
-                                    </c:when>
-                                    <c:otherwise>
-                                        ${none}
-                                    </c:otherwise>
-                                </c:choose>
+                                <p>${returned_date}:
+                                    <c:choose>
+                                        <c:when test="${not empty order.returnedDate}">
+                                            ${order.returnedDate}
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${none}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
                             </c:if>
                         </div>
                     </div>
-                    <div class="col-1"></div>
-                </div>
 
-                <c:if test="${user_role eq 'ADMIN'}">
+                    <c:if test="${user_role eq 'ADMIN'}">
+                        <div class="card my-2">
+                            <h2 class="card-header">User info</h2>
+                            <div class="card-text mx-1">
+                                <p>${user_login}: ${order.user.login}</p><!--  -->
+                                <p>${user_name}: ${order.user.name} ${order.user.surname}</p><!--  -->
+                            </div>
+                        </div>
+                    </c:if>
+
                     <hr/>
 
-                    <div class="row">
-                        <div class="col-1"></div>
-                        <div class="col-10 m-2">
-                            <h4>${user_login}: ${order.user.login}</h4><!--  -->
-                            <h4>${user_name}: ${order.user.name} ${order.user.surname}</h4><!--  -->
-                        </div>
-                        <div class="col-1"></div>
-                    </div>
+                    <div class="card my-2">
+                        <h3 class="card-header">${book_list}:</h3><!--  -->
 
-                </c:if>
-
-                <hr/>
-
-                <div class="row">
-                    <div class="col-1"></div>
-                    <div class="col-10 m-2">
-                        <h3>${book_list}:</h3><!--  -->
-                    </div>
-                    <div class="col-1"></div>
-                </div>
-
-                <c:choose>
-                    <c:when test="${not empty order_books}">
-                        <c:forEach var="book" items="${order_books}">
-                            <div class="row">
-                                <div class="col-1"></div>
-                                <div class="col-10 m-2" style="background-color: aliceblue; border-color: #333333">
-                                    <div class="row">
-                                        <div class="col-2 white-background">
-                                            <div class="">
-                                                <c:choose>
-                                                    <c:when test="${not empty book.image.encodeImage}">
-                                                        <img src="${book.image.encodeImage}" class="img-thumbnail">
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <img src="${path}/img/not_found_image.jpg"
-                                                             class="img-thumbnail">
-                                                    </c:otherwise>
-                                                </c:choose>
+                        <div class="card-text">
+                            <c:choose>
+                                <c:when test="${not empty order_books}">
+                                    <c:forEach var="book" items="${order_books}">
+                                        <div class="row ms-1 my-1">
+                                            <div class="col-2">
+                                                <div>
+                                                    <c:choose>
+                                                        <c:when test="${not empty book.image.encodeImage}">
+                                                            <img src="${book.image.encodeImage}" class="img-thumbnail">
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <img src="${path}/img/not_found_image.jpg"
+                                                                 class="img-thumbnail">
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="col-9">
+                                                <h4 class="py-1">${book_title}: ${book.title}</h4><!--  -->
+                                                <p> ${book_author}: ${book.author.name} ${book.author.surname}</p>
+                                                <!--  -->
+                                                <p>${book_publisher}: ${book.publisher.name}</p><!--  -->
+                                                <p>${book_genre}: ${book.genre.name}</p><!--  -->
+                                            </div>
+                                            <div class="col-3">
+                                                <p class="ps-2">
+                                                    <c:if test="${order.status eq 'CREATED' && user_role eq 'CLIENT'}">
+                                                        <a href="${path}/controller?command=remove_book_from_order&book_id=${book.id}"
+                                                           class="btn btn-primary my-2">${remove_book}</a><!-- -->
+                                                    </c:if>
+                                                </p>
                                             </div>
                                         </div>
-                                        <div class="col-9">
-                                            <h4 class="py-1">${book_title}: ${book.title}</h4><!--  -->
-                                            <p class="">${book_author}: ${book.author.name} ${book.author.surname}</p>
-                                            <!--  -->
-                                            <p class="">${book_publisher}: ${book.publisher.name}</p><!--  -->
-                                            <p class="">${book_genre}: ${book.genre.name}</p><!--  -->
-                                        </div>
-                                        <div class="col-3">
-                                            <p>
-                                                <c:if test="${order.status eq 'CREATED' && user_role eq 'CLIENT'}">
-                                                    <a href="${path}/controller?command=remove_book_from_order&order_id=${order.id}&book_id=${book.id}"
-                                                       class="btn btn-primary my-2">${remove_book}</a><!-- -->
-                                                </c:if>
-                                            </p>
-                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="card-text text-center"><h3>${empty_order}</h3></div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+
+                    <!-- buttons-->
+                    <div class="row">
+                        <c:choose>
+                            <c:when test="${user_role eq 'CLIENT'}">
+                                <c:if test="${order.status eq 'CREATED' && not empty order_books}">
+                                    <hr/>
+                                    <div class="col-2 my-1">
+                                        <a class="btn btn-primary"
+                                           href="${path}/controller?command=change_order_status&order_status=${OrderStatus.RESERVED}">${reserve_order}</a>
+                                        <!--  -->
                                     </div>
-                                </div>
-                                <div class="col-1"></div>
-                            </div>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="col-1"></div>
-                        <div class="col-10 text-center"><h3>${empty_order}</h3></div>
-                        <!-- -->
-                        <div class="col-1"></div>
-                    </c:otherwise>
-                </c:choose>
+                                </c:if>
+                                <c:if test="${order.status eq 'ACCEPTED'}">
+                                    <hr/>
+                                    <div class="col-2 my-2">
+                                        <a class="btn btn-primary"
+                                           href="${path}/controller?command=return_order">${return_order}</a>
+                                        <!--  -->
+                                    </div>
+                                </c:if>
+                                <c:if test="${order.status eq 'RESERVED'}">
+                                    <hr/>
+                                    <div class="col-2 my-2">
+                                            ${wait_order}
+                                    </div>
+                                </c:if>
+                                <c:if test="${order.status eq 'REJECTED'}">
+                                    <hr/>
+                                    <div class="col-2 my-2">
+                                            ${reject_order_by_admin}
+                                    </div>
+                                </c:if>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${order.status eq 'RESERVED'}">
+                                    <hr/>
+                                    <c:if test="${not empty wrong_book_copies_count}">
+                                        <div class="col-12">
+                                                ${wrong_book_copies_message}
+                                        </div>
+                                    </c:if>
+                                    <div class="col-2 my-2 mx-3">
+                                        <a class="btn btn-primary"
+                                           href="${path}/controller?command=accept_order">${accept_order}</a>
+                                    </div>
+                                    <div class="col-2 my-2 mx-1">
+                                        <a class="btn btn-danger"
+                                           href="${path}/controller?command=change_order_status&order_status=${OrderStatus.REJECTED}">${reject_order}</a>
+                                    </div>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
 
-                <c:choose>
-                    <c:when test="${user_role eq 'CLIENT'}">
-                        <c:if test="${order.status eq 'CREATED' && not empty order_books}">
-                            <hr/>
-                            <div class="col-2 my-2">
-                                <a class="btn btn-primary"
-                                   href="${path}/controller?command=reserve_order&order_id=${order.id}">${reserve_order}</a>
-                                <!--  -->
-                            </div>
-                        </c:if>
-                        <c:if test="${order.status eq 'ACCEPTED'}">
-                            <hr/>
-                            <div class="col-2 my-2">
-                                <a class="btn btn-primary"
-                                   href="${path}/controller?command=return_order&order_id=${order.id}&order_type=${order.type}">${return_order}</a>
-                                <!--  -->
-                            </div>
-                        </c:if>
-                        <c:if test="${order.status eq 'RESERVED'}">
-                            <hr/>
-                            <div class="col-2 my-2">
-                                    ${wait_order}
-                            </div>
-                        </c:if>
-                        <c:if test="${order.status eq 'REJECTED'}">
-                            <hr/>
-                            <div class="col-2 my-2">
-                                    ${reject_order_by_admin}
-                            </div>
-                        </c:if>
-                    </c:when>
-                    <c:otherwise>
-                        <c:if test="${order.status eq 'RESERVED'}">
-                            <hr/>
-                            <div class="col-2 my-2 mx-3">
-                                <a class="btn btn-primary"
-                                   href="${path}/controller?command=accept_order&order_id=${order.id}&order_type=${order.type}">${order_order}</a>
-                                <!--  -->
-                            </div>
-                            <div class="col-2 my-2 mx-1">
-                                <a class="btn btn-danger"
-                                   href="${path}/controller?command=reject_order&order_id=${order.id}">${reject_order}</a>
-                                <!--  -->
-                            </div>
-                        </c:if>
-                    </c:otherwise>
-                </c:choose>
+                        <hr/>
 
-                <hr/>
-
-                <div class="col-auto mr-auto">
-                    <form method="get" action="${path}/controller">
-                        <input type="hidden" name="command" value="go_to_order_list_page">
-                        <button class="btn btn-primary" type="submit">${back_btn}</button>
-                    </form>
-                </div>
-                <div class="col-auto">
-                    <c:if test="${order.status eq 'CREATED' && user_role eq 'CLIENT'}">
-                        <a href="${path}/controller?command=delete_order&order_id=${order.id}"
-                           class="btn btn-danger my-2">${delete_order}</a>
-                    </c:if>
+                        <div class="col-auto mr-auto">
+                            <form method="get" action="${path}/controller">
+                                <input type="hidden" name="command" value="go_to_order_list_page">
+                                <button class="btn btn-primary" type="submit">${back_btn}</button>
+                            </form>
+                        </div>
+                        <div class="col-auto">
+                            <c:if test="${order.status eq 'CREATED' && user_role eq 'CLIENT'}">
+                                <a href="${path}/controller?command=delete_order&order_id=${order.id}"
+                                   class="btn btn-danger">${delete_order}</a>
+                            </c:if>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="col-1"></div>
         </div>
         <div class="col-2"></div>
     </div>

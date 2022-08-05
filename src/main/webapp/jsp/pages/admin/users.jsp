@@ -42,10 +42,12 @@
 </header>
 <body class="background-theme">
 <section class="container-fluid">
-    <div class="row m-lg-5 m-5">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <div class="row my-4 white-background">
+    <div class="row mx-lg-5 my-lg-5">
+        <div class="col-3 mx-2">
+            <jsp:include page="../fragment/navigation_account.jsp"/>
+        </div>
+        <div class="col-8 mx-2 white-background">
+            <div class="row my-4">
                 <c:forEach var="user" items="${users_list}">
                     <div class="col-1"></div>
                     <div class="col-10 my-2" style="background-color: #c7b39b">
@@ -58,7 +60,7 @@
                                     ${user.mobilePhone}
                                 </c:when>
                                 <c:otherwise>
-                                    ${not_found_msg}not found
+                                    ${not_found_msg}
                                 </c:otherwise>
                             </c:choose>
                         </p>
@@ -86,7 +88,6 @@
                 </c:forEach>
             </div>
         </div>
-        <div class="col-2"></div>
     </div>
 </section>
 </body>

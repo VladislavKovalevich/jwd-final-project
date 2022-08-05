@@ -3,6 +3,7 @@ package by.vlad.library.controller.command.impl.admin;
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
+import by.vlad.library.entity.Image;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.BookService;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +36,10 @@ public class AddNewBookCommand implements Command {
         HttpSession session = request.getSession();
         Map<String,String> bookMap = (Map<String, String>) session.getAttribute(BOOK_FORM_DATA);
 
+        if (bookMap == null){
+            bookMap = new HashMap<>();
+        }
+
         clearSessionMap(bookMap);
         fillSessionMap(request, bookMap);
 
@@ -45,24 +51,21 @@ public class AddNewBookCommand implements Command {
 
             if (optionalBook.isPresent()) {
                 Part part = request.getPart(IMAGE);
+                InputStream in = part.getInputStream();
+                byte[] image = in.readAllBytes();
 
-                if (part != null) {
-                    InputStream in = part.getInputStream();
-                    byte[] image = in.readAllBytes();
-                    imageService.createNewImage(image, optionalBook.get());
+                Book newBook = optionalBook.get();
+
+                if (image.length > 0) {
+                    imageService.createNewImage(image, newBook);
                 }
 
-                List<Book> books = (List<Book>) session.getAttribute(BOOKS_LIST);
-                books.add(optionalBook.get());
-
-                session.setAttribute(BOOKS_LIST, books);
-
-                bookMap.clear();
-                bookMap.put(ADD_BOOK_MSG, BOOK_ADDED_MARKER);
+                session.removeAttribute(BOOK_FORM_DATA);
+            }else {
+                session.setAttribute(BOOK_FORM_DATA, bookMap);
             }
 
             session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
-            session.setAttribute(BOOK_FORM_DATA, bookMap);
 
         } catch (ServiceException | ServletException | IOException e) {
             logger.error("AddNewBookCommand execution failed");
@@ -84,6 +87,7 @@ public class AddNewBookCommand implements Command {
     }
 
     private void clearSessionMap(Map<String, String> booksMap) {
+        booksMap.remove(WRONG_TITLE_EXISTS_FORM);
         booksMap.remove(WRONG_TITLE_FORM);
         booksMap.remove(WRONG_COPIES_NUMBER_FORM);
         booksMap.remove(WRONG_RELEASE_YEAR_FORM);

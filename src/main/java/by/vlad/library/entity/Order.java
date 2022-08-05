@@ -51,139 +51,76 @@ public class Order extends AbstractEntity{
     }
 
     /**
-     * method-getter for {@link Order#createdDate} field
-     * @return {@link Order#createdDate}
-     */
-    public LocalDate getCreatedDate() {
-        return createdDate;
-    }
-
-    /**
-     * Method-setter for {@link Order#createdDate} filed
-     * @param createdDate - created date, type {@link LocalDate}
-     */
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /**
-     * method-getter for {@link Order#reservedDate} field
-     * @return {@link Order#reservedDate}
-     */
-    public LocalDate getReservedDate() {
-        return reservedDate;
-    }
-
-    /**
-     * Method-setter for {@link Order#reservedDate} filed
-     * @param reservedDate - reserved date, type {@link LocalDate}
-     */
-    public void setReservedDate(LocalDate reservedDate) {
-        this.reservedDate = reservedDate;
-    }
-
-    /**
-     * method-getter for {@link Order#acceptedDate} field
-     * @return {@link Order#acceptedDate}
-     */
-    public LocalDate getAcceptedDate() {
-        return acceptedDate;
-    }
-
-    /**
-     * Method-setter for {@link Order#acceptedDate} filed
-     * @param acceptedDate - ordered date, type {@link LocalDate}
-     */
-    public void setAcceptedDate(LocalDate acceptedDate) {
-        this.acceptedDate = acceptedDate;
-    }
-
-    /**
-     * method-getter for {@link Order#rejectedDate} field
-     * @return {@link Order#rejectedDate}
-     */
-    public LocalDate getRejectedDate() {
-        return rejectedDate;
-    }
-
-    /**
-     * Method-setter for {@link Order#rejectedDate} filed
-     * @param rejectedDate - rejected date, type {@link LocalDate}
-     */
-    public void setRejectedDate(LocalDate rejectedDate) {
-        this.rejectedDate = rejectedDate;
-    }
-
-    /**
-     * method-getter for {@link Order#returnedDate} field
-     * @return {@link Order#returnedDate}
-     */
-    public LocalDate getReturnedDate() {
-        return returnedDate;
-    }
-
-    /**
-     * Method-setter for {@link Order#returnedDate} filed
-     * @param returnedDate - returnedDate date, type {@link LocalDate}
-     */
-    public void setReturnedDate(LocalDate returnedDate) {
-        this.returnedDate = returnedDate;
-    }
-
-    /**
-     * method-getter for {@link Order#type} field
-     * @return {@link Order#type}
-     */
-    public OrderType getType() {
-        return type;
-    }
-
-    /**
-     * Method-setter for {@link Order#type} filed
-     * @param type - order type, type {@link OrderType}
-     */
-    public void setType(OrderType type) {
-        this.type = type;
-    }
-
-    /**
-     * method-getter for {@link Order#status} field
-     * @return {@link Order#status}
-     */
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    /**
-     * Method-setter for {@link Order#status} filed
-     * @param status - order status, type {@link OrderStatus}
-     */
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    /**
-     * method-getter for {@link Order#user} field
-     * @return {@link Order#user}
-     */
-    public User getUser() {
-        return user;
-    }
-
-    /**
-     * Method-setter for {@link Order#user} filed
-     * @param user - user, type {@link User}
-     */
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    /**
      * {@code getOrderBuilder} method to get {@link Order.OrderBuilder}
      * @return {@link Order.OrderBuilder}
      */
     public static OrderBuilder getOrderBuilder(){
         return new Order().new OrderBuilder();
+    }
+
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getReservedDate() {
+        return reservedDate;
+    }
+
+    public void setReservedDate(LocalDate reservedDate) {
+        this.reservedDate = reservedDate;
+    }
+
+    public LocalDate getAcceptedDate() {
+        return acceptedDate;
+    }
+
+    public void setAcceptedDate(LocalDate acceptedDate) {
+        this.acceptedDate = acceptedDate;
+    }
+
+    public LocalDate getRejectedDate() {
+        return rejectedDate;
+    }
+
+    public void setRejectedDate(LocalDate rejectedDate) {
+        this.rejectedDate = rejectedDate;
+    }
+
+    public LocalDate getReturnedDate() {
+        return returnedDate;
+    }
+
+    public void setReturnedDate(LocalDate returnedDate) {
+        this.returnedDate = returnedDate;
+    }
+
+    public OrderType getType() {
+        return type;
+    }
+
+    public void setType(OrderType type) {
+        this.type = type;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDate getEstimatedReturnDate() {
@@ -198,91 +135,47 @@ public class Order extends AbstractEntity{
      * {@code OrderBuilder} class to build {@link Order}
      */
     public class OrderBuilder{
-        /**
-         * Method defines {@link AbstractEntity#id} field
-         * @param id - order id, type {@link Long}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
+
         public OrderBuilder withId(long id){
             Order.this.setId(id);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#createdDate} field
-         * @param date - created date, type {@link LocalDate}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withCreateDate(LocalDate date){
             Order.this.setCreatedDate(date);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#reservedDate} field
-         * @param date - reserved date, type {@link LocalDate}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withReservedDate(LocalDate date){
             Order.this.setReservedDate(date);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#acceptedDate} field
-         * @param date - ordered date, type {@link LocalDate}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withOrderedDate(LocalDate date){
             Order.this.setAcceptedDate(date);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#rejectedDate} field
-         * @param date - rejected date, type {@link LocalDate}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withRejectedDate(LocalDate date){
             Order.this.setRejectedDate(date);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#returnedDate} field
-         * @param date - returned date, type {@link LocalDate}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withReturnedDate(LocalDate date){
             Order.this.setReturnedDate(date);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#type} field
-         * @param type - order type, type {@link OrderType}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withOrderType(OrderType type){
             Order.this.setType(type);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#status} field
-         * @param status - order status, type {@link OrderStatus}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withOrderStatus(OrderStatus status){
             Order.this.setStatus(status);
             return this;
         }
 
-        /**
-         * Method defines {@link Order#user} field
-         * @param user - user, type {@link User}
-         * @return - builder object {@link Order.OrderBuilder}
-         */
         public OrderBuilder withUser(User user){
             Order.this.setUser(user);
             return this;
@@ -311,9 +204,12 @@ public class Order extends AbstractEntity{
         Order order = (Order) o;
 
         if (!createdDate.equals(order.createdDate)) return false;
+        if (reservedDate != null ? !reservedDate.equals(order.reservedDate) : order.reservedDate != null) return false;
         if (acceptedDate != null ? !acceptedDate.equals(order.acceptedDate) : order.acceptedDate != null) return false;
         if (rejectedDate != null ? !rejectedDate.equals(order.rejectedDate) : order.rejectedDate != null) return false;
         if (returnedDate != null ? !returnedDate.equals(order.returnedDate) : order.returnedDate != null) return false;
+        if (estimatedReturnDate != null ? !estimatedReturnDate.equals(order.estimatedReturnDate) : order.estimatedReturnDate != null)
+            return false;
         if (type != order.type) return false;
         if (status != order.status) return false;
         return user.equals(order.user);
@@ -323,9 +219,11 @@ public class Order extends AbstractEntity{
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + createdDate.hashCode();
+        result = 31 * result + (reservedDate != null ? reservedDate.hashCode() : 0);
         result = 31 * result + (acceptedDate != null ? acceptedDate.hashCode() : 0);
         result = 31 * result + (rejectedDate != null ? rejectedDate.hashCode() : 0);
         result = 31 * result + (returnedDate != null ? returnedDate.hashCode() : 0);
+        result = 31 * result + (estimatedReturnDate != null ? estimatedReturnDate.hashCode() : 0);
         result = 31 * result + type.hashCode();
         result = 31 * result + status.hashCode();
         result = 31 * result + user.hashCode();

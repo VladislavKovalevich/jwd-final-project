@@ -2,7 +2,6 @@ package by.vlad.library.controller.command.impl.admin.gotopage;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.Router;
-import by.vlad.library.controller.util.CurrentPageExtractor;
 import by.vlad.library.entity.Book;
 import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
@@ -51,7 +50,10 @@ public class GoToUpdateBookDataPageCommand implements Command {
                 booksData.put(AUTHOR_FORM, String.valueOf(book.getAuthor()));
                 booksData.put(PUBLISHER_FORM, String.valueOf(book.getPublisher()));
                 booksData.put(GENRE_FORM, String.valueOf(book.getGenre()));
-                booksData.put(IMAGE_ID, String.valueOf(book.getImage().getId()));
+
+                if (book.getImage() != null) {
+                    booksData.put(IMAGE_ID, String.valueOf(book.getImage().getId()));
+                }
             }
         } catch (ServiceException e) {
             logger.error("GoToUpdateBookDataPageCommand execution failed");
@@ -59,7 +61,7 @@ public class GoToUpdateBookDataPageCommand implements Command {
         }
 
         session.setAttribute(BOOK_FORM_DATA, booksData);
-        session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));
+        session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
 
         return new Router(UPDATE_BOOK_DATA_PAGE, Router.Type.FORWARD);
     }

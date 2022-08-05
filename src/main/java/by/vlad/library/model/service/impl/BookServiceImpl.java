@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
             }
 
             BookDao bookDAO = BookDaoImpl.getInstance();
-            long tempPage = paginationData.get(CURRENT_PAGE_NUM);
+            long tempPage = paginationData.get(BOOK_CURRENT_PAGE_NUM);
 
             if (direction.equals(NEXT_PAGE)){
                 tempPage++;
@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService {
 
             books = bookDAO.getBooks(tempPage, filterMap);
 
-            paginationData.put(CURRENT_PAGE_NUM, tempPage);
+            paginationData.put(BOOK_CURRENT_PAGE_NUM, tempPage);
         } catch (DaoException e) {
             logger.error("Method getAllBooks from book service was failed" + e);
             throw new ServiceException("Method getAllBooks from book service was failed", e);
@@ -75,8 +75,8 @@ public class BookServiceImpl implements BookService {
 
     private void initPaginationDataMap(Map<String, Long> paginationMap, Map<String, Long[]> filterMap) throws DaoException {
         long pagesNumber = BookDaoImpl.getInstance().findNumberOfPage(filterMap);
-        paginationMap.put(PAGES_NUMBER, pagesNumber);
-        paginationMap.put(CURRENT_PAGE_NUM, 0L);
+        paginationMap.put(BOOK_PAGES_NUMBER, pagesNumber);
+        paginationMap.put(BOOK_CURRENT_PAGE_NUM, 0L);
     }
 
     @Override
@@ -127,7 +127,6 @@ public class BookServiceImpl implements BookService {
                         .withDescription(description)
                         .withNumberOfPages(pages_count)
                         .withReleaseYear(Year.of(year))
-                        .withImage(new Image())
                         .buildBook();
 
                 optionalBook = bookDao.addNewBook(book);

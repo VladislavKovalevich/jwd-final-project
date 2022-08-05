@@ -25,9 +25,11 @@ public class LoginCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
+        String page;
+        Router.Type routerType = Router.Type.REDIRECT;
 
-        Map<String, String> userFormData = (Map<String, String>) session.getAttribute(USER_FORM_DATA);
-        session.removeAttribute(USER_FORM_DATA);
+        Map<String, String> userFormData = (Map<String, String>) session.getAttribute(USER_DATA);
+        session.removeAttribute(USER_DATA);
 
         if (userFormData == null){
             userFormData = new HashMap<>();
@@ -38,8 +40,6 @@ public class LoginCommand implements Command {
 
         UserService userService = UserServiceImpl.getInstance();
 
-        Router router;
-
         try {
             Optional<User> optionalUser = userService.authenticate(userFormData);
             if (optionalUser.isPresent()){
@@ -48,32 +48,28 @@ public class LoginCommand implements Command {
                 if (user.isBanned()){
                     userFormData.put(USER_IS_BANNED, UserValidator.WRONG_FORMAT_MARKER);
 
-                    session.setAttribute(USER_FORM_DATA, userFormData);
-                    session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
-
-                    router = new Router(LOGIN_PAGE, Router.Type.REDIRECT);
+                    session.setAttribute(USER_DATA, userFormData);
+                    page = LOGIN_PAGE;
                 }else {
                     session.setAttribute(USER_EMAIL, user.getEmail());
                     session.setAttribute(USER_ROLE, user.getRole().name().toUpperCase(Locale.ROOT));
                     session.setAttribute(USER_LOGIN, user.getLogin());
                     session.setAttribute(USER_ID, user.getId());
+                    page = BOOKS_PAGE;
 
-                    session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
-                    router = new Router(SHOW_BOOKS_LIST_PAGE, Router.Type.REDIRECT);
                 }
             }else{
-                session.setAttribute(USER_FORM_DATA, userFormData);
-                session.setAttribute(CURRENT_PAGE, LOGIN_PAGE);
-
-                router = new Router(LOGIN_PAGE, Router.Type.REDIRECT);
+                session.setAttribute(USER_DATA, userFormData);
+                page = LOGIN_PAGE;
             }
 
+            session.setAttribute(CURRENT_PAGE, page);
         } catch (ServiceException e) {
             logger.error("LoginCommand execution failed");
             throw new CommandException("LoginCommand execution failed", e);
         }
 
-        return router;
+        return new Router(page, routerType);
     }
 
     private void fillUserMap(Map<String, String> userFormData, HttpServletRequest request){
@@ -82,6 +78,7 @@ public class LoginCommand implements Command {
     }
 
     private void cleanErrorMessages(Map<String, String> userFormData){
+        userFormData.remove(SUCCESSFULLY_PASSWORD_CHANGE);
         userFormData.remove(WRONG_EMAIL_OR_PASS);
         userFormData.remove(NOT_FOUND_USER);
         userFormData.remove(USER_IS_BANNED);

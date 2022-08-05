@@ -15,8 +15,8 @@ public class DefaultCommand implements Command {
         HttpSession session = request.getSession();
         Router router;
 
-        session.setAttribute(CURRENT_PAGE, SHOW_BOOKS_LIST_PAGE);
-        router = new Router(SHOW_BOOKS_LIST_PAGE);
+        session.setAttribute(CURRENT_PAGE, BOOKS_PAGE);
+        router = new Router(BOOKS_PAGE);
 
         return router;
     }

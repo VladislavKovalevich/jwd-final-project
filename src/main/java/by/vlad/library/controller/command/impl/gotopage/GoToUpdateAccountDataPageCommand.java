@@ -7,7 +7,6 @@ import by.vlad.library.exception.CommandException;
 import by.vlad.library.exception.ServiceException;
 import by.vlad.library.model.service.UserService;
 import by.vlad.library.model.service.impl.UserServiceImpl;
-import by.vlad.library.controller.util.CurrentPageExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +18,7 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.CHANGE_ACCOUNT_DATA_PAGE;
+import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_DATA_PAGE;
 
 public class GoToUpdateAccountDataPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -44,14 +44,15 @@ public class GoToUpdateAccountDataPageCommand implements Command {
                 userData.put(SERIAL_NUMBER_FORM, user.getPassportSerialNumber());
                 userData.put(PHONE_NUMBER_FORM, user.getMobilePhone());
 
-                session.setAttribute(USER_FORM_DATA, userData);
+                session.setAttribute(USER_DATA, userData);
             }
         } catch (ServiceException e) {
             logger.error("GoToUpdateAccountDataPageCommand execution failed");
             throw new CommandException("GoToUpdateAccountDataPageCommand execution failed", e);
         }
 
-        session.setAttribute(CURRENT_PAGE, CurrentPageExtractor.extract(request));
+        session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
+
         return new Router(CHANGE_ACCOUNT_DATA_PAGE, Router.Type.FORWARD);
     }
 }

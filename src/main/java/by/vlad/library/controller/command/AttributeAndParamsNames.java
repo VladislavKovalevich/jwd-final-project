@@ -48,7 +48,7 @@ public class AttributeAndParamsNames {
     public static final String NOT_FOUND_USER = "not_found_user";
     public static final String USER_IS_BANNED = "user_is_banned";
 
-    public static final String USER_FORM_DATA = "user_form_data";
+    public static final String USER_DATA = "user_form_data";
 
     public static final String WRONG_NAME_FORM = "wrong_name_form";
     public static final String WRONG_SURNAME_FORM = "wrong_surname_form";
@@ -63,6 +63,8 @@ public class AttributeAndParamsNames {
     public static final String WRONG_NEW_PASSWORD_FORM = "wrong_new_pass_form";
     public static final String WRONG_NEW_REPEAT_PASSWORD_FORM = "wrong_new_repeat_pass_form";
 
+    public static final String SUCCESSFULLY_PASSWORD_CHANGE = "successfully_password_change";
+
     public static final String NAME_FORM = "name_form";
     public static final String SURNAME_FORM = "surname_form";
     public static final String LOGIN_FORM = "login_form";
@@ -74,24 +76,31 @@ public class AttributeAndParamsNames {
     public static final String NEW_PASSWORD_FORM = "new_pass_form";
     public static final String NEW_REPEAT_PASSWORD_FORM = "new_repeat_pass_form";
 
+    public static final String SECRET_CODE_FORM = "secret_code_form";
+    public static final String SECRET_CODE = "secret_code";
+    public static final String WRONG_SECRET_CODE = "wrong_secret_code";
+    public static final String ENCODED_SECRET_CODE = "encoded_secret_code";
+
+    public static final String CHANGE_PASSWORD_OPERATION_STATUS_CODE = "change_password_operation_status_code";
+
     public static final String PAGINATION_DATA = "pagination_data";
-    public static final String CURRENT_PAGE_NUM = "current_page_num";
-    public static final String PAGES_NUMBER = "pages_number";
-    
+    public static final String ORDER_CURRENT_PAGE_NUM = "order_current_page_num";
+    public static final String ORDER_PAGES_NUMBER = "order_pages_number";
+
+    public static final String BOOK_CURRENT_PAGE_NUM = "book_current_page_num";
+    public static final String BOOK_PAGES_NUMBER = "book_pages_number";
+
     public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "user_login";
     public static final String USER_EMAIL = "user_email";
     public static final String USER_ROLE = "user_role";
 
+    public static final String USER_INFO = "user_info";
+
     public static final String LOCALE = "locale";
 
     public static final String CURRENT_PAGE = "current_page";
 
-    public static final String ADD_BOOK_MSG = "add_book_msg";
-
-    public static final String PUBLISHER_OPERATION_FEEDBACK = "publisher_operation_feedback";
-    public static final String AUTHOR_OPERATION_FEEDBACK = "author_operation_feedback";
-    public static final String GENRE_OPERATION_FEEDBACK = "genre_operation_feedback";
     public static final String BOOK_OPERATION_FEEDBACK = "book_operation_feedback";
     public static final String ORDER_OPERATION_FEEDBACK = "order_operation_feedback";
 
@@ -105,13 +114,17 @@ public class AttributeAndParamsNames {
 
     public static final String ORDER_STATUS = "order_status";
     public static final String ORDER_TYPES = "order_types";
+    public static final String ORDER_STATUSES = "order_statuses";
 
-    public static final String BOOK_ORDER_DATA = "book_order_data";
+    public static final String OPERATION_FEEDBACK_MAP_SES = "operation_feedback_map_ses";
     public static final String BOOK_LIMIT_IN_ORDER = "book_limit_in_order";
     public static final String ORDERS_LIMIT = "orders_limit";
 
+    public static final String RETURN_ORDER_BANNED_FLAG = "return_book_banned_flag";
+
     ////request params names
-    public static final String PAGE_DIRECTION = "page_direction";
+    public static final String BOOK_PAGE_DIRECTION = "book_page_direction";
+    public static final String ORDER_PAGE_DIRECTION = "order_page_direction";
 
     public static final String COMMAND = "command";
     public static final String LANGUAGE = "language";
@@ -121,7 +134,6 @@ public class AttributeAndParamsNames {
 
     public static final String ORDER_BOOKS = "order_books";
     public static final String ORDER_TYPE = "order_type";
-    public static final String ORDER_STATUS_ID = "order_status_id";
 
     //user params
     public static final String EMAIL = "email";
@@ -174,4 +186,6 @@ public class AttributeAndParamsNames {
     public static final String ORDERS = "orders";
 
     public static final String ORDER = "order";
+
+    public static final String WRONG_BOOK_COPIES_COUNT = "wrong_book_copies_count";
 }

@@ -19,9 +19,9 @@
 <fmt:message key="label.author_surname" var="author_surname"/>
 <fmt:message key="label.publisher_name" var="publisher_name"/>
 <fmt:message key="label.genre_name" var="genre_name"/>
-<fmt:message key="label.book_author" var="author"/>
+<fmt:message key="label.book_author" var="type"/>
 <fmt:message key="label.book_publisher" var="publisher"/>
-<fmt:message key="label.book_genre" var="genre"/>
+<fmt:message key="label.book_genre" var="status"/>
 <fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
 <fmt:message key="message.incorrect_author" var="incorrect_author"/>
 <fmt:message key="message.incorrect_publisher" var="incorrect_publisher"/>
@@ -55,135 +55,154 @@
         <div class="col mb-2"></div>
 
         <div class="col-6 mb-3 py-3 px-3" style="background-color: aliceblue">
-            <h3 class="py-md-3">${title}</h3>
-            <hr/>
-            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
-                <input type="hidden" name="command" value="add_new_author">
-                <div class="col-md-12">
-                    <p class="form-label">${author}:</p>
-                </div>
+            <h3 class="py-md-3 card-header">${title}</h3>
+            <div class="card mt-2">
+                <h5 class="form-label card-header">${type}:</h5>
+                <div class="card-text my-2 ms-1">
+                    <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                        <input type="hidden" name="command" value="add_new_author">
+                        <div class="col-md-3">
+                            <label for="author_name" class="form-label">${author_name}</label>
+                            <input type="text" class="form-control" maxlength="20" name="author_name" id="author_name"
+                                   value="${book_components_form_data['author_name_form']}"
+                                   pattern="[А-ЯЁ][а-яё]*"
+                                   required oninvalid="this.setCustomValidity('surname rules')">
+                            <c:if test="${not empty book_components_form_data['wrong_author_name_form']}">
+                                <div class="red-color">
+                                        ${incorrect_data_format}
+                                </div>
+                            </c:if>
+                        </div>
 
-                <div class="col-md-3">
-                    <label for="author_name" class="form-label">${author_name}</label>
-                    <input type="text" class="form-control" maxlength="20" name="author_name" id="author_name"
-                           value="${book_components_form_data['author_name_form']}"
-                           pattern="[А-ЯЁ][а-яё]*"
-                           required oninvalid="this.setCustomValidity('surname rules')">
-                    <div class="red-color">
-                        <c:if test="${not empty book_components_form_data['wrong_author_name_form']}">
-                            ${incorrect_data_format}
+                        <div class="col-md-9"></div>
+
+                        <div class="col-md-3">
+                            <label for="author_surname" class="form-label">${author_surname}</label>
+                            <input type="text" class="form-control" maxlength="40" name="author_surname"
+                                   id="author_surname"
+                                   value="${book_components_form_data['author_surname_form']}"
+                                   pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
+                                   required oninvalid="this.setCustomValidity('surname rules')">
+
+                            <c:if test="${not empty book_components_form_data['wrong_author_surname_form']}">
+                                <div class="red-color">
+                                        ${incorrect_data_format}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="col-md-9"></div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">${add_author_btn}</button>
+                        </div>
+
+
+                        <c:if test="${not empty book_components_form_data['wrong_author_exists_form']}">
+                            <div class="col-12 red-color">
+                                    ${incorrect_author}
+                            </div>
                         </c:if>
-                    </div>
-                </div>
 
-                <div class="col-md-9"></div>
 
-                <div class="col-md-3">
-                    <label for="author_surname" class="form-label">${author_surname}</label>
-                    <input type="text" class="form-control" maxlength="40" name="author_surname" id="author_surname"
-                           value="${book_components_form_data['author_surname_form']}"
-                           pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
-                           required oninvalid="this.setCustomValidity('surname rules')">
-                    <div class="red-color">
-                        <c:if test="${not empty book_components_form_data['wrong_author_surname_form']}">
-                            ${incorrect_data_format}
+                        <c:if test="${book_components_form_data['author_surname_form'] == null
+                                and book_components_form_data['author_name_form'] == null}">
+                            <div class="col-12 green-color">
+                                    ${author_has_been_added}
+                            </div>
                         </c:if>
-                    </div>
+                    </form>
                 </div>
-
-                <div class="col-md-9"></div>
-
-                <div class="col-12">
-                    <button class="btn btn-primary" type="submit">${add_author_btn}</button>
-                </div>
-                <div class="col-12 red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_author_exists_form']}">
-                        ${incorrect_author}
-                    </c:if>
-                </div>
-                <div class="col-12 green-color">
-                    <c:if test="${not empty book_components_form_data['author_operation_feedback']}">
-                        ${author_has_been_added}
-                    </c:if>
-                </div>
-            </form>
-
-            <hr/>
-
-            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
-                <input type="hidden" name="command" value="add_new_publisher">
-
-                <div class="col-md-12">
-                    <p class="form-label">${publisher}:</p>
-                </div>
-
-                <div class="col-md-3">
-                    <label for="publisher_name" class="form-label">${publisher_name}</label>
-                    <input type="text" class="form-control" maxlength="40" name="publisher_name" id="publisher_name"
-                           value="${book_components_form_data['publisher_name_form']}"
-                           pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
-                           required oninvalid="this.setCustomValidity('surname rules')">
-                    <div class="red-color">
-                        <c:if test="${not empty book_components_form_data['wrong_publisher_name_form']}">
-                            ${incorrect_data_format}
-                        </c:if>
-                    </div>
-                </div>
-
-                <div class="col-md-9"></div>
-
-                <div class="col-12">
-                    <button class="btn btn-primary" type="submit">${add_publisher_btn}</button>
-                </div>
-                <div class="col-12 red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_publisher_exists_form']}">
-                        ${incorrect_publisher}
-                    </c:if>
-                </div>
-                <div class="col-12 green-color">
-                    <c:if test="${not empty book_components_form_data['publisher_operation_feedback']}">
-                        ${publisher_has_been_added}
-                    </c:if>
-                </div>
-            </form>
+            </div>
 
             <hr/>
 
-            <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
-                <input type="hidden" name="command" value="add_new_genre">
-                <div class="col-md-12">
-                    <p class="form-label">${genre}:</p>
-                </div>
+            <div class="card my-2">
+                <h5 class="form-label card-header">${publisher}:</h5>
+                <div class="card-text my-2 ms-1">
+                    <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                        <input type="hidden" name="command" value="add_new_publisher">
 
-                <div class="col-md-3">
-                    <label for="genre_name" class="form-label">${genre_name}</label>
-                    <input type="text" class="form-control" maxlength="40" name="genre_name" id="genre_name"
-                           value="${book_components_form_data['genre_name_form']}"
-                           pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
-                           required oninvalid="this.setCustomValidity('surname rules')">
-                    <div class="red-color">
-                        <c:if test="${not empty book_components_form_data['wrong_genre_name_form']}">
-                            ${incorrect_data_format}
+                        <div class="col-md-3">
+                            <label for="publisher_name" class="form-label">${publisher_name}</label>
+                            <input type="text" class="form-control" maxlength="40" name="publisher_name"
+                                   id="publisher_name"
+                                   value="${book_components_form_data['publisher_name_form']}"
+                                   pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
+                                   required oninvalid="this.setCustomValidity('surname rules')">
+
+                            <c:if test="${not empty book_components_form_data['wrong_publisher_name_form']}">
+                                <div class="red-color">
+                                        ${incorrect_data_format}
+                                </div>
+                            </c:if>
+
+                        </div>
+
+                        <div class="col-md-9"></div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">${add_publisher_btn}</button>
+                        </div>
+
+
+                        <c:if test="${not empty book_components_form_data['wrong_publisher_exists_form']}">
+                            <div class="col-12 red-color">
+                                    ${incorrect_publisher}
+                            </div>
                         </c:if>
-                    </div>
-                </div>
 
-                <div class="col-md-9"></div>
 
-                <div class="col-12">
-                    <button class="btn btn-primary" type="submit">${add_genre_btn}</button>
+                        <c:if test="${book_components_form_data['publisher_name_form'] == null}">
+                            <div class="col-12 green-color">
+                                    ${publisher_has_been_added}
+                            </div>
+                        </c:if>
+                    </form>
                 </div>
-                <div class="col-12 red-color">
-                    <c:if test="${not empty book_components_form_data['wrong_genre_exists_form']}">
-                        ${incorrect_genre}
-                    </c:if>
+            </div>
+
+            <hr/>
+
+            <div class="card">
+                <h5 class="form-label card-header">${status}:</h5>
+                <div class="card-text my-2 ms-1">
+                    <form method="post" action="${path}/controller" class="row g-3 needs-validation" novalidate>
+                        <input type="hidden" name="command" value="add_new_genre">
+
+                        <div class="col-md-3">
+                            <label for="genre_name" class="form-label">${genre_name}</label>
+                            <input type="text" class="form-control" maxlength="40" name="genre_name" id="genre_name"
+                                   value="${book_components_form_data['genre_name_form']}"
+                                   pattern="([А-ЯЁ][а-яё\s]*)?([А-ЯЁ][а-яё]*)"
+                                   required oninvalid="this.setCustomValidity('surname rules')">
+                            <c:if test="${not empty book_components_form_data['wrong_genre_name_form']}">
+                                <div class="red-color">
+                                        ${incorrect_data_format}
+                                </div>
+                            </c:if>
+                        </div>
+
+                        <div class="col-md-9"></div>
+
+                        <div class="col-12">
+                            <button class="btn btn-primary" type="submit">${add_genre_btn}</button>
+                        </div>
+
+                        <c:if test="${not empty book_components_form_data['wrong_genre_exists_form']}">
+                            <div class="col-12 red-color">
+                                    ${incorrect_genre}
+                            </div>
+                        </c:if>
+
+                        <c:if test="${not empty book_components_form_data['genre_name_form'] == null}">
+                            <div class="col-12 green-color">
+                                    ${genre_has_been_added}
+                            </div>
+                        </c:if>
+                    </form>
                 </div>
-                <div class="col-12 green-color">
-                    <c:if test="${not empty book_components_form_data['genre_operation_feedback']}">
-                        ${genre_has_been_added}
-                    </c:if>
-                </div>
-            </form>
+            </div>
 
             <hr/>
 

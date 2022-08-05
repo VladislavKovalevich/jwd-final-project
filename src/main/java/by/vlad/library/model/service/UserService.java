@@ -14,7 +14,7 @@ public interface UserService {
     /**
      * {@code USER_EXISTS_MARKER} constant represent string marker to mark, that user with some params is already exists
      */
-    String USER_EXISTS_MARKER = "user with this params is already exists";
+    String USER_MAP_MARKER = "user marker";
 
     /**
      * Authenticate user by email and password
@@ -71,4 +71,10 @@ public interface UserService {
      * @throws ServiceException if dao method throw {@link by.vlad.library.exception.DaoException}
      */
     boolean changeAccountStatus(String email, boolean status) throws ServiceException;
+
+    boolean sendPasswordCode(Map<String, String> userFormData);
+
+    boolean verifyPasswordCode(Map<String, String> userFormData);
+
+    boolean changePasswordByCode(Map<String, String> userData) throws ServiceException;
 }

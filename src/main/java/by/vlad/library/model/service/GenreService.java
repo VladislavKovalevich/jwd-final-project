@@ -14,7 +14,7 @@ public interface GenreService {
     /**
      * {@code GENRE_EXISTS_MARKER} constant represent string marker to mark, that genre with some params is already exists
      */
-    String GENRE_EXISTS_MARKER = "genre with this params is already exists";
+    String GENRE_MAP_MARKER = "genre marker";
 
     /**
      * Find all genres

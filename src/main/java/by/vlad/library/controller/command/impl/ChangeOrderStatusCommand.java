@@ -1,4 +1,4 @@
-package by.vlad.library.controller.command.impl.admin;
+package by.vlad.library.controller.command.impl;
 
 import by.vlad.library.controller.command.Command;
 import by.vlad.library.controller.command.PagePath;
@@ -14,42 +14,50 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 
-public class RejectOrderCommand implements Command {
+public class ChangeOrderStatusCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-
-        long orderId = Long.parseLong(request.getParameter(ORDER_ID));
-        long orderStatusId = OrderStatus.REJECTED.ordinal() + 1;
+        Order currentOrder = (Order) session.getAttribute(ORDER);
+        OrderStatus orderStatus = OrderStatus.getStatus(request.getParameter(ORDER_STATUS));
 
         OrderService orderService = OrderServiceImpl.getInstance();
 
-        try {
+        String page;
 
-            if (orderService.changeOrderStatus(orderId, orderStatusId)){
+        if (orderStatus == OrderStatus.RESERVED){
+            page = PagePath.ORDERS_BY_USER_ID_PAGE;
+        }else{
+            page= PagePath.ORDERS_PAGE;
+        }
+
+        try {
+            Optional<Order> optionalOrder = orderService.changeOrderStatus(currentOrder, orderStatus);
+            if (optionalOrder.isPresent()){
+                Order updatedOrder = optionalOrder.get();
+
                 List<Order> orders = (List<Order>) session.getAttribute(ORDERS);
-                orders = orders.stream().peek(order -> {
-                    if (order.getId() == orderId){
-                        order.setStatus(OrderStatus.REJECTED);
-                        order.setRejectedDate(LocalDate.now());
-                    }
-                }).collect(Collectors.toList());
+
+                orders.removeIf(order -> order.getId() == updatedOrder.getId());
+                orders.add(updatedOrder);
 
                 session.setAttribute(ORDERS, orders);
+
+                session.removeAttribute(ORDER);
+                session.removeAttribute(ORDER_BOOKS);
             }
         }catch (ServiceException e){
             logger.error("RejectOrderCommand execution failed");
             throw new CommandException("RejectOrderCommand execution failed", e);
         }
 
-        return new Router(PagePath.ORDERS_LIST_PAGE, Router.Type.REDIRECT);
+        return new Router(page, Router.Type.REDIRECT);
     }
 }

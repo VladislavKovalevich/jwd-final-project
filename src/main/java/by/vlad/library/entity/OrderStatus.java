@@ -25,8 +25,8 @@ public enum OrderStatus {
         OrderStatus status;
 
         try{
-            status = OrderStatus.valueOf(statusName.toUpperCase());
-        }catch (NullPointerException | IllegalArgumentException e){
+            status = statusName != null ? OrderStatus.valueOf(statusName.toUpperCase()) : CREATED;
+        }catch (IllegalArgumentException e){
             logger.warn("OrderStatus " + statusName + " does not exist");
             status = CREATED;
         }

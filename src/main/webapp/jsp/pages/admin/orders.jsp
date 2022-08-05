@@ -42,11 +42,14 @@
 </header>
 <body class="background-theme">
 <section class="container-fluid">
-    <div class="row m-lg-5 m-5">
-        <div class="col-12 white-background">
+    <div class="row mx-lg-5 my-lg-5">
+        <div class="col-3 mx-2">
+            <jsp:include page="../fragment/navigation_account.jsp"/>
+        </div>
+        <div class="col-8 mx-2 white-background">
             <c:choose>
                 <c:when test="${empty orders}">
-                    <h5 class="text-center">${empty_msg}</h5>
+                    <h5 class="text-center my-2">${empty_msg}</h5>
                 </c:when>
                 <c:otherwise>
                     <table class="table">

@@ -84,26 +84,10 @@
                 <input type="text" class="form-control" name="login" id="login"
                        value="${user_form_data['login_form']}" aria-describedby="inputGroupPrepend"
                        pattern="[\da-zA-Z]([\da-zA-Z_\-\.,!@]*){4,10}"
-                       required oninvalid="this.setCustomValidity('email rules')">
+                       required oninvalid="this.setCustomValidity('login rules')">
                 <div class="red-color">
                     <c:if test="${not empty user_form_data['wrong_login_form']}">
                         ${incorrect_data_format}
-                    </c:if>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <label for="email" class="form-label">${email}</label>
-                <input type="text" class="form-control" name="email"
-                       value="${user_form_data['email_form']}" id="email"
-                       pattern="[\da-z]([\da-z_\-\.]*)([\da-z_\-]*)@[\da-z_\-]{2,}\.[a-z]{2,6}"
-                       required oninvalid="this.setCustomValidity('email rules')">
-                <div class="red-color">
-                    <c:if test="${not empty user_form_data['wrong_email_form']}">
-                        ${incorrect_data_format}
-                    </c:if>
-                    <c:if test="${not empty user_form_data['wrong_email_exists_form']}">
-                        ${incorrect_email}
                     </c:if>
                 </div>
             </div>
@@ -113,7 +97,7 @@
                 <input type="text" class="form-control" name="phone_number"
                        value="${user_form_data['phone_number_form']}" id="phone_number"
                        pattern="([+]?[\d]{7,15})"
-                       oninvalid="this.setCustomValidity('phone')">
+                       oninvalid="this.setCustomValidity('phone rules')">
                 <div class="red-color">
                     <c:if test="${not empty user_form_data['wrong_phone_number_form']}">
                         ${incorrect_data_format}
@@ -126,7 +110,7 @@
                 <input type="text" class="form-control" name="serial_number"
                        value="${user_form_data['serial_number_form']}" id="serial_number"
                        pattern="([A-Z][\d]{7})"
-                       required oninvalid="this.setCustomValidity('number')">
+                       required oninvalid="this.setCustomValidity('serial number rules')">
                 <div class="red-color">
                     <c:if test="${not empty user_form_data['wrong_serial_number_form']}">
                         ${incorrect_data_format}
@@ -142,7 +126,7 @@
         <hr/>
 
         <form method="get" action="${path}/controller">
-            <input type="hidden" name="command" value="go_to_main_page">
+            <input type="hidden" name="command" value="go_to_account_page">
             <div class="col-12">
                 <button class="btn btn-primary" type="submit">${back_btn}</button>
             </div>

@@ -3,7 +3,6 @@ package by.vlad.library.model.service;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
 import by.vlad.library.entity.OrderStatus;
-import by.vlad.library.entity.OrderType;
 import by.vlad.library.exception.ServiceException;
 
 import java.time.LocalDate;
@@ -15,6 +14,9 @@ import java.util.Optional;
  * {@code OrderService} represent a functional of business logic to work with {@link Order} class
  */
 public interface OrderService {
+    int daysCount = 30;
+    int overdueOrdersCount = 3;
+
     /**
      * Get orders by user identifier
      * @param userId user identifier
@@ -51,24 +53,22 @@ public interface OrderService {
 
     /**
      * Change books copies and order status
-     * @param orderId order identifier
-     * @param orderType type of order
      * @param books book list
-     * @param statusId status identifier (RETURNED or ORDERED), depending on the status of the order, the books will be returned or picked up
-     * @param date operation date
+     * @param status status (RETURNED or ORDERED), depending on the status of the order, the books will be returned or picked up
+     * @param date
      * @return true if operation finished successfully, false - if didn't
      * @throws ServiceException if dao method throw {@link by.vlad.library.exception.DaoException}
      */
-    boolean changeBooksOrderStatus(long orderId, OrderType orderType, List<Book> books, long statusId, LocalDate date) throws ServiceException;
+    Optional<Order> changeBooksOrderStatus(Order order, List<Book> books, OrderStatus status, LocalDate date) throws ServiceException;
 
     /**
      * Change order status
-     * @param orderId order identifier
-     * @param statusId status identifier
+     * @param order order entity
+     * @param status new order status
      * @return true if status changed, false - if wasn't
      * @throws ServiceException if dao method throw {@link by.vlad.library.exception.DaoException}
      */
-    boolean changeOrderStatus(long orderId, long statusId) throws ServiceException;
+    Optional<Order> changeOrderStatus(Order order, OrderStatus status) throws ServiceException;
 
     /**
      * Add book to order
@@ -95,4 +95,14 @@ public interface OrderService {
      * @throws ServiceException if dao method throw {@link by.vlad.library.exception.DaoException}
      */
     boolean removeBookFromOrder(long orderId, long bookId) throws ServiceException;
+
+    /**
+     * Check count of overdue orders
+     * @param userId
+     * @return
+     * @throws ServiceException if dao method throw {@link by.vlad.library.exception.DaoException}
+     */
+    boolean checkOverdueOrders(long userId) throws ServiceException;
+
+    List<Order> getUserOrdersByFilters(long userId, String direction, Map<String, Long[]> filterData, Map<String, Long> paginationData) throws ServiceException;
 }

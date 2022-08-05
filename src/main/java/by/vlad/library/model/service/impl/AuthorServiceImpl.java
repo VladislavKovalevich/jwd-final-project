@@ -73,7 +73,7 @@ public class AuthorServiceImpl implements AuthorService {
             if(!authorDao.isAuthorExists(author)){
                 optionalAuthor = authorDao.updateAuthor(author);
             }else{
-                mapData.put(WRONG_AUTHOR_EXISTS_FORM, AUTHOR_EXISTS_MARKER);
+                mapData.put(WRONG_AUTHOR_EXISTS_FORM, AUTHOR_MAP_MARKER);
             }
         } catch (DaoException e) {
             logger.error("updateAuthor from author services was failed" + e);
@@ -102,7 +102,7 @@ public class AuthorServiceImpl implements AuthorService {
             if (!authorDaoImpl.isAuthorExists(author)) {
                 optionalAuthor = authorDaoImpl.addAuthor(author);
             }else{
-                mapData.put(WRONG_AUTHOR_EXISTS_FORM, AuthorService.AUTHOR_EXISTS_MARKER);
+                mapData.put(WRONG_AUTHOR_EXISTS_FORM, AuthorService.AUTHOR_MAP_MARKER);
             }
         } catch (DaoException e) {
             logger.error("createNewAuthor from author services was failed" + e);

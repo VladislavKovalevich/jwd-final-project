@@ -26,32 +26,36 @@ public class PageSecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         guestPages = Set.of(
-                SHOW_BOOKS_LIST_PAGE,
+                BOOKS_PAGE,
                 LOGIN_PAGE,
-                SHOW_BOOK_INFO_PAGE,
-                CREATE_NEW_ACCOUNT_PAGE
+                BOOK_INFO_PAGE,
+                NEW_ACCOUNT_PAGE,
+                RECOVERY_PASSWORD_BY_CODE_PAGE
         );
 
         clientPages = Set.of(
-                SHOW_BOOKS_LIST_PAGE,
-                SHOW_BOOK_INFO_PAGE,
-                ORDERS_LIST_BY_USER_ID_PAGE,
+                BOOKS_PAGE,
+                BOOK_INFO_PAGE,
+                ORDERS_BY_USER_ID_PAGE,
+                ORDER_INFO_PAGE,
                 CHANGE_PASSWORD_PAGE,
-                CHANGE_ACCOUNT_DATA_PAGE
+                CHANGE_ACCOUNT_DATA_PAGE,
+                ACCOUNT_PAGE
         );
 
         adminPages = Set.of(
-                SHOW_BOOKS_LIST_PAGE,
-                SHOW_BOOK_INFO_PAGE,
-                ORDERS_LIST_BY_USER_ID_PAGE,
-                ORDERS_LIST_PAGE,
+                BOOKS_PAGE,
+                BOOK_INFO_PAGE,
+                ORDERS_PAGE,
                 CHANGE_PASSWORD_PAGE,
                 CHANGE_ACCOUNT_DATA_PAGE,
                 ADD_NEW_BOOK_PAGE,
                 UPDATE_BOOK_DATA_PAGE,
                 UPDATE_BOOK_COMPONENTS_PAGE,
                 ADD_BOOK_COMPONENTS_PAGE,
-                USERS_LIST_PAGE
+                USERS_PAGE,
+                ACCOUNT_PAGE,
+                ORDER_INFO_PAGE
         );
     }
 
