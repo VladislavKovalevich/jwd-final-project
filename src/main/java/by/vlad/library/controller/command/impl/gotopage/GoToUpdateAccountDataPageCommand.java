@@ -19,6 +19,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.CHANGE_ACCOUNT_DATA_PAGE;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_DATA_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToUpdateAccountDataPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -53,6 +54,6 @@ public class GoToUpdateAccountDataPageCommand implements Command {
 
         session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
 
-        return new Router(CHANGE_ACCOUNT_DATA_PAGE, Router.Type.FORWARD);
+        return new Router(CHANGE_ACCOUNT_DATA_PAGE, FORWARD);
     }
 }

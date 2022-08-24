@@ -1,7 +1,6 @@
 package by.vlad.library.controller.command.impl.admin;
 
 import by.vlad.library.controller.command.Command;
-import by.vlad.library.controller.command.PagePath;
 import by.vlad.library.controller.command.Router;
 import by.vlad.library.entity.Book;
 import by.vlad.library.entity.Order;
@@ -22,6 +21,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.library.controller.command.PagePath.ORDERS_PAGE;
+import static by.vlad.library.controller.command.PagePath.ORDER_INFO_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class AcceptOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -54,14 +56,15 @@ public class AcceptOrderCommand implements Command {
                     session.setAttribute(ORDERS, orders);
                 }
 
-                router = new Router(PagePath.ORDERS_PAGE, Router.Type.REDIRECT);
+                router = new Router(ORDERS_PAGE, REDIRECT);
 
                 session.removeAttribute(WRONG_BOOK_COPIES_COUNT);
                 session.removeAttribute(ORDER);
                 session.removeAttribute(ORDER_BOOKS);
             }else{
                 session.setAttribute(WRONG_BOOK_COPIES_COUNT, true);
-                router = new Router(PagePath.ORDER_INFO_PAGE, Router.Type.REDIRECT);
+
+                router = new Router(ORDER_INFO_PAGE, REDIRECT);
             }
         } catch (ServiceException e) {
             logger.error("AcceptOrderCommand execution failed");

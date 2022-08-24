@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ORDER_INFO_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GetOrderInfoByOrderIdCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -46,6 +47,6 @@ public class GetOrderInfoByOrderIdCommand implements Command {
             throw new CommandException("GetBooksByOrderIdCommand execution failed", e);
         }
 
-        return new Router(ORDER_INFO_PAGE, Router.Type.FORWARD);
+        return new Router(ORDER_INFO_PAGE, FORWARD);
     }
 }

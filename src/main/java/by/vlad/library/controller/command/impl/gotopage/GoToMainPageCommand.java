@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToMainPageCommand implements Command {
     @Override
@@ -29,6 +30,6 @@ public class GoToMainPageCommand implements Command {
 
         session.setAttribute(CURRENT_PAGE, BOOKS_PAGE);
 
-        return new Router(BOOKS_PAGE, Router.Type.FORWARD);
+        return new Router(BOOKS_PAGE, FORWARD);
     }
 }

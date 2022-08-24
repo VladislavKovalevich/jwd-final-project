@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToAddNewBookPageCommand implements Command {
     @Override
@@ -21,6 +22,6 @@ public class GoToAddNewBookPageCommand implements Command {
         session.setAttribute(BOOK_FORM_DATA, booksData);
         session.setAttribute(CURRENT_PAGE, ADD_NEW_BOOK_PAGE);
 
-        return new Router(ADD_NEW_BOOK_PAGE, Router.Type.FORWARD);
+        return new Router(ADD_NEW_BOOK_PAGE, FORWARD);
     }
 }

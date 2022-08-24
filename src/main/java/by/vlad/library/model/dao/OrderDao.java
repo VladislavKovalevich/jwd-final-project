@@ -134,7 +134,7 @@ public interface OrderDao extends BasicDao<Order> {
      * @param tempPage current page
      * @param filterData filter map (type, status)
      * @return order list
-     * @throws DaoException
+     * @throws DaoException if request from database was failed
      */
     List<Order> getUserOrders(long userId, long tempPage, Map<String, Long[]> filterData) throws DaoException;
 

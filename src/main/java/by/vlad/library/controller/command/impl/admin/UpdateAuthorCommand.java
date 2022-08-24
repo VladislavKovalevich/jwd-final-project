@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class UpdateAuthorCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -62,7 +63,7 @@ public class UpdateAuthorCommand implements Command {
             throw new CommandException("UpdateAuthorCommand execution failed", e);
         }
 
-        return new Router(UPDATE_BOOK_COMPONENTS_PAGE, Router.Type.FORWARD);
+        return new Router(UPDATE_BOOK_COMPONENTS_PAGE, FORWARD);
     }
 
     private void clearSessionMap(Map<String, String> map){

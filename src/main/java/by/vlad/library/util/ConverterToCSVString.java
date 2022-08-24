@@ -6,6 +6,7 @@ import java.util.List;
 
 public class ConverterToCSVString {
     private static ConverterToCSVString instance;
+    private static final char COMMA = ',';
 
     public static ConverterToCSVString getInstance(){
         if (instance == null){
@@ -23,7 +24,7 @@ public class ConverterToCSVString {
 
         for (AbstractEntity entity: entityList) {
             result.append(entity.getId())
-                  .append(',');
+                  .append(COMMA);
         }
 
         result.deleteCharAt(result.length() - 1);

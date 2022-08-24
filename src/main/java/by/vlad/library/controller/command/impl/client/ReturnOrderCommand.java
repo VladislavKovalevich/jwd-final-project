@@ -23,6 +23,7 @@ import java.util.Optional;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.ORDERS;
 import static by.vlad.library.controller.command.PagePath.*;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class ReturnOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -79,6 +80,6 @@ public class ReturnOrderCommand implements Command {
         }
 
 
-        return new Router(page, Router.Type.REDIRECT);
+        return new Router(page, REDIRECT);
     }
 }

@@ -16,11 +16,20 @@
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="config.pagecontent"/>
 
+<fmt:message key="label.created_date" var="create_date"/>
+<fmt:message key="label.reserved_date" var="reserved_date"/>
+<fmt:message key="label.ordered_date" var="accepted_date"/>
+<fmt:message key="label.rejected_date" var="rejected_date"/>
+<fmt:message key="label.returned_date" var="returned_date"/>
+<fmt:message key="label.estimated_return_date" var="estimated_return_date"/>
+
+<fmt:message key="label.sort_type_asc" var="type_asc"/>
+<fmt:message key="label.sort_type_desc" var="type_desc"/>
+
 <fmt:message key="title.orders_by_user_id" var="title"/>
 <fmt:message key="label.order" var="order_label"/>
 <fmt:message key="label.order_type" var="order_type"/>
 <fmt:message key="label.order_status" var="order_status"/>
-<fmt:message key="label.created_date" var="create_date"/>
 <fmt:message key="title.order_filter_panel" var="order_filter_panel"/>
 <fmt:message key="label.order_type" var="order_type_label"/>
 <fmt:message key="label.order_status" var="order_status_label"/>
@@ -28,6 +37,14 @@
 <fmt:message key="reference.prev_page" var="prev"/>
 <fmt:message key="button.book_filter" var="filter_btn"/>
 <fmt:message key="message.empty_list" var="empty_list_header"/>
+<fmt:message key="label.sort_type" var="sort_type_label"/>
+<fmt:message key="label.sort_param" var="sort_param_label"/>
+<fmt:message key="message.empty_list" var="empty_list_label"/>
+
+<c:set var="sort_params" value="${[create_date, reserved_date, accepted_date,
+                                   rejected_date, returned_date, estimated_return_date]}" scope="page"/>
+
+<c:set var="sort_types" value="${[type_asc, type_desc]}" scope="page"/>
 
 <html>
 <head>
@@ -68,7 +85,7 @@
                                     <c:when test="${empty filter_data['order_type']}">
                                         <input type="checkbox" id="order_type${type.ordinal() + 1}"
                                                name="order_type${type.ordinal() + 1}"/>
-                                        ${type.toString()} <br/>
+                                        ${OrderType.getTypeName(type)} <br/>
                                     </c:when>
                                     <c:otherwise>
                                         <c:set var="flag_type" value="0" scope="page"/>
@@ -77,14 +94,14 @@
                                                 <input type="checkbox" id="order_type${type.ordinal() + 1}"
                                                        name="order_type${type.ordinal() + 1}"
                                                        checked/>
-                                                ${type.toString()} <br/>
+                                                ${OrderType.getTypeName(type)} <br/>
                                                 <c:set var="flag_type" value="1" scope="page"/>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${flag_type eq 0}">
                                             <input type="checkbox" id="order_type${type.ordinal() + 1}"
                                                    name="order_type${type.ordinal() + 1}"/>
-                                            ${type.toString()} <br/>
+                                            ${OrderType.getTypeName(type)} <br/>
                                         </c:if>
                                     </c:otherwise>
                                 </c:choose>
@@ -100,7 +117,7 @@
                                     <c:when test="${empty filter_data['order_status']}">
                                         <input type="checkbox" id="order_status${status.ordinal() + 1}"
                                                name="order_status${status.ordinal() + 1}"/>
-                                        ${status.toString()} <br/>
+                                        ${OrderStatus.getStatusName(status)} <br/>
                                     </c:when>
                                     <c:otherwise>
                                         <c:set var="flag_status" value="0" scope="page"/>
@@ -109,19 +126,54 @@
                                                 <input type="checkbox" id="order_status${status.ordinal() + 1}"
                                                        name="order_status${status.ordinal() + 1}"
                                                        checked/>
-                                                ${status.toString()} <br/>
+                                                ${OrderStatus.getStatusName(status)} <br/>
                                                 <c:set var="flag_status" value="1" scope="page"/>
                                             </c:if>
                                         </c:forEach>
                                         <c:if test="${flag_status eq 0}">
                                             <input type="checkbox" id="order_status${status.ordinal() + 1}"
-                                            name="order_status${status.ordinal() + 1}" />
-                                            ${status.toString()} <br/>
+                                                   name="order_status${status.ordinal() + 1}"/>
+                                            ${OrderStatus.getStatusName(status)} <br/>
                                         </c:if>
                                     </c:otherwise>
                                 </c:choose>
                             </c:forEach>
                         </div>
+                    </div>
+
+                    <hr/>
+                    <div class="mt-3">
+                        <h5>${sort_param_label}:</h5>
+                        <select name="sort_param" id="sort_param_id">
+                            <c:forEach var="i" begin="1" end="6" step="1">
+                                <c:choose>
+                                    <c:when test="${i eq filter_data['order_sort_param'][0]}">
+                                        <option value="${i}"
+                                                selected>${sort_params[i - 1]}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${i}">${sort_params[i - 1]}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="mt-3">
+                        <h5>${sort_type_label}:</h5>
+                        <select name="sort_type" id="sort_type_param_id">
+                            <c:forEach var="i" begin="1" end="2" step="1">
+                                <c:choose>
+                                    <c:when test="${i eq filter_data['order_sort_type'][0]}">
+                                        <option value="${i}"
+                                                selected>${sort_types[i - 1]}</option>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <option value="${i}">${sort_types[i - 1]}</option>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </select>
                     </div>
 
                     <div class="mt-2 pb-2">
@@ -132,7 +184,7 @@
         </div>
         <div class="col-8 mx-2 white-background">
             <c:choose>
-                <c:when test="${empty orders}">
+                <c:when test="${empty orders || orders.size() == 0}">
                     <h5 class="text-center">${empty_list_label}</h5>
                 </c:when>
                 <c:otherwise>
@@ -165,8 +217,8 @@
                                             <h4>${order_label} #${order.id}</h4>
                                             <div class="my-2 border-top border-bottom">
                                                 <p>${create_date}: ${order.createdDate}</p>
-                                                <p>${order_type}: ${order.type}</p>
-                                                <p>${order_status}: ${order.status}</p>
+                                                <p>${order_type}: ${OrderType.getTypeName(order.type)}</p>
+                                                <p>${order_status}: ${OrderStatus.getStatusName(order.status)}</p>
                                             </div>
                                         </div>
                                     </div>

@@ -28,7 +28,6 @@ import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_NEW_BOOK_PAGE;
 
 public class AddNewBookCommand implements Command {
-    private static final String BOOK_ADDED_MARKER = "book has been added";
     private static final Logger logger = LogManager.getLogger();
 
     @Override

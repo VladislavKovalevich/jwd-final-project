@@ -27,7 +27,7 @@
 <fmt:message key="message.incorrect_data_format" var="incorrect_data_format"/>
 <fmt:message key="button.back_to_main" var="back_btn"/>
 <fmt:message key="message.book_has_been_updated" var="book_has_been_updated"/>
-<fmt:message key="message.book_with_title_is already_exists" var="book_is_already_exists"/>
+<fmt:message key="message.book_with_title_is_already_exists" var="book_is_already_exists"/>
 
 
 <html>

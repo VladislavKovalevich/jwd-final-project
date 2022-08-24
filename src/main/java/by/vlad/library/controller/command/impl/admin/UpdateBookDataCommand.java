@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.*;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class UpdateBookDataCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -76,12 +77,12 @@ public class UpdateBookDataCommand implements Command {
                 session.setAttribute(BOOK, book);
                 session.setAttribute(CURRENT_PAGE, BOOK_INFO_PAGE);
 
-                router = new Router(BOOK_INFO_PAGE, Router.Type.FORWARD);
+                router = new Router(BOOK_INFO_PAGE, FORWARD);
             } else {
                 session.setAttribute(BOOK_FORM_DATA, bookMap);
                 session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_DATA_PAGE);
 
-                router = new Router(UPDATE_BOOK_DATA_PAGE, Router.Type.FORWARD);
+                router = new Router(UPDATE_BOOK_DATA_PAGE, FORWARD);
             }
         } catch (ServiceException | IOException | ServletException e) {
             logger.error("UpdateBookDataCommand execution failed");

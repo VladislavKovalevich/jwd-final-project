@@ -207,13 +207,13 @@ public class OrderServiceImpl implements OrderService {
     public boolean checkOverdueOrders(long userId) throws ServiceException {
         boolean isOverflow;
         LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusDays(OrderService.daysCount);
+        LocalDate startDate = endDate.minusDays(OrderService.DAYS_COUNT);
 
         OrderDao orderDao = OrderDaoImpl.getInstance();
 
         try {
             int ordersCount = orderDao.findOverdueOrders(userId, startDate, endDate);
-            isOverflow = (ordersCount % OrderService.overdueOrdersCount == 0) && (ordersCount > 0);
+            isOverflow = (ordersCount % OrderService.OVERDUE_ORDERS_COUNT == 0) && (ordersCount > 0);
         } catch (DaoException e) {
             logger.error("Method checkOverdueOrders from order service was failed" + e);
             throw new ServiceException("Method checkOverdueOrders from order service was failed", e);

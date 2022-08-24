@@ -11,6 +11,7 @@ import java.util.HashMap;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.AUTHOR_SURNAME_FORM;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToAddBookComponentsPageCommand implements Command {
     @Override
@@ -26,6 +27,6 @@ public class GoToAddBookComponentsPageCommand implements Command {
         session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
         session.setAttribute(CURRENT_PAGE, ADD_BOOK_COMPONENTS_PAGE);
 
-        return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.FORWARD);
+        return new Router(ADD_BOOK_COMPONENTS_PAGE, FORWARD);
     }
 }

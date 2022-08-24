@@ -23,6 +23,7 @@ import java.util.*;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.BOOKS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class ShowBooksListCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -74,7 +75,7 @@ public class ShowBooksListCommand implements Command {
 
             session.setAttribute(CURRENT_PAGE, BOOKS_PAGE);
 
-            router = new Router(BOOKS_PAGE, Router.Type.REDIRECT);
+            router = new Router(BOOKS_PAGE, REDIRECT);
         } catch (ServiceException e) {
             logger.error("ShowBooksListCommand execution failed");
             throw new CommandException("ShowBooksListCommand execution failed", e);

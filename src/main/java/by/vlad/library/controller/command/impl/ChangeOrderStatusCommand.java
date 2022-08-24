@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.library.controller.command.PagePath.ORDERS_BY_USER_ID_PAGE;
+import static by.vlad.library.controller.command.PagePath.ORDERS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class ChangeOrderStatusCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -33,9 +36,9 @@ public class ChangeOrderStatusCommand implements Command {
         String page;
 
         if (orderStatus == OrderStatus.RESERVED){
-            page = PagePath.ORDERS_BY_USER_ID_PAGE;
+            page = ORDERS_BY_USER_ID_PAGE;
         }else{
-            page= PagePath.ORDERS_PAGE;
+            page = ORDERS_PAGE;
         }
 
         try {
@@ -58,6 +61,6 @@ public class ChangeOrderStatusCommand implements Command {
             throw new CommandException("RejectOrderCommand execution failed", e);
         }
 
-        return new Router(page, Router.Type.REDIRECT);
+        return new Router(page, REDIRECT);
     }
 }

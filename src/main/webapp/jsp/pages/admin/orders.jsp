@@ -8,11 +8,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page import="by.vlad.library.entity.OrderStatus" %>
+<%@ page import="by.vlad.library.entity.OrderType" %>
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="config.pagecontent"/>
+
+<fmt:message key="label.created_date" var="create_date"/>
+<fmt:message key="label.reserved_date" var="reserved_date"/>
+<fmt:message key="label.ordered_date" var="accepted_date"/>
+<fmt:message key="label.rejected_date" var="rejected_date"/>
+<fmt:message key="label.returned_date" var="returned_date"/>
+<fmt:message key="label.estimated_return_date" var="estimated_return_date"/>
+
+<fmt:message key="label.sort_type_asc" var="type_asc"/>
+<fmt:message key="label.sort_type_desc" var="type_desc"/>
 
 <fmt:message key="title.show_orders" var="title"/>
 <fmt:message key="message.empty_list" var="empty_msg"/>
@@ -21,6 +33,10 @@
 <fmt:message key="label.order_type" var="type"/>
 <fmt:message key="label.order_status" var="status"/>
 <fmt:message key="button.more_button" var="more_btn"/>
+
+<c:set var="sort_params" value="${[reserved_date, accepted_date]}" scope="page"/>
+
+<c:set var="sort_types" value="${[type_asc, type_desc]}" scope="page"/>
 
 <html>
 <head>
@@ -68,8 +84,8 @@
                             <tr>
                                 <th scope="row">${order.id}</th>
                                 <td>${order.user.name} ${order.user.surname}</td>
-                                <td>${order.type}</td>
-                                <td>${order.status}</td>
+                                <td>${OrderType.getTypeName(order.type)}</td>
+                                <td>${OrderStatus.getStatusName(order.status)}</td>
 
                                 <td>
                                     <form method="get" action="${path}/controller">

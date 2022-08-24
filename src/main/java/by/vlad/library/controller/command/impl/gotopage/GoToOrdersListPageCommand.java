@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpSession;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ORDERS_BY_USER_ID_PAGE;
 import static by.vlad.library.controller.command.PagePath.ORDERS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToOrdersListPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         String page;
-        Router.Type type = Router.Type.FORWARD;
 
         Role role = Role.getRole(String.valueOf(session.getAttribute(USER_ROLE)));
 
@@ -31,6 +31,6 @@ public class GoToOrdersListPageCommand implements Command {
 
         session.setAttribute(CURRENT_PAGE, page);
 
-        return new Router(page, type);
+        return new Router(page, FORWARD);
     }
 }

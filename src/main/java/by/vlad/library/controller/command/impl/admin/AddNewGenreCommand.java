@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.ADD_BOOK_COMPONENTS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class AddNewGenreCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -55,7 +56,7 @@ public class AddNewGenreCommand implements Command {
             throw new CommandException("AddNewGenreCommand execution failed", e);
         }
 
-        return new Router(ADD_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);
+        return new Router(ADD_BOOK_COMPONENTS_PAGE, REDIRECT);
     }
 
     private void clearSessionMap(Map<String, String> map){

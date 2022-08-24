@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.BOOK_INFO_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class ShowBookByIdCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -60,7 +61,7 @@ public class ShowBookByIdCommand implements Command {
 
             session.setAttribute(CURRENT_PAGE, BOOK_INFO_PAGE);
 
-            router = new Router(BOOK_INFO_PAGE, Router.Type.FORWARD);
+            router = new Router(BOOK_INFO_PAGE, FORWARD);
 
         } catch (ServiceException e) {
             logger.error("ShowBookByIdCommand execution failed");

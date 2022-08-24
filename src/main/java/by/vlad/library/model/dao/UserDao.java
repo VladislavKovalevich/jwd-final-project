@@ -81,5 +81,12 @@ public interface UserDao extends BasicDao<User> {
      */
     List<User> findAllUsers() throws DaoException;
 
+    /**
+     * Update account password
+     * @param email user email
+     * @param encodedNewPass new password
+     * @return boolean when password was updated, false - if wasn't
+     * @throws DaoException if request from database was failed
+     */
     boolean changeAccountPasswordByCode(String email, String encodedNewPass) throws DaoException;
 }

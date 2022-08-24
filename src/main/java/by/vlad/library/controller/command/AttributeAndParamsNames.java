@@ -188,4 +188,10 @@ public class AttributeAndParamsNames {
     public static final String ORDER = "order";
 
     public static final String WRONG_BOOK_COPIES_COUNT = "wrong_book_copies_count";
+
+    public static final String ORDER_SORT_TYPE = "order_sort_type";
+    public static final String ORDER_SORT_PARAM = "order_sort_param";
+
+    public static final String SORT_TYPE = "sort_type";
+    public static final String SORT_PARAM = "sort_param";
 }

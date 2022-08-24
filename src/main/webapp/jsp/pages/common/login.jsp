@@ -19,6 +19,7 @@
 <fmt:message key="message.user_is_banned" var="user_is_banned_message"/>
 <fmt:message key="reference.forget_password" var="forget_password_ref"/>
 <fmt:message key="message.password_has_been_changed" var="password_has_been_chaged_msg"/>
+<fmt:message key="button.back_to_main" var="back_btn"/>
 
 <html>
 <head>
@@ -83,7 +84,8 @@
                 </c:if>
 
                 <input class="btn btn-primary btn-lg btn-block mb-3" type="submit" value="${sign_in_btn}" name="sub">
-
+            </form>
+            <div class="row g-3">
                 <div class="green-color">
                     <c:if test="${not empty create_account_feedback}">
                         ${new_account_message}
@@ -97,7 +99,13 @@
                 <div class="mx-3 mt-2">
                     <a href="${path}/controller?command=go_to_create_new_account_page">${create_new_account}</a>
                 </div>
-            </form>
+
+                <hr/>
+                <div class="mx-3 mt-2">
+                    <a href="${path}/controller?command=go_to_main_page">${back_btn}</a>
+                </div>
+            </div>
+
         </div>
         <div class="col-4"></div>
     </div>

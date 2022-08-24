@@ -32,51 +32,51 @@ public class OrderDaoImpl implements OrderDao {
 
     private static final String SQL_SELECT_ORDERS_BY_USER_ID =
             "SELECT order_id, order_create_date, order_reserved_date, order_accepted_date, " +
-                "order_rejected_date, order_returned_date, order_estimated_return_date, " +
-                "order_status_name, order_type_name, user_id, user_login, user_email, user_name, " +
-                "user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
-            "FROM orders " +
-            "JOIN order_status ON orders_status_id = order_status_id " +
-            "JOIN order_types ON orders_types_id = order_type_id " +
-            "JOIN users ON users_id = user_id " +
-            "WHERE users_id = ? ";
+                    "order_rejected_date, order_returned_date, order_estimated_return_date, " +
+                    "order_status_name, order_type_name, user_id, user_login, user_email, user_name, " +
+                    "user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
+                    "FROM orders " +
+                    "JOIN order_status ON orders_status_id = order_status_id " +
+                    "JOIN order_types ON orders_types_id = order_type_id " +
+                    "JOIN users ON users_id = user_id " +
+                    "WHERE users_id = ? ";
 
     private static final String SQL_INSERT_ORDER = "" +
             "INSERT INTO orders(`users_id`, `order_create_date`, `orders_types_id`) " +
-                "VALUES(?, ?, ?)";
+            "VALUES(?, ?, ?)";
 
     private static final String SQL_INSERT_BOOK_TO_ORDER =
             "INSERT INTO books_orders (`orders_id`, `books_id`) " +
-                 "VALUES (?, ?)";
+                    "VALUES (?, ?)";
 
     private static final String SQL_DELETE_BOOK_FROM_ORDER =
             "DELETE FROM books_orders " +
-                 "WHERE orders_id = ? AND books_id = ?";
+                    "WHERE orders_id = ? AND books_id = ?";
 
     private static final String SQL_DELETE_ORDER =
             "DELETE FROM orders " +
-                 "WHERE order_id = ?";
+                    "WHERE order_id = ?";
 
     private static final String SQL_SELECT_ALL_ORDERS =
             "SELECT order_id, order_create_date, order_reserved_date, order_accepted_date, " +
-                "order_rejected_date, order_returned_date, order_estimated_return_date, " +
-                "order_status_name, order_type_name, user_id, user_login, user_email, user_name, " +
-                "user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
-            "FROM orders " +
-            "JOIN order_status ON orders_status_id = order_status_id " +
-            "JOIN order_types ON orders_types_id = order_type_id " +
-            "JOIN users ON users_id = user_id ";
+                    "order_rejected_date, order_returned_date, order_estimated_return_date, " +
+                    "order_status_name, order_type_name, user_id, user_login, user_email, user_name, " +
+                    "user_surname, user_passport_serial_number, user_mobile_phone, user_is_banned " +
+                    "FROM orders " +
+                    "JOIN order_status ON orders_status_id = order_status_id " +
+                    "JOIN order_types ON orders_types_id = order_type_id " +
+                    "JOIN users ON users_id = user_id ";
 
     private static final String SQL_SELECT_ORDER_BY_ID =
             "SELECT order_id, order_create_date, order_reserved_date, order_accepted_date, " +
-                "order_rejected_date, order_returned_date, order_estimated_return_date, order_status_name, " +
-                "order_type_name, user_id, user_login, user_email, user_name, user_surname, " +
-                "user_passport_serial_number, user_mobile_phone, user_is_banned " +
-            "FROM orders " +
-            "JOIN order_status ON orders_status_id = order_status_id " +
-            "JOIN order_types ON orders_types_id = order_type_id " +
-            "JOIN users ON users_id = user_id " +
-            "WHERE order_id = ?";
+                    "order_rejected_date, order_returned_date, order_estimated_return_date, order_status_name, " +
+                    "order_type_name, user_id, user_login, user_email, user_name, user_surname, " +
+                    "user_passport_serial_number, user_mobile_phone, user_is_banned " +
+                    "FROM orders " +
+                    "JOIN order_status ON orders_status_id = order_status_id " +
+                    "JOIN order_types ON orders_types_id = order_type_id " +
+                    "JOIN users ON users_id = user_id " +
+                    "WHERE order_id = ?";
 
     private static final String SQL_SELECT_BOOK_COUNT_IN_ORDER_BY_ID = "" +
             "SELECT COUNT(books_id) as `count_col` FROM library.books_orders " +
@@ -116,6 +116,9 @@ public class OrderDaoImpl implements OrderDao {
     private static final String SQL_IN_END = ") ";
     private static final String SQL_AND = " AND ";
     private static final String SQL_LIMIT = "LIMIT ?, ?";
+    private static final String SQL_ORDER_BY = "ORDER BY ";
+    private static final String SQL_ASC = " ASC ";
+    private static final String SQL_DESC = " DESC ";
 
     private static final int ORDER_LIMIT = 5;
     private static final int BOOK_IN_ORDER_LIMIT = 5;
@@ -499,8 +502,8 @@ public class OrderDaoImpl implements OrderDao {
             statement.setDate(3, Date.valueOf(startDate));
             statement.setDate(4, Date.valueOf(endDate));
 
-            try(ResultSet resultSet = statement.executeQuery()){
-                if (resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     rows = resultSet.getInt(COUNT_COL);
                 }
             }
@@ -520,20 +523,20 @@ public class OrderDaoImpl implements OrderDao {
 
         StringBuilder resultSQL = new StringBuilder(SQL_SELECT_ORDERS_BY_USER_ID);
 
-        if (!filterData.isEmpty()){
+        if (!filterData.isEmpty()) {
             resultSQL.append(buildSQLFilterString(filterData));
         }
 
         resultSQL.append(SQL_LIMIT);
 
-        try(Connection connection  = ConnectionPool.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(resultSQL.toString())) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(resultSQL.toString())) {
 
             preparedStatement.setLong(1, userId);
             preparedStatement.setLong(2, (tempPage - 1) * DEFAULT_USER_ORDERS_COUNT_PER_PAGE);
             preparedStatement.setLong(3, DEFAULT_USER_ORDERS_COUNT_PER_PAGE);
 
-            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 orders = mapper.map(resultSet);
             }
 
@@ -552,29 +555,29 @@ public class OrderDaoImpl implements OrderDao {
 
         StringBuilder resultSQL = new StringBuilder(SQL_SELECT_NUMBER_OF_USER_ORDERS);
 
-        if (!filterMap.isEmpty()){
+        if (!filterMap.isEmpty()) {
             resultSQL.append(buildSQLFilterString(filterMap));
         }
 
-        try(Connection connection = ConnectionPool.getInstance().getConnection();
-            PreparedStatement statement = connection.prepareStatement(resultSQL.toString())){
+        try (Connection connection = ConnectionPool.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(resultSQL.toString())) {
 
             statement.setLong(1, userId);
 
-            try(ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     rows = resultSet.getInt(COUNT_COL);
                 }
             }
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             logger.error("SQL request findNumberOfUserOrdersPage for table library.books was failed" + e);
             throw new DaoException("SQL request findNumberOfUserOrdersPage for table library.books was failed", e);
         }
 
         pagesNumber = (int) (rows / DEFAULT_USER_ORDERS_COUNT_PER_PAGE);
 
-        if (rows % DEFAULT_USER_ORDERS_COUNT_PER_PAGE != 0){
+        if (rows % DEFAULT_USER_ORDERS_COUNT_PER_PAGE != 0) {
             pagesNumber++;
         }
 
@@ -604,32 +607,64 @@ public class OrderDaoImpl implements OrderDao {
         return sqlChangeOrderStatus.toString();
     }
 
-    private String buildSQLFilterString(Map<String, Long[]> filterMap){
+    private String buildSQLFilterString(Map<String, Long[]> filterMap) {
         StringBuilder sqlFilter = new StringBuilder(SQL_AND);
 
-        for (Map.Entry<String ,Long[]> e: filterMap.entrySet()) {
+        for (Map.Entry<String, Long[]> e : filterMap.entrySet()) {
             String s = Arrays.toString(e.getValue());
 
-            switch (e.getKey()){
+            switch (e.getKey()) {
                 case ORDER_STATUS -> {
                     sqlFilter.append(ORDER_STATUSES_ID_COL)
                             .append(SQL_IN_START)
                             .append(s, 1, s.length() - 1)
-                            .append(SQL_IN_END);
+                            .append(SQL_IN_END)
+                            .append(SQL_AND);
                 }
 
                 case ORDER_TYPE -> {
                     sqlFilter.append(ORDER_TYPES_ID_COL)
                             .append(SQL_IN_START)
                             .append(s, 1, s.length() - 1)
-                            .append(SQL_IN_END);
+                            .append(SQL_IN_END)
+                            .append(SQL_AND);
                 }
             }
-
-            sqlFilter.append(SQL_AND);
         }
 
         sqlFilter.delete(sqlFilter.length() - SQL_AND.length(), sqlFilter.length() - 1);
+
+        int sortParam = Math.toIntExact(filterMap.get(ORDER_SORT_PARAM)[0]);
+        int sortType = Math.toIntExact(filterMap.get(ORDER_SORT_TYPE)[0]);
+
+        sqlFilter.append(SQL_ORDER_BY);
+
+        switch (sortParam){
+            case 1 -> {
+                sqlFilter.append(ORDER_CREATE_DATE_COL);
+            }
+            case 2 -> {
+                sqlFilter.append(ORDER_RESERVED_DATE_COL);
+            }
+            case 3 -> {
+                sqlFilter.append(ORDER_ACCEPTED_DATE_COL);
+            }
+            case 4 -> {
+                sqlFilter.append(ORDER_REJECTED_DATE_COL);
+            }
+            case 5 -> {
+                sqlFilter.append(ORDER_RETURNED_DATE_COL);
+            }
+            case 6 -> {
+                sqlFilter.append(ORDER_ESTIMATED_RETURN_DATE_COL);
+            }
+        }
+
+        if (sortType == 1){
+            sqlFilter.append(SQL_ASC);
+        }else{
+            sqlFilter.append(SQL_DESC);
+        }
 
         return sqlFilter.toString();
     }

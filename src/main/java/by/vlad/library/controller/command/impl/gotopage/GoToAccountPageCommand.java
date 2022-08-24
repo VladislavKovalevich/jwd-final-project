@@ -12,8 +12,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
@@ -30,19 +28,16 @@ public class GoToAccountPageCommand implements Command {
         UserService userService = UserServiceImpl.getInstance();
 
         try {
-            User user = (User) session.getAttribute(USER_INFO);
-            if (user == null) {
-                Optional<User> optionalUser = userService.findUserById(userId);
+            User user;
+            Optional<User> optionalUser = userService.findUserById(userId);
 
-                if (optionalUser.isPresent()) {
-                    user = optionalUser.get();
-                }
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
 
+                request.setAttribute(USER_INFO, user);
             }
 
-            session.setAttribute(USER_INFO, user);
             session.setAttribute(CURRENT_PAGE, ACCOUNT_PAGE);
-
         } catch (ServiceException e) {
             logger.error("GoToAccountPageCommand execution failed");
             throw new CommandException("GoToAccountPageCommand execution failed", e);

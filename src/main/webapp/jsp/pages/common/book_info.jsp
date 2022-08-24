@@ -55,20 +55,6 @@
 
     <link rel="stylesheet" href="${path}/css/styles.css">
     <script src="${path}/js/script.js"></script>
-
-    <style>
-        figure {
-            width: 100%; /* Ширина области */
-            height: 100%; /* Высота области */
-            margin: 0; /* Обнуляем отступы */
-        }
-
-        figure img {
-            width: 100%; /* Ширина изображений */
-            height: 100%; /* Высота изображении */
-            object-fit: cover; /* Вписываем фотографию в область */
-        }
-    </style>
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>

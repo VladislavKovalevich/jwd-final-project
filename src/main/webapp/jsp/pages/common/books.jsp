@@ -43,32 +43,6 @@
 
     <link rel="stylesheet" href="${path}/css/styles.css">
     <script src="${path}/js/script.js"></script>
-
-    <style>
-        figure {
-            width: 100%;
-            height: 400px;
-            margin: 0;
-        }
-
-        figure img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .truncate {
-            padding: 0;
-        }
-
-        .truncate p {
-            margin: 0;
-            -webkit-line-clamp: 3;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-    </style>
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>

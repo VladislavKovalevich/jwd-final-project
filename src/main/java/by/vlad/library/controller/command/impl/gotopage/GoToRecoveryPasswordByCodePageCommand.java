@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.RECOVERY_PASSWORD_BY_CODE_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class GoToRecoveryPasswordByCodePageCommand implements Command {
 
@@ -23,6 +24,6 @@ public class GoToRecoveryPasswordByCodePageCommand implements Command {
 
         session.setAttribute(CURRENT_PAGE, RECOVERY_PASSWORD_BY_CODE_PAGE);
 
-        return new Router(RECOVERY_PASSWORD_BY_CODE_PAGE, Router.Type.REDIRECT);
+        return new Router(RECOVERY_PASSWORD_BY_CODE_PAGE, REDIRECT);
     }
 }

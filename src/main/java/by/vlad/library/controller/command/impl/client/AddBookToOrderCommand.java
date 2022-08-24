@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.library.controller.command.PagePath.BOOK_INFO_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class AddBookToOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -41,6 +43,6 @@ public class AddBookToOrderCommand implements Command {
             throw new CommandException("AddBookToOrderCommand execution failed", e);
         }
 
-        return new Router(PagePath.BOOK_INFO_PAGE, Router.Type.REDIRECT);
+        return new Router(BOOK_INFO_PAGE, REDIRECT);
     }
 }

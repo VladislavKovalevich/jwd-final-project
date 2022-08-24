@@ -11,19 +11,24 @@
 
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 
+<fmt:setLocale value="${locale}" scope="session"/>
+<fmt:setBundle basename="config.pagecontent"/>
+
+<fmt:message key="message.footer" var="footer"/>
+
 <html>
 <head>
     <title>Title</title>
 </head>
 <body>
-<div class="container position-relative p-3 mb-2 bg-secondary bg-opacity-75 text-white text-end" id="foot_position">
-    <div>footer</div>
+<div class="container position-relative p-3 mb-2 bg-secondary bg-opacity-75 text-white text-center" id="foot_position">
+    <div>${footer}</div>
 </div>
 <script type="text/javascript">
     if (document.body.scrollHeight > window.innerHeight) {
-        document.getElementById("foot_position").className = "container position-relative p-3 mb-2 bg-secondary bg-opacity-75 text-white text-end";
+        document.getElementById("foot_position").className = "container position-relative p-3 mb-2 bg-secondary bg-opacity-75 text-white text-center";
     } else {
-        document.getElementById("foot_position").className = "container position-absolute fixed-bottom p-3 mb-2 bg-secondary bg-opacity-75 text-white text-end";
+        document.getElementById("foot_position").className = "container position-absolute fixed-bottom p-3 mb-2 bg-secondary bg-opacity-75 text-white text-center";
     }
 </script>
 </body>

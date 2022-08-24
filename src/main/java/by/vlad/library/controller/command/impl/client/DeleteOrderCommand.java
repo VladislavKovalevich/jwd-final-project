@@ -16,6 +16,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
+import static by.vlad.library.controller.command.PagePath.ORDERS_BY_USER_ID_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class DeleteOrderCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -38,6 +40,6 @@ public class DeleteOrderCommand implements Command {
             throw new CommandException("DeleteOrderCommand execution failed", e);
         }
 
-        return new Router(PagePath.ORDERS_BY_USER_ID_PAGE, Router.Type.FORWARD);
+        return new Router(ORDERS_BY_USER_ID_PAGE, FORWARD);
     }
 }

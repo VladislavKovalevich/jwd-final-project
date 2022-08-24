@@ -57,7 +57,6 @@ public class RecoveryPasswordByCodeCommand implements Command {
     }
 
     private void clearWrongMessages(Map<String, String> passwordData){
-        //passwordData.remove(SUCCESSFULLY_PASSWORD_CHANGE);
         passwordData.remove(WRONG_NEW_PASSWORD_FORM);
         passwordData.remove(WRONG_NEW_REPEAT_PASSWORD_FORM);
         passwordData.remove(WRONG_PASSWORD_VALUE);

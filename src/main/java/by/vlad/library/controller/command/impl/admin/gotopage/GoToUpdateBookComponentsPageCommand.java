@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToUpdateBookComponentsPageCommand implements Command {
     @Override
@@ -26,6 +27,6 @@ public class GoToUpdateBookComponentsPageCommand implements Command {
         session.setAttribute(BOOK_COMPONENTS_FORM_DATA, componentsData);
         session.setAttribute(CURRENT_PAGE, UPDATE_BOOK_COMPONENTS_PAGE);
 
-        return new Router(UPDATE_BOOK_COMPONENTS_PAGE, Router.Type.FORWARD);
+        return new Router(UPDATE_BOOK_COMPONENTS_PAGE, FORWARD);
     }
 }

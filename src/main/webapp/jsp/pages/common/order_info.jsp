@@ -65,54 +65,7 @@
     <link rel="stylesheet" href="${path}/css/styles.css">
     <script src="${path}/js/script.js"></script>
 
-    <title>${title}</title><!--  -->
-    <style>
-        .modal__custom {
-            position: absolute;
-            visibility: hidden;
-            opacity: 0;
-            transition: .3s;
-            top: -1000px;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            overflow-y: scroll;
-            padding: 60px 15px;
-        }
-
-        .modal__active {
-            position: fixed;
-            top: 0;
-            visibility: visible;
-            opacity: 1;
-            transition: .3s;
-        }
-
-        .modal__content {
-            width: 100%;
-            max-width: 500px;
-            padding: 50px;
-            background: #f9f9f9;
-            border-radius: 3px;
-            position: relative;
-            box-shadow: 0 5px 15px black;
-        }
-
-        .modal__title {
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            margin: 0 0 15px;
-        }
-
-        .modal__description {
-            font-size: 1.125rem;
-        }
-    </style>
+    <title>${title}</title>
 </head>
 <header>
     <jsp:include page="../header/header.jsp"/>

@@ -72,9 +72,25 @@ public interface UserService {
      */
     boolean changeAccountStatus(String email, boolean status) throws ServiceException;
 
+    /**
+     * Send secret code on user email
+     * @param userFormData user map data
+     * @return true if code was sent, false - if wasn't
+     */
     boolean sendPasswordCode(Map<String, String> userFormData);
 
+    /**
+     * Verify sent code and code from user
+     * @param userFormData user map data
+     * @return true if codes was equals, false - if wasn't
+     */
     boolean verifyPasswordCode(Map<String, String> userFormData);
 
+    /**
+     * Update account password
+     * @param userData user map data
+     * @return true if password was updated, false - if wasn't
+     * @throws ServiceException if dao method throw {@link by.vlad.library.exception.DaoException}
+     */
     boolean changePasswordByCode(Map<String, String> userData) throws ServiceException;
 }

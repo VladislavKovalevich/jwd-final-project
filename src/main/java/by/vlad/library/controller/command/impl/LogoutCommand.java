@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.LOCALE;
 import static by.vlad.library.controller.command.PagePath.INDEX_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class LogoutCommand implements Command {
     @Override
@@ -20,6 +21,6 @@ public class LogoutCommand implements Command {
         HttpSession newSession = request.getSession();
         newSession.setAttribute(LOCALE, string);
 
-        return new Router(INDEX_PAGE, Router.Type.REDIRECT);
+        return new Router(INDEX_PAGE, REDIRECT);
     }
 }

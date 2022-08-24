@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.UPDATE_BOOK_COMPONENTS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.REDIRECT;
 
 public class UpdatePublisherCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -56,7 +57,7 @@ public class UpdatePublisherCommand implements Command {
             throw new CommandException("UpdatePublisherCommand execution failed", e);
         }
 
-        return new Router(UPDATE_BOOK_COMPONENTS_PAGE, Router.Type.REDIRECT);
+        return new Router(UPDATE_BOOK_COMPONENTS_PAGE, REDIRECT);
     }
 
     private void clearSessionMap(Map<String, String> map){

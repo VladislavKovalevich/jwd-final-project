@@ -15,6 +15,7 @@ import java.util.List;
 
 import static by.vlad.library.controller.command.AttributeAndParamsNames.*;
 import static by.vlad.library.controller.command.PagePath.USERS_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class ChangeUserStatusCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -35,6 +36,6 @@ public class ChangeUserStatusCommand implements Command {
             throw new CommandException("ChangeUserStatusCommand execution failed", e);
         }
 
-        return new Router(USERS_PAGE, Router.Type.FORWARD);
+        return new Router(USERS_PAGE, FORWARD);
     }
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.CURRENT_PAGE;
 import static by.vlad.library.controller.command.AttributeAndParamsNames.USER_DATA;
 import static by.vlad.library.controller.command.PagePath.CHANGE_PASSWORD_PAGE;
+import static by.vlad.library.controller.command.Router.Type.FORWARD;
 
 public class GoToChangeAccountPasswordPageCommand implements Command {
     @Override
@@ -21,6 +22,6 @@ public class GoToChangeAccountPasswordPageCommand implements Command {
         session.setAttribute(USER_DATA, userPasswordData);
         session.setAttribute(CURRENT_PAGE, CHANGE_PASSWORD_PAGE);
 
-        return new Router(CHANGE_PASSWORD_PAGE, Router.Type.FORWARD);
+        return new Router(CHANGE_PASSWORD_PAGE, FORWARD);
     }
 }

@@ -14,8 +14,8 @@ import java.util.Optional;
  * {@code OrderService} represent a functional of business logic to work with {@link Order} class
  */
 public interface OrderService {
-    int daysCount = 30;
-    int overdueOrdersCount = 3;
+    int DAYS_COUNT = 30;
+    int OVERDUE_ORDERS_COUNT = 3;
 
     /**
      * Get orders by user identifier
@@ -104,5 +104,14 @@ public interface OrderService {
      */
     boolean checkOverdueOrders(long userId) throws ServiceException;
 
+    /**
+     *
+     * @param userId
+     * @param direction
+     * @param filterData
+     * @param paginationData
+     * @return
+     * @throws ServiceException
+     */
     List<Order> getUserOrdersByFilters(long userId, String direction, Map<String, Long[]> filterData, Map<String, Long> paginationData) throws ServiceException;
 }

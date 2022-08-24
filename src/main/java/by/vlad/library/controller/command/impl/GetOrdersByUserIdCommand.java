@@ -32,12 +32,18 @@ public class GetOrdersByUserIdCommand implements Command {
         Map<String, Long> paginationData = (Map<String, Long>) session.getAttribute(PAGINATION_DATA);
         String direction = request.getParameter(ORDER_PAGE_DIRECTION);
 
-        if (paginationData == null){
+        Router.Type type = Router.Type.REDIRECT;
+
+        if (paginationData == null) {
             paginationData = new HashMap<>();
         }
 
-        if (filterData == null || direction == null){
+        if (filterData == null || direction == null) {
             filterData = new HashMap<>();
+        }
+
+        if (direction == null){
+            type = Router.Type.FORWARD;
         }
 
         fillOrderFilterMap(request, filterData);
@@ -49,7 +55,7 @@ public class GetOrdersByUserIdCommand implements Command {
 
             List<Order> orders = orderService.getUserOrdersByFilters(userId, direction, filterData, paginationData);
 
-            if (session.getAttribute(ORDER_STATUSES) == null){
+            if (session.getAttribute(ORDER_STATUSES) == null) {
                 OrderStatus[] orderStatus = OrderStatus.values();
                 session.setAttribute(ORDER_STATUSES, orderStatus);
             }
@@ -70,12 +76,24 @@ public class GetOrdersByUserIdCommand implements Command {
             throw new CommandException("GetOrdersByUserIdCommand execution failed", e);
         }
 
-        return new Router(PagePath.ORDERS_BY_USER_ID_PAGE, Router.Type.FORWARD);
+        return new Router(PagePath.ORDERS_BY_USER_ID_PAGE, type);
     }
 
-    private void fillOrderFilterMap(HttpServletRequest request, Map<String, Long[]> map){
+    private void fillOrderFilterMap(HttpServletRequest request, Map<String, Long[]> map) {
         RequestStringConverter converter = RequestStringConverter.getInstance();
         converter.convertStringToIdArray(request, ORDER_TYPE, map);
         converter.convertStringToIdArray(request, ORDER_STATUS, map);
+
+        if (request.getParameter(SORT_PARAM) != null) {
+            map.put(ORDER_SORT_PARAM, new Long[]{Long.valueOf(request.getParameter(SORT_PARAM))});
+        }else{
+            map.put(ORDER_SORT_PARAM, new Long[]{1L});
+        }
+
+        if (request.getParameter(SORT_TYPE) != null) {
+            map.put(ORDER_SORT_TYPE, new Long[]{Long.valueOf(request.getParameter(SORT_TYPE))});
+        }else{
+            map.put(ORDER_SORT_TYPE, new Long[]{1L});
+        }
     }
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class RequestStringConverter {
     private static RequestStringConverter instance;
+    private static final String DIGITAL_REGEX = "\\d+";
 
     public static RequestStringConverter getInstance() {
         if (instance == null){
@@ -25,7 +26,7 @@ public class RequestStringConverter {
 
         while(paramEnum.hasMoreElements()){
             String reqParamElement = paramEnum.nextElement();
-            if (reqParamElement.matches(reqParam + "\\d+")){
+            if (reqParamElement.matches(reqParam + DIGITAL_REGEX)){
                 idList.add(Long.valueOf(reqParamElement.split(reqParam)[1]));
             }
         }
