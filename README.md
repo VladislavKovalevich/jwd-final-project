@@ -39,4 +39,4 @@ The project represents an electronic library. The functionality depends on the u
 
 ***
 ## Database Schema
-![image](https://user-images.githubusercontent.com/48410663/166869056-e414d3b3-6ef7-4099-a883-ac00b6fed003.png)
+![image](https://user-images.githubusercontent.com/48410663/183028179-4d357fd6-5f1e-4a7a-a604-bd04f80e5fc3.png)
